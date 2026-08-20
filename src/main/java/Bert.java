@@ -1,5 +1,7 @@
 public class Bert {
     public static void main(String[] args) {
+        String userPrompt;
+
         String banner = """
  ____     ___  ____  ______
 |    \\   /  _]|    \\|      |
@@ -9,11 +11,25 @@ public class Bert {
 |     ||     ||  .  \\ |  | 
 |_____||_____||__|\\_| |__| 
 """;
-        System.out.println("------------------------------------------------------------");
-        System.out.println(banner);
-        System.out.println("I am  B E R T.");
-        System.out.println("What'd you need?");
-        System.out.println("------------------------------------------------------------");
-        System.out.println("Goodbye.");
+        IO.println("\n------------------------------------------------------------");
+        IO.println(banner);
+        IO.println("I am  B E R T.");
+        IO.println("What'd you need?");
+
+        while (true) {
+            IO.println("\n------------------------------------------------------------");
+            userPrompt = IO.readln("> ");
+            switch (userPrompt) {
+                case "bye":
+                case "exit":
+                case "quit":
+                    IO.println("\n------------------------------------------------------------");
+                    IO.println("Goodbye.");
+                    return;
+                default:
+                    IO.println("\n------------------------------------------------------------");
+                    IO.println(userPrompt);
+            }
+        }
     }
 }
