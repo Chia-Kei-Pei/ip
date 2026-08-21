@@ -135,7 +135,7 @@ public class Bert {
                 } else if (command[0].contentEquals("list")) {
                     if (itemList.size() == 0) {
                         IO.println("List is empty.");
-                        return;
+                        continue;
                     }
 
                     for (int i = 0; i < itemList.size(); i++) {
@@ -149,6 +149,11 @@ public class Bert {
                     int i = Integer.parseInt(command[1]) - 1;
                     itemList.get(i).unmark();
                     IO.println(String.format("%d.%s", i + 1, itemList.get(i).toString()));
+                } else if (command[0].contentEquals("delete") || command[0].contentEquals("remove")) {
+                    int i = Integer.parseInt(command[1]) - 1;
+                    Todo todo = itemList.remove(i);
+                    IO.println(String.format("Removed item"));
+                    IO.println(todo);
                 } else {
                     throw new UnknownError("Unrecognized command");
                 }
