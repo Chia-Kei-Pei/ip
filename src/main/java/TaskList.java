@@ -27,11 +27,39 @@ public class TaskList {
         }
 
         for (int i = 0; i < size; i++) {
-            IO.println(String.format("%d.[%s] %s", i + 1, isMarkList.get(i) ? "X": " ", itemList.get(i)));
+            printTask(i);
         }
     }
 
-//    public void markTask(String item) {
-//        int i = itemList.indexOf(item);
-//    }
+    public void markTask(int n) {
+        IO.println("\n------------------------------------------------------------");
+        int i = n - 1;
+
+        if (isMarkList.get(i)) {
+            IO.println("Task already marked.");
+        } else {
+            isMarkList.set(i, true);
+            IO.println("Marked task.");
+        }
+
+        printTask(i);
+    }
+
+    public void unmarkTask(int n) {
+        IO.println("\n------------------------------------------------------------");
+        int i = n - 1;
+
+        if (!isMarkList.get(i)) {
+            IO.println("Task already unmarked.");
+        } else {
+            isMarkList.set(i, false);
+            IO.println("Unmarked task.");
+        }
+
+        printTask(i);
+    }
+
+    private void printTask(int i) {
+        IO.println(String.format("%d.[%s] %s", i + 1, isMarkList.get(i) ? "X": " ", itemList.get(i)));
+    }
 }
