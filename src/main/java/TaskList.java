@@ -21,6 +21,11 @@ public class TaskList {
 
     public void listTasks() {
         IO.println("\n------------------------------------------------------------");
+        if (size == 0) {
+            IO.println("List is empty.");
+            return;
+        }
+
         for (int i = 0; i < size; i++) {
             IO.println(String.format("%d.[%s] %s", i + 1, isMarkList.get(i) ? "X": " ", itemList.get(i)));
         }
