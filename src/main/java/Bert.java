@@ -1,9 +1,7 @@
-import java.util.ArrayList;
-
 public class Bert {
     public static void main(String[] args) {
         String[] command;
-        TaskList tasks = new TaskList();
+        ItemList tasks = new ItemList();
 
         String banner = """
  ____     ___  ____  ______
@@ -94,16 +92,16 @@ public class Bert {
                     IO.println("Goodbye.");
                     return;
                 case "list":
-                    tasks.listTasks();
+                    tasks.listItems();
                     break;
                 case "mark":
-                    tasks.markTask(Integer.parseInt(command[1]));
+                    tasks.markItems(Integer.parseInt(command[1]));
                     break;
                 case "unmark":
-                    tasks.unmarkTask(Integer.parseInt(command[1]));
+                    tasks.unmarkItems(Integer.parseInt(command[1]));
                     break;
                 default:
-                    tasks.addTask(userPrompt);
+                    IO.println("ERROR!");
             }
         }
     }
