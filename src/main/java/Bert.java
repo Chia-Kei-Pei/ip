@@ -14,7 +14,7 @@ public class Bert {
         IO.println("\n------------------------------------------------------------");
         IO.println(banner);
         IO.println("I am  B E R T.");
-        IO.println("What'd you need?");
+        IO.println("What do you need?");
 
         while (true) {
             IO.println("\n------------------------------------------------------------");
