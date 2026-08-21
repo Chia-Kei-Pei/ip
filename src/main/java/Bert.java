@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Bert {
     public static void main(String[] args) {
         String userPrompt;
-        ArrayList<String> tasks = new ArrayList<>();
+        TaskList tasks = new TaskList();
 
         String banner = """
  ____     ___  ____  ______
@@ -30,24 +30,22 @@ public class Bert {
                     IO.println("Goodbye.");
                     return;
                 case "list":
-                    listTasks(tasks);
+                    tasks.listTasks();
                     break;
+//                case "mark":
+//                    markTask(item, tasks);
+//                    break;
+//                case "unmark":
+//                    unmarkTask(item, tasks);
+//                    break;
                 default:
-                    addTask(userPrompt, tasks);
+                    tasks.addTask(userPrompt);
             }
         }
     }
 
-    public static void addTask(String item, ArrayList<String> tasks) {
-        tasks.add(item);
-        IO.println("\n------------------------------------------------------------");
-        IO.println(String.format("added: %s", item));
-    }
-
-    public static void listTasks(ArrayList<String> tasks) {
-        IO.println("\n------------------------------------------------------------");
-        for (int i = 0; i < tasks.size(); i++) {
-            IO.println(String.format("%d. %s", i + 1, tasks.get(i)));
-        }
-    }
+//    public static void markTask(String item, ArrayList<String> tasks) {
+//        IO.println("\n------------------------------------------------------------");
+//        tasks.
+//    }
 }
