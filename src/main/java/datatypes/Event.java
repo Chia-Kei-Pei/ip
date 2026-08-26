@@ -5,7 +5,7 @@ public class Event extends Todo {
     protected String toDate;
 
     public Event(String item, String fromDate, String toDate) {
-        super(item);
+        super("event", item);
         this.fromDate = fromDate;
         this.toDate = toDate;
     }

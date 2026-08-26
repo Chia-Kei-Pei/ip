@@ -24,10 +24,7 @@ public class TodoList {
      */
     public void add(Todo item) {
         items.add(item);
-        String itemType = (item instanceof Deadline) ? "deadline"
-                : (item instanceof Event) ? "event"
-                : "todo";
-        IO.println("Added " + itemType);
+        IO.println("Added " + item.getType());
         IO.println(item);
     }
 

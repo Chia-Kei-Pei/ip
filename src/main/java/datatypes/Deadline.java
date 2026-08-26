@@ -4,7 +4,7 @@ public class Deadline extends Todo {
     protected String byDate;
 
     public Deadline(String item, String byDate) {
-        super(item);
+        super("deadline", item);
         this.byDate = byDate;
     }
 
