@@ -7,9 +7,10 @@ public class MissingFieldException extends BertException {
     /**
      * Constructs a {@code MissingFieldException} with the specified detail message.
      *
-     * @param message The detail message describing the missing field.
+     * @param missingField The name of the field that is required when creating a item.
+     * @param item The type of item (such as "todo", "event", "deadline").
      */
-    public MissingFieldException(String message) {
-        super(message);
+    public MissingFieldException(String missingField, String item) {
+        super(missingField);
     }
 }

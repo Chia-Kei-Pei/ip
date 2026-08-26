@@ -7,7 +7,7 @@ public class UnknownCommandException extends BertException {
     /**
      * Constructs an {@code UnknownCommandException} with the specified detail message.
      *
-     * @param message The detail message describing the error.
+     * @param invalidCommand The command called in BERT that is not part of the set of valid commands.
      */
     public UnknownCommandException(String invalidCommand) {
         super("Unknown command: " + invalidCommand);
