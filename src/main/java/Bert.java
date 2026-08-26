@@ -1,14 +1,14 @@
 import datatypes.Deadline;
 import datatypes.Event;
 import datatypes.Todo;
+import datatypes.TodoList;
+import exceptions.BertException;
 import exceptions.UnknownCommandException;
-
-import java.util.ArrayList;
 
 public class Bert {
     public static void main(String[] args) throws IllegalArgumentException {
         String[] command;
-        ArrayList<Todo> itemList = new ArrayList<>();
+        TodoList itemList = new TodoList();
 
         String banner = """
  ____     ___  ____  ______
@@ -48,8 +48,6 @@ public class Bert {
 
                     Todo todo = new Todo(item);
                     itemList.add(todo);
-                    IO.println("Added todo");
-                    IO.println(todo);
                 } else if (command[0].contentEquals("deadline")) {
                     int i = 1;
                     itemBuilder = new StringBuilder();
@@ -80,8 +78,6 @@ public class Bert {
 
                     Deadline deadline = new Deadline(item, byDate);
                     itemList.add(deadline);
-                    IO.println("Added deadline");
-                    IO.println(deadline);
                 } else if (command[0].contentEquals("event")) {
                     int i = 1;
                     itemBuilder = new StringBuilder();
@@ -126,43 +122,30 @@ public class Bert {
 
                     Event event = new Event(item, fromDate, toDate);
                     itemList.add(event);
-                    IO.println("Added event");
-                    IO.println(event);
                 } else if (command[0].contentEquals("bye")
                         || command[0].contentEquals("exit")
                         || command[0].contentEquals("quit")) {
                     IO.println("Goodbye.");
                     return;
                 } else if (command[0].contentEquals("list")) {
-                    if (itemList.size() == 0) {
-                        IO.println("List is empty.");
-                        continue;
-                    }
-
-                    for (int i = 0; i < itemList.size(); i++) {
-                        IO.println(String.format("%d.%s", i + 1, itemList.get(i).toString()));
-                    }
+                    itemList.printList();
                 } else if (command[0].contentEquals("mark")) {
-                    int i = Integer.parseInt(command[1]) - 1;
-                    itemList.get(i).mark();
-                    IO.println(String.format("%d.%s", i + 1, itemList.get(i).toString()));
+                    int i = Integer.parseInt(command[1]);
+                    itemList.mark(i);
                 } else if (command[0].contentEquals("unmark")) {
-                    int i = Integer.parseInt(command[1]) - 1;
-                    itemList.get(i).unmark();
-                    IO.println(String.format("%d.%s", i + 1, itemList.get(i).toString()));
+                    int i = Integer.parseInt(command[1]);
+                    itemList.unmark(i);
                 } else if (command[0].contentEquals("delete") || command[0].contentEquals("remove")) {
-                    int i = Integer.parseInt(command[1]) - 1;
-                    Todo todo = itemList.remove(i);
-                    IO.println(String.format("Removed item"));
-                    IO.println(todo);
+                    int i = Integer.parseInt(command[1]);
+                    itemList.remove(i);
                 } else {
                     throw new UnknownCommandException(command[0]);
                 }
+            } catch (BertException e) {
+                IO.println(e.getMessage());
             } catch (IndexOutOfBoundsException e) {
                 IO.println(e);
             } catch (IllegalArgumentException e) {
-                IO.println(e.getMessage());
-            } catch (UnknownCommandException e) {
                 IO.println(e.getMessage());
             }
         }
