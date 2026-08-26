@@ -1,6 +1,7 @@
 import datatypes.Deadline;
 import datatypes.Event;
 import datatypes.Todo;
+import exceptions.UnknownCommandException;
 
 import java.util.ArrayList;
 
@@ -155,13 +156,13 @@ public class Bert {
                     IO.println(String.format("Removed item"));
                     IO.println(todo);
                 } else {
-                    throw new UnknownError("Unrecognized command");
+                    throw new UnknownCommandException(command[0]);
                 }
             } catch (IndexOutOfBoundsException e) {
                 IO.println(e);
             } catch (IllegalArgumentException e) {
                 IO.println(e.getMessage());
-            } catch (UnknownError e) {
+            } catch (UnknownCommandException e) {
                 IO.println(e.getMessage());
             }
         }
