@@ -59,35 +59,25 @@ public class Bert {
     }
 
     /**
-     * Executes a parsed command programmatically against the provided task list.
+     * Executes a parsed command by extracting its arguments and dispatching to the appropriate handler method.
      *
      * @param cmd The parsed command containing command type, arguments, and flags.
      * @param itemList The task list to operate on.
      * @throws BertException If an application-level error occurs during execution.
-     * @throws IllegalArgumentException If an argument is invalid.
+     * @throws IllegalArgumentException If an argument format is invalid.
      */
     public static void executeCommand(ParsedCommand cmd, TodoList itemList)
             throws BertException, IllegalArgumentException {
         switch (cmd.getCommandType()) {
-            case "todo" -> handleTodo(cmd, itemList);
-            case "deadline" -> handleDeadline(cmd, itemList);
-            case "event" -> handleEvent(cmd, itemList);
-            case "list" -> handleList(itemList);
-            case "mark" -> handleMark(cmd, itemList);
-            case "unmark" -> handleUnmark(cmd, itemList);
-            case "delete", "remove" -> handleDelete(cmd, itemList);
-            default -> throw new UnknownCommandException(cmd.getCommandType());
+        case "todo" -> handleTodo(cmd.getArgument(), itemList);
+        case "deadline" -> handleDeadline(cmd.getArgument(), cmd.getFlag("by"), itemList);
+        case "event" -> handleEvent(cmd.getArgument(), cmd.getFlag("from"), cmd.getFlag("to"), itemList);
+        case "list" -> handleList(itemList);
+        case "mark" -> handleMark(cmd.getArgumentAsInt(), itemList);
+        case "unmark" -> handleUnmark(cmd.getArgumentAsInt(), itemList);
+        case "delete", "remove" -> handleDelete(cmd.getArgumentAsInt(), itemList);
+        default -> throw new UnknownCommandException(cmd.getCommandType());
         }
-    }
-
-    /**
-     * Handles adding a new {@link Todo} item from a parsed command.
-     *
-     * @param cmd The parsed command containing the todo description.
-     * @param itemList The task list to add the todo to.
-     */
-    public static void handleTodo(ParsedCommand cmd, TodoList itemList) {
-        handleTodo(cmd.getArgument(), itemList);
     }
 
     /**
@@ -102,16 +92,6 @@ public class Bert {
     }
 
     /**
-     * Handles adding a new {@link Deadline} item from a parsed command.
-     *
-     * @param cmd The parsed command containing the deadline description and by date flag.
-     * @param itemList The task list to add the deadline to.
-     */
-    public static void handleDeadline(ParsedCommand cmd, TodoList itemList) {
-        handleDeadline(cmd.getArgument(), cmd.getFlag("by"), itemList);
-    }
-
-    /**
      * Programmatically adds a new {@link Deadline} item to the list.
      *
      * @param description The description of the deadline.
@@ -121,16 +101,6 @@ public class Bert {
     public static void handleDeadline(String description, String byDate, TodoList itemList) {
         Deadline deadline = new Deadline(description, byDate);
         itemList.add(deadline);
-    }
-
-    /**
-     * Handles adding a new {@link Event} item from a parsed command.
-     *
-     * @param cmd The parsed command containing the event description, from date, and to date flags.
-     * @param itemList The task list to add the event to.
-     */
-    public static void handleEvent(ParsedCommand cmd, TodoList itemList) {
-        handleEvent(cmd.getArgument(), cmd.getFlag("from"), cmd.getFlag("to"), itemList);
     }
 
     /**
@@ -156,19 +126,6 @@ public class Bert {
     }
 
     /**
-     * Handles marking a task as completed using index from a parsed command.
-     *
-     * @param cmd The parsed command containing the target 1-based index.
-     * @param itemList The task list containing the task.
-     * @throws InvalidIndexException If the index is outside the valid range.
-     * @throws IllegalArgumentException If the index argument cannot be parsed.
-     */
-    public static void handleMark(ParsedCommand cmd, TodoList itemList)
-            throws InvalidIndexException, IllegalArgumentException {
-        handleMark(cmd.getArgumentAsInt(), itemList);
-    }
-
-    /**
      * Programmatically marks a task at the given 1-based index as completed.
      *
      * @param index The 1-based index of the task.
@@ -180,19 +137,6 @@ public class Bert {
     }
 
     /**
-     * Handles unmarking a task as completed using index from a parsed command.
-     *
-     * @param cmd The parsed command containing the target 1-based index.
-     * @param itemList The task list containing the task.
-     * @throws InvalidIndexException If the index is outside the valid range.
-     * @throws IllegalArgumentException If the index argument cannot be parsed.
-     */
-    public static void handleUnmark(ParsedCommand cmd, TodoList itemList)
-            throws InvalidIndexException, IllegalArgumentException {
-        handleUnmark(cmd.getArgumentAsInt(), itemList);
-    }
-
-    /**
      * Programmatically unmarks a task at the given 1-based index.
      *
      * @param index The 1-based index of the task.
@@ -201,19 +145,6 @@ public class Bert {
      */
     public static void handleUnmark(int index, TodoList itemList) throws InvalidIndexException {
         itemList.unmark(index);
-    }
-
-    /**
-     * Handles removing a task from the list using index from a parsed command.
-     *
-     * @param cmd The parsed command containing the target 1-based index.
-     * @param itemList The task list to remove the task from.
-     * @throws InvalidIndexException If the index is outside the valid range.
-     * @throws IllegalArgumentException If the index argument cannot be parsed.
-     */
-    public static void handleDelete(ParsedCommand cmd, TodoList itemList)
-            throws InvalidIndexException, IllegalArgumentException {
-        handleDelete(cmd.getArgumentAsInt(), itemList);
     }
 
     /**
