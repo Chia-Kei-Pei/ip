@@ -1,10 +1,14 @@
 package datatypes;
 
+import parser.DateTimeParser;
+
+import java.time.LocalDateTime;
+
 /**
  * Represents a task with a deadline date/time constraint.
  */
 public class Deadline extends Todo {
-    protected String byDate;
+    protected LocalDateTime byDate;
 
     /**
      * Constructs a {@code Deadline} task with specified completion status, description, and due date.
@@ -13,7 +17,7 @@ public class Deadline extends Todo {
      * @param description The description of the deadline task.
      * @param byDate The date or time string by which the task must be completed.
      */
-    public Deadline(Boolean isMark, String description, String byDate) {
+    public Deadline(Boolean isMark, String description, LocalDateTime byDate) {
         super(isMark, description);
         this.type = "deadline";
         this.byDate = byDate;
@@ -25,17 +29,17 @@ public class Deadline extends Todo {
      * @param description The description of the deadline task.
      * @param byDate The date or time string by which the task must be completed.
      */
-    public Deadline(String description, String byDate) {
+    public Deadline(String description, LocalDateTime byDate) {
         this(false, description, byDate);
     }
 
     @Override
     public String toString() {
-        return String.format("%s (by: %s)", super.toString(), byDate);
+        return String.format("%s (by: %s)", super.toString(), DateTimeParser.format(byDate));
     }
 
     @Override
     public String toFileFormat() {
-        return String.format("%s | %s", super.toFileFormat(), byDate);
+        return String.format("%s | %s", super.toFileFormat(), DateTimeParser.formatForStorage(byDate));
     }
 }

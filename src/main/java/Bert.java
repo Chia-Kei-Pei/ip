@@ -6,8 +6,10 @@ import exceptions.BertException;
 import exceptions.InvalidIndexException;
 import exceptions.UnknownCommandException;
 import parser.CommandParser;
+import parser.DateTimeParser;
 import parser.ParsedCommand;
 import storage.Storage;
+import java.time.LocalDateTime;
 
 /**
  * The main application class for BERT task assistant.
@@ -105,9 +107,12 @@ public class Bert {
      * @param byDate The date or time string by which the task must be completed.
      * @param todoList The task list to add the deadline to.
      * @param storage The storage handler to persist changes.
+     * @throws BertException If the date/time format is invalid.
      */
-    public static void handleDeadline(String description, String byDate, TodoList todoList, Storage storage) {
-        Deadline deadline = new Deadline(description, byDate);
+    public static void handleDeadline(String description, String byDate, TodoList todoList, Storage storage)
+            throws BertException {
+        LocalDateTime parsedByDate = DateTimeParser.parse(byDate);
+        Deadline deadline = new Deadline(description, parsedByDate);
         todoList.add(deadline);
         storage.save(todoList);
     }
@@ -120,10 +125,13 @@ public class Bert {
      * @param toDate The ending date or time of the event.
      * @param todoList The task list to add the event to.
      * @param storage The storage handler to persist changes.
+     * @throws BertException If the date/time format is invalid.
      */
     public static void handleEvent(String description, String fromDate, String toDate, TodoList todoList,
-            Storage storage) {
-        Event event = new Event(description, fromDate, toDate);
+            Storage storage) throws BertException {
+        LocalDateTime parsedFromDate = DateTimeParser.parse(fromDate);
+        LocalDateTime parsedToDate = DateTimeParser.parse(toDate);
+        Event event = new Event(description, parsedFromDate, parsedToDate);
         todoList.add(event);
         storage.save(todoList);
     }
