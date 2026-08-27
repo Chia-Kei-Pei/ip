@@ -1,11 +1,15 @@
 package datatypes;
 
+import parser.DateTimeParser;
+
+import java.time.LocalDateTime;
+
 /**
  * Represents an event task occurring within a specific time period.
  */
 public class Event extends Todo {
-    protected String fromDate;
-    protected String toDate;
+    protected LocalDateTime fromDate;
+    protected LocalDateTime toDate;
 
     /**
      * Constructs an {@code Event} task with specified completion status, description, start time, and end time.
@@ -15,7 +19,7 @@ public class Event extends Todo {
      * @param fromDate The starting date or time of the event.
      * @param toDate The ending date or time of the event.
      */
-    public Event(Boolean isMark, String description, String fromDate, String toDate) {
+    public Event(Boolean isMark, String description, LocalDateTime fromDate, LocalDateTime toDate) {
         super(isMark, description);
         this.type = "event";
         this.fromDate = fromDate;
@@ -29,13 +33,13 @@ public class Event extends Todo {
      * @param fromDate The starting date or time of the event.
      * @param toDate The ending date or time of the event.
      */
-    public Event(String description, String fromDate, String toDate) {
+    public Event(String description, LocalDateTime fromDate, LocalDateTime toDate) {
         this(false, description, fromDate, toDate);
     }
 
     @Override
     public String toString() {
-        return String.format("%s (from: %s to: %s)", super.toString(), fromDate, toDate);
+        return String.format("%s (from: %s to: %s)", super.toString(), DateTimeParser.format(fromDate), DateTimeParser.format(toDate));
     }
 
     @Override
