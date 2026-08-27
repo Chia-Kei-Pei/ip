@@ -40,22 +40,27 @@ public class Todo {
         return type;
     }
 
-    public void mark() {
-        if (isMark) {
-            IO.println("Item already marked.");
-        } else {
-            isMark = true;
-            IO.println("Marked Item.");
-        }
+    /**
+     * Checks if this task is marked as completed.
+     *
+     * @return {@code true} if marked, {@code false} otherwise.
+     */
+    public boolean isMarked() {
+        return isMark;
     }
 
+    /**
+     * Marks this task as completed.
+     */
+    public void mark() {
+        this.isMark = true;
+    }
+
+    /**
+     * Unmarks this task, setting its status to not completed.
+     */
     public void unmark() {
-        if (!isMark) {
-            IO.println("Item already unmarked.");
-        } else {
-            isMark = false;
-            IO.println("Unmarked Item.");
-        }
+        this.isMark = false;
     }
 
     @Override
