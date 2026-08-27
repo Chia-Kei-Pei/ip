@@ -1,16 +1,19 @@
 package datatypes;
 
+/**
+ * Represents a standard task in the task list.
+ * Serves as the base class for specialized task types such as {@link Deadline} and {@link Event}.
+ */
 public class Todo {
     protected String type;
     protected boolean isMark;
     protected String description;
 
     /**
-     * Constructs a {@code Todo} task with a specified type and description.
-     * Used by subclasses (e.g., {@code Deadline}, {@code Event}) to set their type
-     * and by Storage class for save and load operations.
+     * Constructs a {@code Todo} task with a specified completion status and description.
+     * Also used as a base constructor by subclasses (e.g., {@link Deadline}, {@link Event}).
      *
-     * @param isMark Whether this item is marked or not.
+     * @param isMark Whether this task is marked as completed.
      * @param description The description of the task.
      */
     public Todo(Boolean isMark, String description) {
@@ -20,7 +23,7 @@ public class Todo {
     }
 
     /**
-     * Constructs a {@code Todo} task with isMark set to default value "false".
+     * Constructs an unmarked {@code Todo} task with default completion status set to {@code false}.
      *
      * @param description The description of the todo task.
      */
