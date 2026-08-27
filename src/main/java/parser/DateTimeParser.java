@@ -21,8 +21,8 @@ public class DateTimeParser {
     /** Default date-time format for input and persistence: dd/MM/yyyy HH:mm */
     public static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    /** Human-readable display format: MMM dd yyyy, HH:mm (e.g. Dec 02 2019, 18:00) */
-    public static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, HH:mm");
+    /** Human-readable display format: MMM dd yyyy at HH:mm (e.g. Dec 02 2019 at 18:00) */
+    public static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy 'at' HH:mm");
 
     /** Display format for date-only outputs: MMM dd yyyy (e.g. Dec 02 2019) */
     public static final DateTimeFormatter DISPLAY_DATE_ONLY_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy");
@@ -96,7 +96,7 @@ public class DateTimeParser {
 
     /**
      * Formats a {@link LocalDateTime} into a standard user-friendly display string.
-     * If the time is 00:00, outputs the date only (e.g. {@code Dec 02 2019}); otherwise includes time (e.g. {@code Dec 02 2019, 18:00}).
+     * If the time is 00:00, outputs the date only (e.g. {@code Dec 02 2019}); otherwise includes time (e.g. {@code Dec 02 2019 at 18:00}).
      *
      * @param dateTime The {@link LocalDateTime} to format.
      * @return Formatted date string for user display.

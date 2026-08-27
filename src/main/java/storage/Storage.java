@@ -4,9 +4,12 @@ import datatypes.Deadline;
 import datatypes.Event;
 import datatypes.Todo;
 import datatypes.TodoList;
+import exceptions.BertException;
+import parser.DateTimeParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,15 +70,23 @@ public class Storage {
                     case "todo" -> todoList.addNoPrint(new Todo(isMark, description));
                     case "deadline" -> {
                         if (parts.length >= 4) {
-                            String byDate = parts[3].trim();
-                            todoList.addNoPrint(new Deadline(isMark, description, byDate));
+                            try {
+                                LocalDateTime byDate = DateTimeParser.parse(parts[3].trim());
+                                todoList.addNoPrint(new Deadline(isMark, description, byDate));
+                            } catch (BertException e) {
+                                IO.println("Warning: Skipping task with invalid deadline in " + filePath + ": " + line);
+                            }
                         }
                     }
                     case "event" -> {
                         if (parts.length >= 5) {
-                            String fromDate = parts[3].trim();
-                            String toDate = parts[4].trim();
-                            todoList.addNoPrint(new Event(isMark, description, fromDate, toDate));
+                            try {
+                                LocalDateTime fromDate = DateTimeParser.parse(parts[3].trim());
+                                LocalDateTime toDate = DateTimeParser.parse(parts[4].trim());
+                                todoList.addNoPrint(new Event(isMark, description, fromDate, toDate));
+                            } catch (BertException e) {
+                                IO.println("Warning: Skipping task with invalid event dates in " + filePath + ": " + line);
+                            }
                         }
                     }
                     default -> {

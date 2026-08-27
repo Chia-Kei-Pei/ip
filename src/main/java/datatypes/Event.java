@@ -39,7 +39,7 @@ public class Event extends Todo {
 
     @Override
     public String toString() {
-        return String.format("%s (from: %s to: %s)", super.toString(),
+        return String.format("%s (from: %s, to: %s)", super.toString(),
                 DateTimeParser.format(fromDate),
                 DateTimeParser.format(toDate));
     }
