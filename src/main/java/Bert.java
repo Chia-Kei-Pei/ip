@@ -9,6 +9,8 @@ import parser.CommandParser;
 import parser.DateTimeParser;
 import parser.ParsedCommand;
 import storage.Storage;
+import ui.Ui;
+
 import java.time.LocalDateTime;
 
 /**
@@ -19,10 +21,12 @@ public class Bert {
 
     private Storage storage;
     private TodoList todoList;
+    private Ui ui;
 
     public Bert(String todoListFilePath) {
-        storage = new Storage();
+        storage = new Storage(todoListFilePath);
         todoList = new TodoList();
+        ui = new Ui();
     }
 
     /**
@@ -34,38 +38,28 @@ public class Bert {
     public void run() {
         storage.load(todoList);
 
-        String banner = """
- ____     ___  ____  ______
-|    \\   /  _]|    \\|      |
-|  o  ) /  [_ |  D  )      |
-|     ||    _]|    /|_|  |_|
-|  O  ||   [_ |    \\  |  | 
-|     ||     ||  .  \\ |  | 
-|_____||_____||__|\\_| |__| 
-""";
-        IO.println("\n------------------------------------------------------------");
-        IO.println(banner);
-        IO.println("I am  B E R T.");
-        IO.println("What do you need?");
+        ui.greeting();
+        ui.showLine();
 
         while (true) {
-            IO.println("\n------------------------------------------------------------");
-            String userPrompt = IO.readln("> ");
-            IO.println("\n------------------------------------------------------------");
+            String userPrompt = ui.userPrompt();
+            ui.showLine();
 
             try {
                 ParsedCommand command = CommandParser.parse(userPrompt);
 
                 if (command.isExitCommand()) {
-                    IO.println("Goodbye.");
+                    ui.farewell();
                     return;
                 }
 
                 executeCommand(command, todoList, storage);
             } catch (BertException | IllegalArgumentException e) {
-                IO.println(e.getMessage());
+                ui.showError(e.getMessage());
             } catch (IndexOutOfBoundsException e) {
-                IO.println(e);
+                ui.showError(e.getMessage());
+            } finally {
+                ui.showLine();
             }
         }
     }
