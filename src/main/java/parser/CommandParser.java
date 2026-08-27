@@ -10,8 +10,9 @@ import java.util.Map;
 /**
  * Parses raw user input strings into structured {@link ParsedCommand} objects.
  * <p>
- * Supports command words, positional arguments with or without quotation marks,
- * and named flags prefixed with {@code /}, {@code --}, {@code -}, or context-specific bare keywords.
+ * Enforces strict single-token arguments and flag values. Arguments or flag values
+ * containing spaces must be enclosed in quotation marks (e.g. {@code "wash the dishes"}).
+ * Single-word arguments without spaces (or connected by underscores) do not require quotation marks.
  * </p>
  */
 public class CommandParser {
@@ -62,7 +63,7 @@ public class CommandParser {
 
     /**
      * Determines whether a token represents a flag identifier, and returns its normalized name.
-     * Supports `/flag`, `--flag`, `-flag`, and command-specific keywords like `by`, `from`, `to`.
+     * Supports `/flag`, `--flag`, `-flag`, and context-specific bare keywords like `by`, `from`, `to`.
      *
      * @param token The token string to inspect.
      * @param commandType The command context in lowercase.
@@ -90,12 +91,12 @@ public class CommandParser {
 
     /**
      * Parses a raw command string from the user into a {@link ParsedCommand}.
-     * Validates required arguments and flags for known command types.
+     * Enforces that each argument or flag value is a single token or a quoted string.
      *
      * @param rawInput The raw input string entered by the user.
      * @return A {@link ParsedCommand} containing the parsed command type, arguments, and flags.
      * @throws BertException If the command type is unknown or invalid.
-     * @throws IllegalArgumentException If required fields or flags are missing or empty.
+     * @throws IllegalArgumentException If arguments with spaces are not quoted, or required fields are missing.
      */
     public static ParsedCommand parse(String rawInput) throws BertException, IllegalArgumentException {
         List<String> tokens = tokenize(rawInput);
@@ -104,32 +105,41 @@ public class CommandParser {
         }
 
         String commandType = tokens.get(0).toLowerCase();
-        List<String> positionalTokens = new ArrayList<>();
-        Map<String, StringBuilder> flagBuilders = new LinkedHashMap<>();
-        String currentFlag = null;
+        String argument = null;
+        Map<String, String> flags = new LinkedHashMap<>();
 
-        for (int i = 1; i < tokens.size(); i++) {
+        int i = 1;
+        while (i < tokens.size()) {
             String token = tokens.get(i);
             String flagName = extractFlagName(token, commandType);
 
-            if (flagName != null) {
-                currentFlag = flagName;
-                flagBuilders.putIfAbsent(currentFlag, new StringBuilder());
-            } else if (currentFlag == null) {
-                positionalTokens.add(token);
-            } else {
-                StringBuilder flagBuilder = flagBuilders.get(currentFlag);
-                if (!flagBuilder.isEmpty()) {
-                    flagBuilder.append(" ");
+            // A token is treated as a flag if it matches flag syntax and either:
+            // 1. It explicitly starts with a flag prefix ('/' or '-'), or
+            // 2. The primary positional argument has already been populated.
+            if (flagName != null && (argument != null || token.startsWith("/") || token.startsWith("-"))) {
+                if (i + 1 >= tokens.size()) {
+                    throw new IllegalArgumentException("Missing value for flag: " + token);
                 }
-                flagBuilder.append(token);
+                String flagValue = tokens.get(i + 1);
+                if (flagValue.startsWith("/") || flagValue.startsWith("--")) {
+                    throw new IllegalArgumentException("Missing value for flag: " + token);
+                }
+                flags.put(flagName, flagValue);
+                i += 2;
+            } else {
+                if (argument == null) {
+                    argument = token;
+                    i++;
+                } else {
+                    throw new IllegalArgumentException(
+                        "Unexpected argument: \"" + token + "\". Arguments containing spaces must be enclosed in quotes."
+                    );
+                }
             }
         }
 
-        String argument = String.join(" ", positionalTokens).trim();
-        Map<String, String> flags = new LinkedHashMap<>();
-        for (Map.Entry<String, StringBuilder> entry : flagBuilders.entrySet()) {
-            flags.put(entry.getKey(), entry.getValue().toString().trim());
+        if (argument == null) {
+            argument = "";
         }
 
         validateCommand(commandType, argument, flags);
