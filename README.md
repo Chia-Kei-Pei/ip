@@ -1,6 +1,6 @@
-# Bert project template
+# Assistant BERT
 
-This is a project template for a greenfield Java project. It's named `B E R T`. Given below are instructions on how to use it.
+This is based on "Duke", a project template for a greenfield Java project. It's named `B E R T`. Given below are instructions on how to use it.
 
 ## Setting up in Intellij
 
