@@ -21,3 +21,6 @@ text-ui-test/EXPECTED-UNIX.TXT
 
 # Class files
 *.class
+
+# Persistent Data files
+/data/
