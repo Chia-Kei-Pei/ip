@@ -62,4 +62,8 @@ public class Todo {
     public String toString() {
         return String.format("[%s][%s] %s", type, isMark ? "X": " ", description);
     }
+
+    public String toFileFormat() {
+        return String.format("%s | %s | %s", type, isMark, description);
+    }
 }

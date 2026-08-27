@@ -37,4 +37,9 @@ public class Event extends Todo {
     public String toString() {
         return String.format("%s (from: %s to: %s)", super.toString(), fromDate, toDate);
     }
+
+    @Override
+    public String toFileFormat() {
+        return String.format("%s | %s | %s", super.toFileFormat(), fromDate, toDate);
+    }
 }

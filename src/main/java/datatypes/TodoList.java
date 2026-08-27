@@ -8,35 +8,39 @@ import java.util.ArrayList;
  * Handles adding, retrieving, removing, marking, and unmarking tasks with range validation.
  */
 public class TodoList {
-    private final ArrayList<Todo> items;
+    private final ArrayList<Todo> todos;
 
     /**
      * Initializes an empty todo list.
      */
     public TodoList() {
-        this.items = new ArrayList<>();
+        this.todos = new ArrayList<>();
     }
 
     /**
      * Adds a task to the end of the list and prints the confirmation message.
      *
-     * @param item The task to add.
+     * @param todo The task to add.
      */
-    public void add(Todo item) {
-        items.add(item);
-        IO.println("Added " + item.getType());
-        IO.println(item);
+    public void add(Todo todo) {
+        todos.add(todo);
+        IO.println("Added " + todo.getType());
+        IO.println(todo);
+    }
+
+    public void addNoPrint(Todo todo) {
+        todos.add(todo);
     }
 
     /**
      * Validates that the specified 1-based index is within valid list bounds.
      *
      * @param index The 1-based index to validate.
-     * @throws InvalidIndexException If the index is less than 1 or greater than the number of items.
+     * @throws InvalidIndexException If the index is less than 1 or greater than the number of todos.
      */
     private void validateIndex(int index) throws InvalidIndexException {
-        if (index < 1 || index > items.size()) {
-            throw new InvalidIndexException(index, items.size());
+        if (index < 1 || index > todos.size()) {
+            throw new InvalidIndexException(index, todos.size());
         }
     }
 
@@ -49,7 +53,11 @@ public class TodoList {
      */
     public Todo get(int index) throws InvalidIndexException {
         validateIndex(index);
-        return items.get(index - 1);
+        return todos.get(index - 1);
+    }
+
+    public ArrayList<Todo> getTodos() {
+        return todos;
     }
 
     /**
@@ -61,8 +69,8 @@ public class TodoList {
      */
     public Todo remove(int index) throws InvalidIndexException {
         validateIndex(index);
-        Todo todo = items.remove(index - 1);
-        IO.println("Removed item");
+        Todo todo = todos.remove(index - 1);
+        IO.println("Removed todo");
         IO.println(todo);
         return todo;
     }
@@ -75,10 +83,10 @@ public class TodoList {
      * @throws InvalidIndexException If the index is outside the valid range.
      */
     public Todo mark(int index) throws InvalidIndexException {
-        Todo item = get(index);
-        item.mark();
-        IO.println(String.format("%d.%s", index, item.toString()));
-        return item;
+        Todo todo = get(index);
+        todo.mark();
+        IO.println(String.format("%d.%s", index, todo.toString()));
+        return todo;
     }
 
     /**
@@ -89,10 +97,10 @@ public class TodoList {
      * @throws InvalidIndexException If the index is outside the valid range.
      */
     public Todo unmark(int index) throws InvalidIndexException {
-        Todo item = get(index);
-        item.unmark();
-        IO.println(String.format("%d.%s", index, item.toString()));
-        return item;
+        Todo todo = get(index);
+        todo.unmark();
+        IO.println(String.format("%d.%s", index, todo.toString()));
+        return todo;
     }
 
     /**
@@ -101,7 +109,7 @@ public class TodoList {
      * @param index The 1-based index of the task to print.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    public void printItem(int index) throws InvalidIndexException {
+    public void printTodo(int index) throws InvalidIndexException {
         IO.println(String.format("%d.%s", index, get(index).toString()));
     }
 
@@ -111,7 +119,7 @@ public class TodoList {
      * @return The number of tasks.
      */
     public int size() {
-        return items.size();
+        return todos.size();
     }
 
     /**
@@ -120,7 +128,7 @@ public class TodoList {
      * @return {@code true} if the list is empty, {@code false} otherwise.
      */
     public boolean isEmpty() {
-        return items.isEmpty();
+        return todos.isEmpty();
     }
 
     /**
@@ -133,8 +141,8 @@ public class TodoList {
             return;
         }
 
-        for (int i = 0; i < items.size(); i++) {
-            IO.println(String.format("%d.%s", i + 1, items.get(i).toString()));
+        for (int i = 0; i < todos.size(); i++) {
+            IO.println(String.format("%d.%s", i + 1, todos.get(i).toString()));
         }
     }
 }

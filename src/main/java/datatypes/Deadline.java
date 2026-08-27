@@ -33,4 +33,9 @@ public class Deadline extends Todo {
     public String toString() {
         return String.format("%s (by: %s)", super.toString(), byDate);
     }
+
+    @Override
+    public String toFileFormat() {
+        return String.format("%s | %s", super.toFileFormat(), byDate);
+    }
 }
