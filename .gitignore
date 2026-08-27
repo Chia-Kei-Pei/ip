@@ -24,3 +24,6 @@ text-ui-test/EXPECTED-UNIX.TXT
 
 # Persistent Data files
 /data/
+
+# Style
+Java_coding_standard.md
