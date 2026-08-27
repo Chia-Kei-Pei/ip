@@ -18,17 +18,11 @@ public class TodoList {
     }
 
     /**
-     * Adds a task to the end of the list and prints the confirmation message.
+     * Adds a task to the end of the list.
      *
      * @param todo The task to add.
      */
     public void add(Todo todo) {
-        todos.add(todo);
-        IO.println("Added " + todo.getType());
-        IO.println(todo);
-    }
-
-    public void addNoPrint(Todo todo) {
         todos.add(todo);
     }
 
@@ -61,7 +55,7 @@ public class TodoList {
     }
 
     /**
-     * Removes and returns the task at the specified 1-based index, printing the confirmation message.
+     * Removes and returns the task at the specified 1-based index.
      *
      * @param index The 1-based index of the task to remove.
      * @return The removed task.
@@ -69,14 +63,11 @@ public class TodoList {
      */
     public Todo remove(int index) throws InvalidIndexException {
         validateIndex(index);
-        Todo todo = todos.remove(index - 1);
-        IO.println("Removed todo");
-        IO.println(todo);
-        return todo;
+        return todos.remove(index - 1);
     }
 
     /**
-     * Marks the task at the specified 1-based index as done and prints its formatted representation.
+     * Marks the task at the specified 1-based index as done.
      *
      * @param index The 1-based index of the task.
      * @return The marked task.
@@ -85,12 +76,11 @@ public class TodoList {
     public Todo mark(int index) throws InvalidIndexException {
         Todo todo = get(index);
         todo.mark();
-        IO.println(String.format("%d.%s", index, todo.toString()));
         return todo;
     }
 
     /**
-     * Unmarks the task at the specified 1-based index and prints its formatted representation.
+     * Unmarks the task at the specified 1-based index.
      *
      * @param index The 1-based index of the task.
      * @return The unmarked task.
@@ -99,18 +89,7 @@ public class TodoList {
     public Todo unmark(int index) throws InvalidIndexException {
         Todo todo = get(index);
         todo.unmark();
-        IO.println(String.format("%d.%s", index, todo.toString()));
         return todo;
-    }
-
-    /**
-     * Prints the task at the specified 1-based index prefixed with its index number.
-     *
-     * @param index The 1-based index of the task to print.
-     * @throws InvalidIndexException If the index is outside the valid range.
-     */
-    public void printTodo(int index) throws InvalidIndexException {
-        IO.println(String.format("%d.%s", index, get(index).toString()));
     }
 
     /**
@@ -129,20 +108,5 @@ public class TodoList {
      */
     public boolean isEmpty() {
         return todos.isEmpty();
-    }
-
-    /**
-     * Prints all tasks in the list prefixed with their 1-based index numbers.
-     * If the list contains no tasks, prints an informative message.
-     */
-    public void printList() {
-        if (isEmpty()) {
-            IO.println("List is empty.");
-            return;
-        }
-
-        for (int i = 0; i < todos.size(); i++) {
-            IO.println(String.format("%d.%s", i + 1, todos.get(i).toString()));
-        }
     }
 }

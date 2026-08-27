@@ -24,9 +24,9 @@ public class Bert {
     private Ui ui;
 
     public Bert(String todoListFilePath) {
-        storage = new Storage(todoListFilePath);
-        todoList = new TodoList();
         ui = new Ui();
+        storage = new Storage(todoListFilePath, ui);
+        todoList = new TodoList();
     }
 
     /**
@@ -97,6 +97,7 @@ public class Bert {
     private void handleTodo(String description, TodoList todoList, Storage storage) {
         Todo todo = new Todo(description);
         todoList.add(todo);
+        ui.showAdded(todo);
         storage.save(todoList);
     }
 
@@ -114,6 +115,7 @@ public class Bert {
         LocalDateTime parsedByDate = DateTimeParser.parse(byDate);
         Deadline deadline = new Deadline(description, parsedByDate);
         todoList.add(deadline);
+        ui.showAdded(deadline);
         storage.save(todoList);
     }
 
@@ -133,6 +135,7 @@ public class Bert {
         LocalDateTime parsedToDate = DateTimeParser.parse(toDate);
         Event event = new Event(description, parsedFromDate, parsedToDate);
         todoList.add(event);
+        ui.showAdded(event);
         storage.save(todoList);
     }
 
@@ -142,7 +145,7 @@ public class Bert {
      * @param todoList The task list to display.
      */
     private void handleList(TodoList todoList) {
-        todoList.printList();
+        ui.showTodoList(todoList);
     }
 
     /**
@@ -154,8 +157,14 @@ public class Bert {
      * @throws InvalidIndexException If the index is outside the valid range.
      */
     private void handleMark(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
-        todoList.mark(index);
-        storage.save(todoList);
+        Todo todo = todoList.get(index);
+        if (todo.isMarked()) {
+            ui.showAlreadyMarked(index, todo);
+        } else {
+            todoList.mark(index);
+            ui.showMarked(index, todo);
+            storage.save(todoList);
+        }
     }
 
     /**
@@ -167,8 +176,14 @@ public class Bert {
      * @throws InvalidIndexException If the index is outside the valid range.
      */
     private void handleUnmark(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
-        todoList.unmark(index);
-        storage.save(todoList);
+        Todo todo = todoList.get(index);
+        if (!todo.isMarked()) {
+            ui.showAlreadyUnmarked(index, todo);
+        } else {
+            todoList.unmark(index);
+            ui.showUnmarked(index, todo);
+            storage.save(todoList);
+        }
     }
 
     /**
@@ -180,7 +195,8 @@ public class Bert {
      * @throws InvalidIndexException If the index is outside the valid range.
      */
     private void handleDelete(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
-        todoList.remove(index);
+        Todo removed = todoList.remove(index);
+        ui.showRemoved(removed);
         storage.save(todoList);
     }
 

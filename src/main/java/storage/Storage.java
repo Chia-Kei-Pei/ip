@@ -6,6 +6,7 @@ import datatypes.Todo;
 import datatypes.TodoList;
 import exceptions.BertException;
 import parser.DateTimeParser;
+import ui.Ui;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,21 +20,33 @@ import java.util.List;
  */
 public class Storage {
     private final String filePath;
+    private final Ui ui;
 
     /**
-     * Constructs a {@code Storage} handler for a custom file path.
+     * Constructs a {@code Storage} handler with a custom file path and {@link Ui} instance.
+     *
+     * @param filePath Relative or absolute path to the data storage file.
+     * @param ui The {@link Ui} instance used for displaying warning messages.
+     */
+    public Storage(String filePath, Ui ui) {
+        this.filePath = filePath;
+        this.ui = ui;
+    }
+
+    /**
+     * Constructs a {@code Storage} handler for a custom file path with a default {@link Ui}.
      *
      * @param filePath Relative or absolute path to the data storage file.
      */
     public Storage(String filePath) {
-        this.filePath = filePath;
+        this(filePath, new Ui());
     }
 
     /**
      * Constructs a {@code Storage} handler with the default file path {@code "./data/todo_list.txt"}.
      */
     public Storage() {
-        this("./data/todo_list.txt");
+        this("./data/todo_list.txt", new Ui());
     }
 
     /**
@@ -67,14 +80,14 @@ public class Storage {
                 String description = parts[2].trim();
 
                 switch (type) {
-                    case "todo" -> todoList.addNoPrint(new Todo(isMark, description));
+                    case "todo" -> todoList.add(new Todo(isMark, description));
                     case "deadline" -> {
                         if (parts.length >= 4) {
                             try {
                                 LocalDateTime byDate = DateTimeParser.parse(parts[3].trim());
-                                todoList.addNoPrint(new Deadline(isMark, description, byDate));
+                                todoList.add(new Deadline(isMark, description, byDate));
                             } catch (BertException e) {
-                                IO.println("Warning: Skipping task with invalid deadline in " + filePath + ": " + line);
+                                ui.showWarning("Warning: Skipping task with invalid deadline in " + filePath + ": " + line);
                             }
                         }
                     }
@@ -83,9 +96,9 @@ public class Storage {
                             try {
                                 LocalDateTime fromDate = DateTimeParser.parse(parts[3].trim());
                                 LocalDateTime toDate = DateTimeParser.parse(parts[4].trim());
-                                todoList.addNoPrint(new Event(isMark, description, fromDate, toDate));
+                                todoList.add(new Event(isMark, description, fromDate, toDate));
                             } catch (BertException e) {
-                                IO.println("Warning: Skipping task with invalid event dates in " + filePath + ": " + line);
+                                ui.showWarning("Warning: Skipping task with invalid event dates in " + filePath + ": " + line);
                             }
                         }
                     }
@@ -95,7 +108,7 @@ public class Storage {
                 }
             }
         } catch (IOException e) {
-            IO.println("Warning: Unable to load data from " + filePath + " (" + e.getMessage() + ")");
+            ui.showWarning("Warning: Unable to load data from " + filePath + " (" + e.getMessage() + ")");
         }
     }
 
@@ -120,7 +133,7 @@ public class Storage {
 
             Files.write(path, lines);
         } catch (IOException e) {
-            IO.println("Warning: Unable to save data to " + filePath + " (" + e.getMessage() + ")");
+            ui.showWarning("Warning: Unable to save data to " + filePath + " (" + e.getMessage() + ")");
         }
     }
 }
