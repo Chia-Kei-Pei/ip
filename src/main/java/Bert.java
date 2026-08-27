@@ -17,15 +17,21 @@ import java.time.LocalDateTime;
  */
 public class Bert {
 
+    private Storage storage;
+    private TodoList todoList;
+
+    public Bert(String todoListFilePath) {
+        storage = new Storage();
+        todoList = new TodoList();
+    }
+
     /**
      * Entry point for running the BERT assistant CLI application.
      * Initializes storage, loads saved tasks, and starts the command loop.
      *
      * @param args Command line arguments (not used).
      */
-    public static void main(String[] args) {
-        Storage storage = new Storage();
-        TodoList todoList = new TodoList();
+    public void run() {
         storage.load(todoList);
 
         String banner = """
@@ -73,7 +79,7 @@ public class Bert {
      * @throws BertException If an application-level error occurs during execution.
      * @throws IllegalArgumentException If an argument format is invalid.
      */
-    public static void executeCommand(ParsedCommand cmd, TodoList todoList, Storage storage)
+    private void executeCommand(ParsedCommand cmd, TodoList todoList, Storage storage)
             throws BertException, IllegalArgumentException {
         switch (cmd.getCommandType()) {
             case "todo" -> handleTodo(cmd.getArgument(), todoList, storage);
@@ -94,7 +100,7 @@ public class Bert {
      * @param todoList The task list to add the todo to.
      * @param storage The storage handler to persist changes.
      */
-    public static void handleTodo(String description, TodoList todoList, Storage storage) {
+    private void handleTodo(String description, TodoList todoList, Storage storage) {
         Todo todo = new Todo(description);
         todoList.add(todo);
         storage.save(todoList);
@@ -109,7 +115,7 @@ public class Bert {
      * @param storage The storage handler to persist changes.
      * @throws BertException If the date/time format is invalid.
      */
-    public static void handleDeadline(String description, String byDate, TodoList todoList, Storage storage)
+    private void handleDeadline(String description, String byDate, TodoList todoList, Storage storage)
             throws BertException {
         LocalDateTime parsedByDate = DateTimeParser.parse(byDate);
         Deadline deadline = new Deadline(description, parsedByDate);
@@ -127,7 +133,7 @@ public class Bert {
      * @param storage The storage handler to persist changes.
      * @throws BertException If the date/time format is invalid.
      */
-    public static void handleEvent(String description, String fromDate, String toDate, TodoList todoList,
+    private void handleEvent(String description, String fromDate, String toDate, TodoList todoList,
             Storage storage) throws BertException {
         LocalDateTime parsedFromDate = DateTimeParser.parse(fromDate);
         LocalDateTime parsedToDate = DateTimeParser.parse(toDate);
@@ -141,7 +147,7 @@ public class Bert {
      *
      * @param todoList The task list to display.
      */
-    public static void handleList(TodoList todoList) {
+    private void handleList(TodoList todoList) {
         todoList.printList();
     }
 
@@ -153,7 +159,7 @@ public class Bert {
      * @param storage The storage handler to persist changes.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    public static void handleMark(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
+    private void handleMark(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
         todoList.mark(index);
         storage.save(todoList);
     }
@@ -166,7 +172,7 @@ public class Bert {
      * @param storage The storage handler to persist changes.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    public static void handleUnmark(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
+    private void handleUnmark(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
         todoList.unmark(index);
         storage.save(todoList);
     }
@@ -179,8 +185,13 @@ public class Bert {
      * @param storage The storage handler to persist changes.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    public static void handleDelete(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
+    private void handleDelete(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
         todoList.remove(index);
         storage.save(todoList);
+    }
+
+    public static void main(String[] args) {
+        Bert bert = new Bert("data/todo_list.txt");
+        bert.run();
     }
 }
