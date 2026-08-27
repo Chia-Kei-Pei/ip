@@ -44,6 +44,6 @@ public class Event extends Todo {
 
     @Override
     public String toFileFormat() {
-        return String.format("%s | %s | %s", super.toFileFormat(), fromDate, toDate);
+        return String.format("%s | %s | %s", super.toFileFormat(), DateTimeParser.formatForStorage(fromDate), DateTimeParser.formatForStorage(toDate));
     }
 }
