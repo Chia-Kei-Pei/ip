@@ -213,7 +213,7 @@ public class Bert {
      * @param args Command line arguments (not used).
      */
     public static void main(String[] args) {
-        Bert bert = new Bert("data/todo_list.txt", System.in, System.out);
+        Bert bert = new Bert("data/todo_list_1.txt", System.in, System.out);
         bert.run();
     }
 }
