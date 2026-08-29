@@ -68,6 +68,11 @@ public class Todo {
         return String.format("[%s][%s] %s", type, isMarked ? "X" : " ", description);
     }
 
+    /**
+     * Formats this task into a delimited string representation suitable for storage.
+     *
+     * @return Formatted string representing the task for file storage.
+     */
     public String toFileFormat() {
         return String.format("%s | %s | %s", type, isMarked, description);
     }
