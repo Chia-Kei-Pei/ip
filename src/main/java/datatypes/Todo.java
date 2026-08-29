@@ -6,19 +6,19 @@ package datatypes;
  */
 public class Todo {
     protected String type;
-    protected boolean isMark;
+    protected boolean isMarked;
     protected String description;
 
     /**
      * Constructs a {@code Todo} task with a specified completion status and description.
      * Also used as a base constructor by subclasses (e.g., {@link Deadline}, {@link Event}).
      *
-     * @param isMark Whether this task is marked as completed.
+     * @param isMarked Whether this task is marked as completed.
      * @param description The description of the task.
      */
-    public Todo(Boolean isMark, String description) {
+    public Todo(boolean isMarked, String description) {
         this.type = "todo";
-        this.isMark = isMark;
+        this.isMarked = isMarked;
         this.description = description;
     }
 
@@ -46,29 +46,29 @@ public class Todo {
      * @return {@code true} if marked, {@code false} otherwise.
      */
     public boolean isMarked() {
-        return isMark;
+        return isMarked;
     }
 
     /**
      * Marks this task as completed.
      */
     public void mark() {
-        this.isMark = true;
+        this.isMarked = true;
     }
 
     /**
      * Unmarks this task, setting its status to not completed.
      */
     public void unmark() {
-        this.isMark = false;
+        this.isMarked = false;
     }
 
     @Override
     public String toString() {
-        return String.format("[%s][%s] %s", type, isMark ? "X" : " ", description);
+        return String.format("[%s][%s] %s", type, isMarked ? "X" : " ", description);
     }
 
     public String toFileFormat() {
-        return String.format("%s | %s | %s", type, isMark, description);
+        return String.format("%s | %s | %s", type, isMarked, description);
     }
 }

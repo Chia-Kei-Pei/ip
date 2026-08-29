@@ -76,16 +76,16 @@ public class Storage {
                 }
 
                 String type = parts[0].trim();
-                boolean isMark = Boolean.parseBoolean(parts[1].trim()) || parts[1].trim().equals("1");
+                boolean isMarked = Boolean.parseBoolean(parts[1].trim()) || parts[1].trim().equals("1");
                 String description = parts[2].trim();
 
                 switch (type) {
-                    case "todo" -> todoList.add(new Todo(isMark, description));
+                    case "todo" -> todoList.add(new Todo(isMarked, description));
                     case "deadline" -> {
                         if (parts.length >= 4) {
                             try {
                                 LocalDateTime byDate = DateTimeParser.parse(parts[3].trim());
-                                todoList.add(new Deadline(isMark, description, byDate));
+                                todoList.add(new Deadline(isMarked, description, byDate));
                             } catch (BertException e) {
                                 ui.showWarning("Warning: Skipping task with invalid deadline in "
                                         + filePath + ": " + line);
@@ -97,7 +97,7 @@ public class Storage {
                             try {
                                 LocalDateTime fromDate = DateTimeParser.parse(parts[3].trim());
                                 LocalDateTime toDate = DateTimeParser.parse(parts[4].trim());
-                                todoList.add(new Event(isMark, description, fromDate, toDate));
+                                todoList.add(new Event(isMarked, description, fromDate, toDate));
                             } catch (BertException e) {
                                 ui.showWarning("Warning: Skipping task with invalid event dates in "
                                         + filePath + ": " + line);
