@@ -1,7 +1,7 @@
 package exceptions;
 
 /**
- * Represents the base exception for application-specific errors in Bert.
+ * Represents the base exception for application-specific errors in bert.Bert.
  */
 public class BertException extends Exception {
     /**
