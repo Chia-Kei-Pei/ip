@@ -1,5 +1,12 @@
 package storage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import datatypes.Deadline;
 import datatypes.Event;
 import datatypes.Todo;
@@ -7,12 +14,6 @@ import datatypes.TodoList;
 import exceptions.BertException;
 import parser.DateTimeParser;
 import ui.Ui;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Handles persistent storage of {@link TodoList} tasks to and from a local file.

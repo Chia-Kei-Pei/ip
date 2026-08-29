@@ -1,8 +1,8 @@
 package datatypes;
 
-import parser.DateTimeParser;
-
 import java.time.LocalDateTime;
+
+import parser.DateTimeParser;
 
 /**
  * Represents an event task occurring within a specific time period.

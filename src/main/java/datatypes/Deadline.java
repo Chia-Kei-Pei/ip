@@ -1,8 +1,8 @@
 package datatypes;
 
-import parser.DateTimeParser;
-
 import java.time.LocalDateTime;
+
+import parser.DateTimeParser;
 
 /**
  * Represents a task with a deadline date/time constraint.

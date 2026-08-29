@@ -1,5 +1,7 @@
 package bert;
 
+import java.time.LocalDateTime;
+
 import datatypes.Deadline;
 import datatypes.Event;
 import datatypes.Todo;
@@ -12,8 +14,6 @@ import parser.DateTimeParser;
 import parser.ParsedCommand;
 import storage.Storage;
 import ui.Ui;
-
-import java.time.LocalDateTime;
 
 /**
  * The main application class for BERT task assistant.
