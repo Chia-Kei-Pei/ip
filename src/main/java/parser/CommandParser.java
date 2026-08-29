@@ -1,11 +1,12 @@
 package parser;
 
-import exceptions.BertException;
-import exceptions.UnknownCommandException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import exceptions.BertException;
+import exceptions.UnknownCommandException;
 
 /**
  * Parses raw user input strings into structured {@link ParsedCommand} objects.
@@ -83,7 +84,8 @@ public class CommandParser {
         if (commandType.equals("deadline") && token.equalsIgnoreCase("by")) {
             return "by";
         }
-        if (commandType.equals("event") && (token.equalsIgnoreCase("from") || token.equalsIgnoreCase("to"))) {
+        if (commandType.equals("event") && (token.equalsIgnoreCase("from")
+                || token.equalsIgnoreCase("to"))) {
             return token.toLowerCase();
         }
         return null;
@@ -132,8 +134,8 @@ public class CommandParser {
                     i++;
                 } else {
                     throw new IllegalArgumentException(
-                        "Unexpected argument: \"" + token + "\". Arguments containing spaces must be enclosed in quotes."
-                    );
+                            "Unexpected argument: \"" + token + "\"."
+                            + " Arguments containing spaces must be enclosed in quotes.");
                 }
             }
         }

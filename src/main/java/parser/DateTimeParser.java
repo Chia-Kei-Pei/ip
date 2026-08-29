@@ -1,12 +1,13 @@
 package parser;
 
-import exceptions.BertException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+
+import exceptions.BertException;
 
 /**
  * Utility class for parsing and formatting date and time strings.
@@ -32,23 +33,23 @@ public class DateTimeParser {
      * Flexible with single-digit day/month (d/M/yyyy) and optional colons in time (HH:mm or HHmm).
      */
     private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = List.of(
-        DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"),
-        DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
-        DateTimeFormatter.ofPattern("d-M-yyyy HH:mm"),
-        DateTimeFormatter.ofPattern("d-M-yyyy HHmm"),
-        DateTimeFormatter.ofPattern("yyyy-M-d HH:mm"),
-        DateTimeFormatter.ofPattern("yyyy-M-d HHmm"),
-        DateTimeFormatter.ISO_LOCAL_DATE_TIME
+            DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"),
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
+            DateTimeFormatter.ofPattern("d-M-yyyy HH:mm"),
+            DateTimeFormatter.ofPattern("d-M-yyyy HHmm"),
+            DateTimeFormatter.ofPattern("yyyy-M-d HH:mm"),
+            DateTimeFormatter.ofPattern("yyyy-M-d HHmm"),
+            DateTimeFormatter.ISO_LOCAL_DATE_TIME
     );
 
     /**
      * List of supported date-only formatters attempted when no time is supplied.
      */
     private static final List<DateTimeFormatter> DATE_ONLY_FORMATTERS = List.of(
-        DateTimeFormatter.ofPattern("d/M/yyyy"),
-        DateTimeFormatter.ofPattern("d-M-yyyy"),
-        DateTimeFormatter.ofPattern("yyyy-M-d"),
-        DateTimeFormatter.ISO_LOCAL_DATE
+            DateTimeFormatter.ofPattern("d/M/yyyy"),
+            DateTimeFormatter.ofPattern("d-M-yyyy"),
+            DateTimeFormatter.ofPattern("yyyy-M-d"),
+            DateTimeFormatter.ISO_LOCAL_DATE
     );
 
     /**
@@ -90,13 +91,14 @@ public class DateTimeParser {
         }
 
         throw new BertException(
-            "Invalid date/time format: \"" + input + "\". Expected DD/MM/YYYY HH:MM (e.g., 02/12/2019 18:00) or DD/MM/YYYY."
-        );
+                "Invalid date/time format: \"" + input + "\"."
+                + " Expected DD/MM/YYYY HH:MM (e.g., 02/12/2019 18:00) or DD/MM/YYYY.");
     }
 
     /**
      * Formats a {@link LocalDateTime} into a standard user-friendly display string.
-     * If the time is 00:00, outputs the date only (e.g. {@code Dec 02 2019}); otherwise includes time (e.g. {@code Dec 02 2019 at 18:00}).
+     * If the time is 00:00, outputs the date only (e.g. {@code Dec 02 2019});
+     * otherwise includes time (e.g. {@code Dec 02 2019 at 18:00}).
      *
      * @param dateTime The {@link LocalDateTime} to format.
      * @return Formatted date string for user display.

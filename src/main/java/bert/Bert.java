@@ -1,5 +1,7 @@
 package bert;
 
+import java.time.LocalDateTime;
+
 import datatypes.Deadline;
 import datatypes.Event;
 import datatypes.Todo;
@@ -13,8 +15,6 @@ import parser.ParsedCommand;
 import storage.Storage;
 import ui.Ui;
 
-import java.time.LocalDateTime;
-
 /**
  * The main application class for BERT task assistant.
  * Handles user interaction loop, task persistence, and programmatic execution of commands.
@@ -25,6 +25,11 @@ public class Bert {
     private TodoList todoList;
     private Ui ui;
 
+    /**
+     * Constructs a {@code Bert} application instance with the specified task list file path.
+     *
+     * @param todoListFilePath The file path used for task persistence.
+     */
     public Bert(String todoListFilePath) {
         ui = new Ui();
         storage = new Storage(todoListFilePath, ui);
@@ -34,8 +39,6 @@ public class Bert {
     /**
      * Entry point for running the BERT assistant CLI application.
      * Initializes storage, loads saved tasks, and starts the command loop.
-     *
-     * @param args Command line arguments (not used).
      */
     public void run() {
         storage.load(todoList);
@@ -202,6 +205,11 @@ public class Bert {
         storage.save(todoList);
     }
 
+    /**
+     * Starts the BERT application with default storage settings.
+     *
+     * @param args Command line arguments (not used).
+     */
     public static void main(String[] args) {
         Bert bert = new Bert("data/todo_list.txt");
         bert.run();

@@ -1,7 +1,8 @@
 package datatypes;
 
-import exceptions.InvalidIndexException;
 import java.util.ArrayList;
+
+import exceptions.InvalidIndexException;
 
 /**
  * Represents an ordered, 1-based indexed collection of tasks (Todos, Deadlines, Events).

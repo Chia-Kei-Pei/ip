@@ -1,8 +1,8 @@
 package datatypes;
 
-import parser.DateTimeParser;
-
 import java.time.LocalDateTime;
+
+import parser.DateTimeParser;
 
 /**
  * Represents a task with a deadline date/time constraint.
@@ -13,12 +13,12 @@ public class Deadline extends Todo {
     /**
      * Constructs a {@code Deadline} task with specified completion status, description, and due date.
      *
-     * @param isMark Whether this deadline task is marked as completed.
+     * @param isMarked Whether this deadline task is marked as completed.
      * @param description The description of the deadline task.
      * @param byDate The date or time string by which the task must be completed.
      */
-    public Deadline(Boolean isMark, String description, LocalDateTime byDate) {
-        super(isMark, description);
+    public Deadline(boolean isMarked, String description, LocalDateTime byDate) {
+        super(isMarked, description);
         this.type = "deadline";
         this.byDate = byDate;
     }
