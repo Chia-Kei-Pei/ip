@@ -84,7 +84,8 @@ public class CommandParser {
         if (commandType.equals("deadline") && token.equalsIgnoreCase("by")) {
             return "by";
         }
-        if (commandType.equals("event") && (token.equalsIgnoreCase("from") || token.equalsIgnoreCase("to"))) {
+        if (commandType.equals("event") && (token.equalsIgnoreCase("from")
+                || token.equalsIgnoreCase("to"))) {
             return token.toLowerCase();
         }
         return null;
