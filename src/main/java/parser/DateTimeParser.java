@@ -32,23 +32,23 @@ public class DateTimeParser {
      * Flexible with single-digit day/month (d/M/yyyy) and optional colons in time (HH:mm or HHmm).
      */
     private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = List.of(
-        DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"),
-        DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
-        DateTimeFormatter.ofPattern("d-M-yyyy HH:mm"),
-        DateTimeFormatter.ofPattern("d-M-yyyy HHmm"),
-        DateTimeFormatter.ofPattern("yyyy-M-d HH:mm"),
-        DateTimeFormatter.ofPattern("yyyy-M-d HHmm"),
-        DateTimeFormatter.ISO_LOCAL_DATE_TIME
+            DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"),
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
+            DateTimeFormatter.ofPattern("d-M-yyyy HH:mm"),
+            DateTimeFormatter.ofPattern("d-M-yyyy HHmm"),
+            DateTimeFormatter.ofPattern("yyyy-M-d HH:mm"),
+            DateTimeFormatter.ofPattern("yyyy-M-d HHmm"),
+            DateTimeFormatter.ISO_LOCAL_DATE_TIME
     );
 
     /**
      * List of supported date-only formatters attempted when no time is supplied.
      */
     private static final List<DateTimeFormatter> DATE_ONLY_FORMATTERS = List.of(
-        DateTimeFormatter.ofPattern("d/M/yyyy"),
-        DateTimeFormatter.ofPattern("d-M-yyyy"),
-        DateTimeFormatter.ofPattern("yyyy-M-d"),
-        DateTimeFormatter.ISO_LOCAL_DATE
+            DateTimeFormatter.ofPattern("d/M/yyyy"),
+            DateTimeFormatter.ofPattern("d-M-yyyy"),
+            DateTimeFormatter.ofPattern("yyyy-M-d"),
+            DateTimeFormatter.ISO_LOCAL_DATE
     );
 
     /**
