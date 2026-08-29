@@ -132,8 +132,8 @@ public class CommandParser {
                     i++;
                 } else {
                     throw new IllegalArgumentException(
-                        "Unexpected argument: \"" + token + "\". Arguments containing spaces must be enclosed in quotes."
-                    );
+                            "Unexpected argument: \"" + token + "\"."
+                            + " Arguments containing spaces must be enclosed in quotes.");
                 }
             }
         }

@@ -87,7 +87,8 @@ public class Storage {
                                 LocalDateTime byDate = DateTimeParser.parse(parts[3].trim());
                                 todoList.add(new Deadline(isMark, description, byDate));
                             } catch (BertException e) {
-                                ui.showWarning("Warning: Skipping task with invalid deadline in " + filePath + ": " + line);
+                                ui.showWarning("Warning: Skipping task with invalid deadline in "
+                                        + filePath + ": " + line);
                             }
                         }
                     }
@@ -98,7 +99,8 @@ public class Storage {
                                 LocalDateTime toDate = DateTimeParser.parse(parts[4].trim());
                                 todoList.add(new Event(isMark, description, fromDate, toDate));
                             } catch (BertException e) {
-                                ui.showWarning("Warning: Skipping task with invalid event dates in " + filePath + ": " + line);
+                                ui.showWarning("Warning: Skipping task with invalid event dates in "
+                                        + filePath + ": " + line);
                             }
                         }
                     }

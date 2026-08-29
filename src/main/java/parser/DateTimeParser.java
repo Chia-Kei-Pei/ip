@@ -90,13 +90,14 @@ public class DateTimeParser {
         }
 
         throw new BertException(
-            "Invalid date/time format: \"" + input + "\". Expected DD/MM/YYYY HH:MM (e.g., 02/12/2019 18:00) or DD/MM/YYYY."
-        );
+                "Invalid date/time format: \"" + input + "\"."
+                + " Expected DD/MM/YYYY HH:MM (e.g., 02/12/2019 18:00) or DD/MM/YYYY.");
     }
 
     /**
      * Formats a {@link LocalDateTime} into a standard user-friendly display string.
-     * If the time is 00:00, outputs the date only (e.g. {@code Dec 02 2019}); otherwise includes time (e.g. {@code Dec 02 2019 at 18:00}).
+     * If the time is 00:00, outputs the date only (e.g. {@code Dec 02 2019});
+     * otherwise includes time (e.g. {@code Dec 02 2019 at 18:00}).
      *
      * @param dateTime The {@link LocalDateTime} to format.
      * @return Formatted date string for user display.
