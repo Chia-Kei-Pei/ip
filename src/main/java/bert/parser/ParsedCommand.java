@@ -1,4 +1,4 @@
-package parser;
+package bert.parser;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

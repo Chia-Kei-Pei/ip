@@ -1,4 +1,4 @@
-package exceptions;
+package bert.exceptions;
 
 /**
  * Signals that an invalid or out-of-bounds task index was specified.

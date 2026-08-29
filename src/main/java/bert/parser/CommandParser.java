@@ -1,12 +1,12 @@
-package parser;
+package bert.parser;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import exceptions.BertException;
-import exceptions.UnknownCommandException;
+import bert.exceptions.BertException;
+import bert.exceptions.UnknownCommandException;
 
 /**
  * Parses raw user input strings into structured {@link ParsedCommand} objects.

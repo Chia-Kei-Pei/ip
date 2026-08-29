@@ -1,4 +1,4 @@
-package exceptions;
+package bert.exceptions;
 
 /**
  * Signals that a required field or argument for a command is missing or empty.

@@ -1,19 +1,21 @@
 package bert;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 
-import datatypes.Deadline;
-import datatypes.Event;
-import datatypes.Todo;
-import datatypes.TodoList;
-import exceptions.BertException;
-import exceptions.InvalidIndexException;
-import exceptions.UnknownCommandException;
-import parser.CommandParser;
-import parser.DateTimeParser;
-import parser.ParsedCommand;
-import storage.Storage;
-import ui.Ui;
+import bert.datatypes.Deadline;
+import bert.datatypes.Event;
+import bert.datatypes.Todo;
+import bert.datatypes.TodoList;
+import bert.exceptions.BertException;
+import bert.exceptions.InvalidIndexException;
+import bert.exceptions.UnknownCommandException;
+import bert.parser.CommandParser;
+import bert.parser.DateTimeParser;
+import bert.parser.ParsedCommand;
+import bert.storage.Storage;
+import bert.ui.Ui;
 
 /**
  * The main application class for BERT task assistant.
@@ -30,8 +32,8 @@ public class Bert {
      *
      * @param todoListFilePath The file path used for task persistence.
      */
-    public Bert(String todoListFilePath) {
-        ui = new Ui();
+    public Bert(String todoListFilePath, InputStream in, OutputStream out) {
+        ui = new Ui(in, out);
         storage = new Storage(todoListFilePath, ui);
         todoList = new TodoList();
     }
@@ -211,7 +213,7 @@ public class Bert {
      * @param args Command line arguments (not used).
      */
     public static void main(String[] args) {
-        Bert bert = new Bert("data/todo_list.txt");
+        Bert bert = new Bert("data/todo_list_1.txt", System.in, System.out);
         bert.run();
     }
 }

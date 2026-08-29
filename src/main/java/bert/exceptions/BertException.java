@@ -1,4 +1,4 @@
-package exceptions;
+package bert.exceptions;
 
 /**
  * Represents the base exception for application-specific errors in bert.Bert.

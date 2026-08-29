@@ -1,4 +1,4 @@
-package storage;
+package bert.storage;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import datatypes.Deadline;
-import datatypes.Event;
-import datatypes.Todo;
-import datatypes.TodoList;
-import exceptions.BertException;
-import parser.DateTimeParser;
-import ui.Ui;
+import bert.datatypes.Deadline;
+import bert.datatypes.Event;
+import bert.datatypes.Todo;
+import bert.datatypes.TodoList;
+import bert.exceptions.BertException;
+import bert.parser.DateTimeParser;
+import bert.ui.Ui;
 
 /**
  * Handles persistent storage of {@link TodoList} tasks to and from a local file.
@@ -32,22 +32,6 @@ public class Storage {
     public Storage(String filePath, Ui ui) {
         this.filePath = filePath;
         this.ui = ui;
-    }
-
-    /**
-     * Constructs a {@code Storage} handler for a custom file path with a default {@link Ui}.
-     *
-     * @param filePath Relative or absolute path to the data storage file.
-     */
-    public Storage(String filePath) {
-        this(filePath, new Ui());
-    }
-
-    /**
-     * Constructs a {@code Storage} handler with the default file path {@code "./data/todo_list.txt"}.
-     */
-    public Storage() {
-        this("./data/todo_list.txt", new Ui());
     }
 
     /**
