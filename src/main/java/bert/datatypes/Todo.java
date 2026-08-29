@@ -1,4 +1,4 @@
-package datatypes;
+package bert.datatypes;
 
 /**
  * Represents a standard task in the task list.

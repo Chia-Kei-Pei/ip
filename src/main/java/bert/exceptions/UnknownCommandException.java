@@ -1,4 +1,4 @@
-package exceptions;
+package bert.exceptions;
 
 /**
  * Signals that an unrecognized or unsupported command was entered.

@@ -1,7 +1,7 @@
-package ui;
+package bert.ui;
 
-import datatypes.Todo;
-import datatypes.TodoList;
+import bert.datatypes.Todo;
+import bert.datatypes.TodoList;
 
 /**
  * Handles all user interactions and console input/output for BERT assistant.

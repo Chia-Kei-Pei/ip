@@ -1,8 +1,8 @@
-package datatypes;
+package bert.datatypes;
 
 import java.time.LocalDateTime;
 
-import parser.DateTimeParser;
+import bert.parser.DateTimeParser;
 
 /**
  * Represents an event task occurring within a specific time period.

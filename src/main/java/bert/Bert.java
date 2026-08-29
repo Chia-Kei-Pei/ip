@@ -2,18 +2,18 @@ package bert;
 
 import java.time.LocalDateTime;
 
-import datatypes.Deadline;
-import datatypes.Event;
-import datatypes.Todo;
-import datatypes.TodoList;
-import exceptions.BertException;
-import exceptions.InvalidIndexException;
-import exceptions.UnknownCommandException;
-import parser.CommandParser;
-import parser.DateTimeParser;
-import parser.ParsedCommand;
-import storage.Storage;
-import ui.Ui;
+import bert.datatypes.Deadline;
+import bert.datatypes.Event;
+import bert.datatypes.Todo;
+import bert.datatypes.TodoList;
+import bert.exceptions.BertException;
+import bert.exceptions.InvalidIndexException;
+import bert.exceptions.UnknownCommandException;
+import bert.parser.CommandParser;
+import bert.parser.DateTimeParser;
+import bert.parser.ParsedCommand;
+import bert.storage.Storage;
+import bert.ui.Ui;
 
 /**
  * The main application class for BERT task assistant.

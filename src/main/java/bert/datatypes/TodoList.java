@@ -1,8 +1,8 @@
-package datatypes;
+package bert.datatypes;
 
 import java.util.ArrayList;
 
-import exceptions.InvalidIndexException;
+import bert.exceptions.InvalidIndexException;
 
 /**
  * Represents an ordered, 1-based indexed collection of tasks (Todos, Deadlines, Events).
