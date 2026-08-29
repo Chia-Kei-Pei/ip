@@ -35,22 +35,6 @@ public class Storage {
     }
 
     /**
-     * Constructs a {@code Storage} handler for a custom file path with a default {@link Ui}.
-     *
-     * @param filePath Relative or absolute path to the data storage file.
-     */
-    public Storage(String filePath) {
-        this(filePath, new Ui());
-    }
-
-    /**
-     * Constructs a {@code Storage} handler with the default file path {@code "./data/todo_list.txt"}.
-     */
-    public Storage() {
-        this("./data/todo_list.txt", new Ui());
-    }
-
-    /**
      * Loads tasks from the save file into the provided {@link TodoList}.
      * If the file does not exist, no action is taken and the list remains as-is.
      * Corrupted or unrecognized lines are safely ignored.

@@ -1,5 +1,7 @@
 package bert;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 
 import bert.datatypes.Deadline;
@@ -30,8 +32,8 @@ public class Bert {
      *
      * @param todoListFilePath The file path used for task persistence.
      */
-    public Bert(String todoListFilePath) {
-        ui = new Ui();
+    public Bert(String todoListFilePath, InputStream in, OutputStream out) {
+        ui = new Ui(in, out);
         storage = new Storage(todoListFilePath, ui);
         todoList = new TodoList();
     }
@@ -211,7 +213,7 @@ public class Bert {
      * @param args Command line arguments (not used).
      */
     public static void main(String[] args) {
-        Bert bert = new Bert("data/todo_list.txt");
+        Bert bert = new Bert("data/todo_list.txt", System.in, System.out);
         bert.run();
     }
 }

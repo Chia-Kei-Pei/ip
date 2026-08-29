@@ -2,6 +2,9 @@ package bert;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BertTest {
@@ -11,7 +14,11 @@ class BertTest {
      */
     @Test
     void run_allCliCommands_noErrors() {
-        Bert bert = new Bert("data/todo_list.txt");
+        String simulatedInput = "todo read book\nbye\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        Bert bert = new Bert("data/todo_list.txt", in, out);
         bert.run();
 
         // write commands to cli
