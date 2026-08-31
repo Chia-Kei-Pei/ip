@@ -8,13 +8,13 @@ import bert.exceptions.InvalidIndexException;
  * Represents an ordered, 1-based indexed collection of tasks (Todos, Deadlines, Events).
  * Handles adding, retrieving, removing, marking, and unmarking tasks with range validation.
  */
-public class TodoList {
-    private final ArrayList<Todo> todos;
+public class TaskList {
+    private final ArrayList<Task> todos;
 
     /**
      * Initializes an empty todo list.
      */
-    public TodoList() {
+    public TaskList() {
         this.todos = new ArrayList<>();
     }
 
@@ -23,7 +23,7 @@ public class TodoList {
      *
      * @param todo The task to add.
      */
-    public void add(Todo todo) {
+    public void add(Task todo) {
         todos.add(todo);
     }
 
@@ -46,12 +46,12 @@ public class TodoList {
      * @return The task at the given index.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    public Todo get(int index) throws InvalidIndexException {
+    public Task get(int index) throws InvalidIndexException {
         validateIndex(index);
         return todos.get(index - 1);
     }
 
-    public ArrayList<Todo> getTodos() {
+    public ArrayList<Task> getTodos() {
         return todos;
     }
 
@@ -62,7 +62,7 @@ public class TodoList {
      * @return The removed task.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    public Todo remove(int index) throws InvalidIndexException {
+    public Task remove(int index) throws InvalidIndexException {
         validateIndex(index);
         return todos.remove(index - 1);
     }
@@ -74,8 +74,8 @@ public class TodoList {
      * @return The marked task.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    public Todo mark(int index) throws InvalidIndexException {
-        Todo todo = get(index);
+    public Task mark(int index) throws InvalidIndexException {
+        Task todo = get(index);
         todo.mark();
         return todo;
     }
@@ -87,8 +87,8 @@ public class TodoList {
      * @return The unmarked task.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    public Todo unmark(int index) throws InvalidIndexException {
-        Todo todo = get(index);
+    public Task unmark(int index) throws InvalidIndexException {
+        Task todo = get(index);
         todo.unmark();
         return todo;
     }

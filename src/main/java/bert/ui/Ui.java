@@ -1,7 +1,7 @@
 package bert.ui;
 
-import bert.datatypes.Todo;
-import bert.datatypes.TodoList;
+import bert.datatypes.Task;
+import bert.datatypes.TaskList;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -87,7 +87,7 @@ public class Ui {
      *
      * @param todo The task that was added.
      */
-    public void showAdded(Todo todo) {
+    public void showAdded(Task todo) {
         printStream.println("Added " + todo.getType());
         printStream.println(todo);
     }
@@ -97,7 +97,7 @@ public class Ui {
      *
      * @param todo The task that was removed.
      */
-    public void showRemoved(Todo todo) {
+    public void showRemoved(Task todo) {
         printStream.println("Removed todo");
         printStream.println(todo);
     }
@@ -108,7 +108,7 @@ public class Ui {
      * @param index The 1-based index of the task.
      * @param todo The task that was marked.
      */
-    public void showMarked(int index, Todo todo) {
+    public void showMarked(int index, Task todo) {
         printStream.println("Marked Item.");
         printStream.println(String.format("%d.%s", index, todo.toString()));
     }
@@ -119,7 +119,7 @@ public class Ui {
      * @param index The 1-based index of the task.
      * @param todo The task that is already marked.
      */
-    public void showAlreadyMarked(int index, Todo todo) {
+    public void showAlreadyMarked(int index, Task todo) {
         printStream.println("Item already marked.");
         printStream.println(String.format("%d.%s", index, todo.toString()));
     }
@@ -130,7 +130,7 @@ public class Ui {
      * @param index The 1-based index of the task.
      * @param todo The task that was unmarked.
      */
-    public void showUnmarked(int index, Todo todo) {
+    public void showUnmarked(int index, Task todo) {
         printStream.println("Unmarked Item.");
         printStream.println(String.format("%d.%s", index, todo.toString()));
     }
@@ -141,7 +141,7 @@ public class Ui {
      * @param index The 1-based index of the task.
      * @param todo The task that is already unmarked.
      */
-    public void showAlreadyUnmarked(int index, Todo todo) {
+    public void showAlreadyUnmarked(int index, Task todo) {
         printStream.println("Item already unmarked.");
         printStream.println(String.format("%d.%s", index, todo.toString()));
     }
@@ -149,16 +149,16 @@ public class Ui {
     /**
      * Displays all tasks in the list, or an empty list notification if no tasks exist.
      *
-     * @param todoList The list of tasks to display.
+     * @param taskList The list of tasks to display.
      */
-    public void showTodoList(TodoList todoList) {
-        if (todoList.isEmpty()) {
+    public void showTodoList(TaskList taskList) {
+        if (taskList.isEmpty()) {
             printStream.println("List is empty.");
             return;
         }
 
-        for (int i = 0; i < todoList.size(); i++) {
-            printStream.println(String.format("%d.%s", i + 1, todoList.getTodos().get(i).toString()));
+        for (int i = 0; i < taskList.size(); i++) {
+            printStream.println(String.format("%d.%s", i + 1, taskList.getTodos().get(i).toString()));
         }
     }
 }

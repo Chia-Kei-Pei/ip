@@ -4,30 +4,30 @@ package bert.datatypes;
  * Represents a standard task in the task list.
  * Serves as the base class for specialized task types such as {@link Deadline} and {@link Event}.
  */
-public class Todo {
+public class Task {
     protected String type;
     protected boolean isMarked;
     protected String description;
 
     /**
-     * Constructs a {@code Todo} task with a specified completion status and description.
+     * Constructs a {@code Task} task with a specified completion status and description.
      * Also used as a base constructor by subclasses (e.g., {@link Deadline}, {@link Event}).
      *
      * @param isMarked Whether this task is marked as completed.
      * @param description The description of the task.
      */
-    public Todo(boolean isMarked, String description) {
+    public Task(boolean isMarked, String description) {
         this.type = "todo";
         this.isMarked = isMarked;
         this.description = description;
     }
 
     /**
-     * Constructs an unmarked {@code Todo} task with default completion status set to {@code false}.
+     * Constructs an unmarked {@code Task} task with default completion status set to {@code false}.
      *
      * @param description The description of the todo task.
      */
-    public Todo(String description) {
+    public Task(String description) {
         this(false, description);
     }
 

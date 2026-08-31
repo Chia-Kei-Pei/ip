@@ -7,7 +7,7 @@ import bert.parser.DateTimeParser;
 /**
  * Represents a task with a deadline date/time constraint.
  */
-public class Deadline extends Todo {
+public class Deadline extends Task {
     protected LocalDateTime byDate;
 
     /**

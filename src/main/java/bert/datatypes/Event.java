@@ -7,7 +7,7 @@ import bert.parser.DateTimeParser;
 /**
  * Represents an event task occurring within a specific time period.
  */
-public class Event extends Todo {
+public class Event extends Task {
     protected LocalDateTime fromDate;
     protected LocalDateTime toDate;
 

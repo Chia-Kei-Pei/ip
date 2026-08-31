@@ -4,10 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 
-import bert.datatypes.Deadline;
-import bert.datatypes.Event;
-import bert.datatypes.Todo;
-import bert.datatypes.TodoList;
+import bert.datatypes.*;
 import bert.exceptions.BertException;
 import bert.exceptions.InvalidIndexException;
 import bert.exceptions.UnknownCommandException;
@@ -24,7 +21,7 @@ import bert.ui.Ui;
 public class Bert {
 
     private Storage storage;
-    private TodoList todoList;
+    private TaskList taskList;
     private Ui ui;
 
     /**
@@ -35,7 +32,7 @@ public class Bert {
     public Bert(String todoListFilePath, InputStream in, OutputStream out) {
         ui = new Ui(in, out);
         storage = new Storage(todoListFilePath, ui);
-        todoList = new TodoList();
+        taskList = new TaskList();
     }
 
     /**
@@ -43,7 +40,7 @@ public class Bert {
      * Initializes storage, loads saved tasks, and starts the command loop.
      */
     public void run() {
-        storage.load(todoList);
+        storage.load(taskList);
 
         ui.greeting();
         ui.showLine();
@@ -60,7 +57,7 @@ public class Bert {
                     return;
                 }
 
-                executeCommand(command, todoList, storage);
+                executeCommand(command, taskList, storage);
             } catch (BertException | IllegalArgumentException e) {
                 ui.showError(e.getMessage());
             } catch (IndexOutOfBoundsException e) {
@@ -75,37 +72,37 @@ public class Bert {
      * Executes a parsed command by extracting its arguments and dispatching to the appropriate handler method.
      *
      * @param cmd The parsed command containing command type, arguments, and flags.
-     * @param todoList The task list to operate on.
+     * @param taskList The task list to operate on.
      * @param storage The storage handler used to persist modifications.
      * @throws BertException If an application-level error occurs during execution.
      * @throws IllegalArgumentException If an argument format is invalid.
      */
-    private void executeCommand(ParsedCommand cmd, TodoList todoList, Storage storage)
+    private void executeCommand(ParsedCommand cmd, TaskList taskList, Storage storage)
             throws BertException, IllegalArgumentException {
         switch (cmd.getCommandType()) {
-            case "todo" -> handleTodo(cmd.getArgument(), todoList, storage);
-            case "deadline" -> handleDeadline(cmd.getArgument(), cmd.getFlag("by"), todoList, storage);
-            case "event" -> handleEvent(cmd.getArgument(), cmd.getFlag("from"), cmd.getFlag("to"), todoList, storage);
-            case "list" -> handleList(todoList);
-            case "mark" -> handleMark(cmd.getArgumentAsInt(), todoList, storage);
-            case "unmark" -> handleUnmark(cmd.getArgumentAsInt(), todoList, storage);
-            case "delete", "remove" -> handleDelete(cmd.getArgumentAsInt(), todoList, storage);
+            case "todo" -> handleTodo(cmd.getArgument(), taskList, storage);
+            case "deadline" -> handleDeadline(cmd.getArgument(), cmd.getFlag("by"), taskList, storage);
+            case "event" -> handleEvent(cmd.getArgument(), cmd.getFlag("from"), cmd.getFlag("to"), taskList, storage);
+            case "list" -> handleList(taskList);
+            case "mark" -> handleMark(cmd.getArgumentAsInt(), taskList, storage);
+            case "unmark" -> handleUnmark(cmd.getArgumentAsInt(), taskList, storage);
+            case "delete", "remove" -> handleDelete(cmd.getArgumentAsInt(), taskList, storage);
             default -> throw new UnknownCommandException(cmd.getCommandType());
         }
     }
 
     /**
-     * Programmatically adds a new {@link Todo} task to the list and saves changes.
+     * Programmatically adds a new {@link Task} task to the list and saves changes.
      *
      * @param description The description of the todo task.
-     * @param todoList The task list to add the todo to.
+     * @param taskList The task list to add the todo to.
      * @param storage The storage handler to persist changes.
      */
-    private void handleTodo(String description, TodoList todoList, Storage storage) {
-        Todo todo = new Todo(description);
-        todoList.add(todo);
+    private void handleTodo(String description, TaskList taskList, Storage storage) {
+        Task todo = new Task(description);
+        taskList.add(todo);
         ui.showAdded(todo);
-        storage.save(todoList);
+        storage.save(taskList);
     }
 
     /**
@@ -113,17 +110,17 @@ public class Bert {
      *
      * @param description The description of the deadline.
      * @param byDate The date or time string by which the task must be completed.
-     * @param todoList The task list to add the deadline to.
+     * @param taskList The task list to add the deadline to.
      * @param storage The storage handler to persist changes.
      * @throws BertException If the date/time format is invalid.
      */
-    private void handleDeadline(String description, String byDate, TodoList todoList, Storage storage)
+    private void handleDeadline(String description, String byDate, TaskList taskList, Storage storage)
             throws BertException {
         LocalDateTime parsedByDate = DateTimeParser.parse(byDate);
         Deadline deadline = new Deadline(description, parsedByDate);
-        todoList.add(deadline);
+        taskList.add(deadline);
         ui.showAdded(deadline);
-        storage.save(todoList);
+        storage.save(taskList);
     }
 
     /**
@@ -132,45 +129,45 @@ public class Bert {
      * @param description The description of the event.
      * @param fromDate The starting date or time of the event.
      * @param toDate The ending date or time of the event.
-     * @param todoList The task list to add the event to.
+     * @param taskList The task list to add the event to.
      * @param storage The storage handler to persist changes.
      * @throws BertException If the date/time format is invalid.
      */
-    private void handleEvent(String description, String fromDate, String toDate, TodoList todoList,
+    private void handleEvent(String description, String fromDate, String toDate, TaskList taskList,
             Storage storage) throws BertException {
         LocalDateTime parsedFromDate = DateTimeParser.parse(fromDate);
         LocalDateTime parsedToDate = DateTimeParser.parse(toDate);
         Event event = new Event(description, parsedFromDate, parsedToDate);
-        todoList.add(event);
+        taskList.add(event);
         ui.showAdded(event);
-        storage.save(todoList);
+        storage.save(taskList);
     }
 
     /**
      * Programmatically prints all items in the task list.
      *
-     * @param todoList The task list to display.
+     * @param taskList The task list to display.
      */
-    private void handleList(TodoList todoList) {
-        ui.showTodoList(todoList);
+    private void handleList(TaskList taskList) {
+        ui.showTodoList(taskList);
     }
 
     /**
      * Programmatically marks a task at the given 1-based index as completed and saves changes.
      *
      * @param index The 1-based index of the task.
-     * @param todoList The task list containing the task.
+     * @param taskList The task list containing the task.
      * @param storage The storage handler to persist changes.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    private void handleMark(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
-        Todo todo = todoList.get(index);
+    private void handleMark(int index, TaskList taskList, Storage storage) throws InvalidIndexException {
+        Task todo = taskList.get(index);
         if (todo.isMarked()) {
             ui.showAlreadyMarked(index, todo);
         } else {
-            todoList.mark(index);
+            taskList.mark(index);
             ui.showMarked(index, todo);
-            storage.save(todoList);
+            storage.save(taskList);
         }
     }
 
@@ -178,18 +175,18 @@ public class Bert {
      * Programmatically unmarks a task at the given 1-based index and saves changes.
      *
      * @param index The 1-based index of the task.
-     * @param todoList The task list containing the task.
+     * @param taskList The task list containing the task.
      * @param storage The storage handler to persist changes.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    private void handleUnmark(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
-        Todo todo = todoList.get(index);
+    private void handleUnmark(int index, TaskList taskList, Storage storage) throws InvalidIndexException {
+        Task todo = taskList.get(index);
         if (!todo.isMarked()) {
             ui.showAlreadyUnmarked(index, todo);
         } else {
-            todoList.unmark(index);
+            taskList.unmark(index);
             ui.showUnmarked(index, todo);
-            storage.save(todoList);
+            storage.save(taskList);
         }
     }
 
@@ -197,14 +194,14 @@ public class Bert {
      * Programmatically removes a task at the given 1-based index from the list and saves changes.
      *
      * @param index The 1-based index of the task.
-     * @param todoList The task list to remove the task from.
+     * @param taskList The task list to remove the task from.
      * @param storage The storage handler to persist changes.
      * @throws InvalidIndexException If the index is outside the valid range.
      */
-    private void handleDelete(int index, TodoList todoList, Storage storage) throws InvalidIndexException {
-        Todo removed = todoList.remove(index);
+    private void handleDelete(int index, TaskList taskList, Storage storage) throws InvalidIndexException {
+        Task removed = taskList.remove(index);
         ui.showRemoved(removed);
-        storage.save(todoList);
+        storage.save(taskList);
     }
 
     /**
