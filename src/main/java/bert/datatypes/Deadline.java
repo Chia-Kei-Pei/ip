@@ -19,7 +19,7 @@ public class Deadline extends Task {
      */
     public Deadline(boolean isMarked, String description, LocalDateTime byDate) {
         super(isMarked, description);
-        this.type = "deadline";
+        type = "deadline";
         this.byDate = byDate;
     }
 
