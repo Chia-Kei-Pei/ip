@@ -12,7 +12,7 @@ import bert.exceptions.BertException;
 /**
  * Utility class for parsing and formatting date and time strings.
  * <p>
- * The default date-time pattern is {@code DD/MM/YYYY HH:MM} (e.g. {@code 02/12/2019 18:00}).
+ * The default date-time pattern is {@code dd/MM/yyyy HH:mm} (e.g. {@code 02/12/2019 18:00}).
  * Multiple common formats are supported for user convenience, falling back to a start-of-day
  * time (00:00) when only a date is provided.
  * </p>
