@@ -110,4 +110,22 @@ public class TaskList {
     public boolean isEmpty() {
         return todos.isEmpty();
     }
+
+    /**
+     * Finds and returns a task list of tasks whose descriptions contain the specified keyword.
+     * The search is case-insensitive.
+     *
+     * @param keyword The search keyword.
+     * @return A {@code TaskList} containing all matching tasks.
+     */
+    public TaskList find(String keyword) {
+        TaskList matchingTasks = new TaskList();
+        String lowerKeyword = keyword.toLowerCase();
+        for (Task todo : todos) {
+            if (todo.getDescription().toLowerCase().contains(lowerKeyword)) {
+                matchingTasks.add(todo);
+            }
+        }
+        return matchingTasks;
+    }
 }

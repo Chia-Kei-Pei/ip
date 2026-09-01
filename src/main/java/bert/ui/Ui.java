@@ -161,4 +161,21 @@ public class Ui {
             printStream.println(String.format("%d.%s", i + 1, taskList.getTodos().get(i).toString()));
         }
     }
+
+    /**
+     * Displays all matching tasks found from a search, or a message indicating no matches were found.
+     *
+     * @param foundTasks The list of matching tasks.
+     */
+    public void showFoundTasks(TaskList foundTasks) {
+        if (foundTasks.isEmpty()) {
+            printStream.println("No matching tasks found.");
+            return;
+        }
+
+        printStream.println("Matching tasks:");
+        for (int i = 0; i < foundTasks.size(); i++) {
+            printStream.println(String.format("%d.%s", i + 1, foundTasks.getTodos().get(i).toString()));
+        }
+    }
 }

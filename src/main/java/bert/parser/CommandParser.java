@@ -194,6 +194,11 @@ public class CommandParser {
                     throw new IllegalArgumentException("Index must be specified for " + commandType);
                 }
                 break;
+            case "find":
+                if (argument.isEmpty()) {
+                    throw new IllegalArgumentException("Keyword for find should not be empty");
+                }
+                break;
             case "list", "bye", "exit", "quit":
                 break;
             default:
