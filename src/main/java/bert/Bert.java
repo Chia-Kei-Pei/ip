@@ -84,6 +84,7 @@ public class Bert {
             case "deadline" -> handleDeadline(cmd.getArgument(), cmd.getFlag("by"), taskList, storage);
             case "event" -> handleEvent(cmd.getArgument(), cmd.getFlag("from"), cmd.getFlag("to"), taskList, storage);
             case "list" -> handleList(taskList);
+            case "find" -> handleFind(cmd.getArgument(), taskList);
             case "mark" -> handleMark(cmd.getArgumentAsInt(), taskList, storage);
             case "unmark" -> handleUnmark(cmd.getArgumentAsInt(), taskList, storage);
             case "delete", "remove" -> handleDelete(cmd.getArgumentAsInt(), taskList, storage);
@@ -150,6 +151,17 @@ public class Bert {
      */
     private void handleList(TaskList taskList) {
         ui.showTodoList(taskList);
+    }
+
+    /**
+     * Finds and displays tasks matching the specified keyword in their description.
+     *
+     * @param keyword The keyword to search for.
+     * @param taskList The task list to search within.
+     */
+    private void handleFind(String keyword, TaskList taskList) {
+        TaskList matchingTasks = taskList.find(keyword);
+        ui.showFoundTasks(matchingTasks);
     }
 
     /**

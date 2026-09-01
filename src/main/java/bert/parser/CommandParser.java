@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import bert.exceptions.BertException;
+import bert.exceptions.MissingFieldException;
 import bert.exceptions.UnknownCommandException;
 
 /**
@@ -161,42 +162,47 @@ public class CommandParser {
     private static void validateCommand(String commandType, String argument, Map<String, String> flags)
             throws BertException, IllegalArgumentException {
         switch (commandType) {
-        case "todo":
-            if (argument.isEmpty()) {
-                throw new IllegalArgumentException("Name of todo should not be empty");
-            }
-            break;
-        case "deadline":
-            if (argument.isEmpty()) {
-                throw new IllegalArgumentException("Name of deadline should not be empty");
-            }
-            String byDate = flags.get("by");
-            if (byDate == null || byDate.isEmpty()) {
-                throw new IllegalArgumentException("ByDate of deadline should not be empty");
-            }
-            break;
-        case "event":
-            if (argument.isEmpty()) {
-                throw new IllegalArgumentException("Name of event should not be empty");
-            }
-            String fromDate = flags.get("from");
-            if (fromDate == null || fromDate.isEmpty()) {
-                throw new IllegalArgumentException("FromDate of event should not be empty");
-            }
-            String toDate = flags.get("to");
-            if (toDate == null || toDate.isEmpty()) {
-                throw new IllegalArgumentException("ToDate of event should not be empty");
-            }
-            break;
-        case "mark", "unmark", "delete", "remove":
-            if (argument.isEmpty()) {
-                throw new IllegalArgumentException("Index must be specified for " + commandType);
-            }
-            break;
-        case "list", "bye", "exit", "quit":
-            break;
-        default:
-            throw new UnknownCommandException(commandType);
+            case "todo":
+                if (argument.isEmpty()) {
+                    throw new IllegalArgumentException("Name of todo should not be empty");
+                }
+                break;
+            case "deadline":
+                if (argument.isEmpty()) {
+                    throw new IllegalArgumentException("Name of deadline should not be empty");
+                }
+                String byDate = flags.get("by");
+                if (byDate == null || byDate.isEmpty()) {
+                    throw new IllegalArgumentException("ByDate of deadline should not be empty");
+                }
+                break;
+            case "event":
+                if (argument.isEmpty()) {
+                    throw new IllegalArgumentException("Name of event should not be empty");
+                }
+                String fromDate = flags.get("from");
+                if (fromDate == null || fromDate.isEmpty()) {
+                    throw new IllegalArgumentException("FromDate of event should not be empty");
+                }
+                String toDate = flags.get("to");
+                if (toDate == null || toDate.isEmpty()) {
+                    throw new IllegalArgumentException("ToDate of event should not be empty");
+                }
+                break;
+            case "mark", "unmark", "delete", "remove":
+                if (argument.isEmpty()) {
+                    throw new IllegalArgumentException("Index must be specified for " + commandType);
+                }
+                break;
+            case "find":
+                if (argument.isEmpty()) {
+                    throw new IllegalArgumentException("Keyword for find should not be empty");
+                }
+                break;
+            case "list", "bye", "exit", "quit":
+                break;
+            default:
+                throw new UnknownCommandException(commandType);
         }
     }
 }
