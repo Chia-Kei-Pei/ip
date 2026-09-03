@@ -85,4 +85,4 @@ public class Task {
     public String toFileFormat() {
         return String.format("%s | %s | %s", type, isMarked, description);
     }
-}
+}

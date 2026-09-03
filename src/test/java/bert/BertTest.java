@@ -102,4 +102,4 @@ class BertTest {
 
         assertTrue(output.contains("No matching tasks found."));
     }
-}
+}
