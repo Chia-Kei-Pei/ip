@@ -1,31 +1,37 @@
 package bert.ui;
 
-import bert.datatypes.Task;
-import bert.datatypes.TaskList;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
+
+import bert.datatypes.Task;
+import bert.datatypes.TaskList;
 
 /**
  * Handles all user interactions and console input/output for BERT assistant.
  */
 public class Ui {
     private static final String BANNER = """
- ____     ___  ____  ______
-|    \\   /  _]|    \\|      |
-|  o  ) /  [_ |  D  )      |
-|     ||    _]|    /|_|  |_|
-|  O  ||   [_ |    \\  |  |
-|     ||     ||  .  \\ |  |
-|_____||_____||__|\\_| |__|
-""";
+         ____     ___  ____  ______
+        |    \\   /  _]|    \\|      |
+        |  o  ) /  [_ |  D  )      |
+        |     ||    _]|    /|_|  |_|
+        |  O  ||   [_ |    \\  |  |
+        |     ||     ||  .  \\ |  |
+        |_____||_____||__|\\_| |__|
+        """;
     private static final String HORIZONTAL_LINE = "____________________________________________________________";
 
     private final Scanner scanner;
     private final PrintStream printStream;
 
+    /**
+     * Constructs a {@code Ui} instance connected to the specified input and output streams.
+     *
+     * @param inputStream The input stream for reading user commands.
+     * @param outputStream The output stream for writing user responses.
+     */
     public Ui(InputStream inputStream, OutputStream outputStream) {
         this.scanner = new Scanner(inputStream);
         this.printStream = new PrintStream(outputStream);

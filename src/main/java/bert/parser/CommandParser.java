@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import bert.exceptions.BertException;
-import bert.exceptions.MissingFieldException;
 import bert.exceptions.UnknownCommandException;
 
 /**

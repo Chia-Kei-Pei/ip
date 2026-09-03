@@ -4,7 +4,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 
-import bert.datatypes.*;
+import bert.datatypes.Deadline;
+import bert.datatypes.Event;
+import bert.datatypes.Task;
+import bert.datatypes.TaskList;
 import bert.exceptions.BertException;
 import bert.exceptions.InvalidIndexException;
 import bert.exceptions.UnknownCommandException;
@@ -28,6 +31,8 @@ public class Bert {
      * Constructs a {@code Bert} application instance with the specified task list file path.
      *
      * @param todoListFilePath The file path used for task persistence.
+     * @param in Input stream for user commands.
+     * @param out Output stream for user responses.
      */
     public Bert(String todoListFilePath, InputStream in, OutputStream out) {
         ui = new Ui(in, out);
