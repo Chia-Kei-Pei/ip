@@ -4,8 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Locale;
 
 import bert.exceptions.BertException;
 
@@ -30,15 +32,75 @@ public class DateTimeParser {
 
     /**
      * List of supported date-time formatters attempted during parsing.
-     * Flexible with single-digit day/month (d/M/yyyy) and optional colons in time (HH:mm or HHmm).
+     * Flexible with single-digit day/month, multiple separators, 12/24-hour time formats,
+     * textual months, and optional colons/seconds.
      */
     private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = List.of(
-            DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"),
-            DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),
-            DateTimeFormatter.ofPattern("d-M-yyyy HH:mm"),
-            DateTimeFormatter.ofPattern("d-M-yyyy HHmm"),
-            DateTimeFormatter.ofPattern("yyyy-M-d HH:mm"),
-            DateTimeFormatter.ofPattern("yyyy-M-d HHmm"),
+            // Slash-separated (d/M/yyyy)
+            createFormatter("d/M/yyyy HH:mm"),
+            createFormatter("d/M/yyyy HHmm"),
+            createFormatter("d/M/yyyy HH:mm:ss"),
+            createFormatter("d/M/yyyy h:mm a"),
+            createFormatter("d/M/yyyy hh:mm a"),
+            createFormatter("d/M/yyyy h:mma"),
+            createFormatter("d/M/yyyy hh:mma"),
+
+            // Dash-separated (d-M-yyyy)
+            createFormatter("d-M-yyyy HH:mm"),
+            createFormatter("d-M-yyyy HHmm"),
+            createFormatter("d-M-yyyy HH:mm:ss"),
+            createFormatter("d-M-yyyy h:mm a"),
+            createFormatter("d-M-yyyy hh:mm a"),
+            createFormatter("d-M-yyyy h:mma"),
+            createFormatter("d-M-yyyy hh:mma"),
+
+            // ISO-like date with time (yyyy-M-d)
+            createFormatter("yyyy-M-d HH:mm"),
+            createFormatter("yyyy-M-d HHmm"),
+            createFormatter("yyyy-M-d HH:mm:ss"),
+            createFormatter("yyyy-M-d h:mm a"),
+            createFormatter("yyyy-M-d hh:mm a"),
+            createFormatter("yyyy-M-d h:mma"),
+            createFormatter("yyyy-M-d hh:mma"),
+
+            // Slash year-first (yyyy/M/d)
+            createFormatter("yyyy/M/d HH:mm"),
+            createFormatter("yyyy/M/d HHmm"),
+            createFormatter("yyyy/M/d HH:mm:ss"),
+            createFormatter("yyyy/M/d h:mm a"),
+            createFormatter("yyyy/M/d hh:mm a"),
+            createFormatter("yyyy/M/d h:mma"),
+            createFormatter("yyyy/M/d hh:mma"),
+
+            // Dot-separated (d.M.yyyy)
+            createFormatter("d.M.yyyy HH:mm"),
+            createFormatter("d.M.yyyy HHmm"),
+            createFormatter("d.M.yyyy HH:mm:ss"),
+            createFormatter("d.M.yyyy h:mm a"),
+            createFormatter("d.M.yyyy hh:mm a"),
+            createFormatter("d.M.yyyy h:mma"),
+            createFormatter("d.M.yyyy hh:mma"),
+
+            // Dot-separated year-first (yyyy.M.d)
+            createFormatter("yyyy.M.d HH:mm"),
+            createFormatter("yyyy.M.d HHmm"),
+            createFormatter("yyyy.M.d HH:mm:ss"),
+            createFormatter("yyyy.M.d h:mm a"),
+            createFormatter("yyyy.M.d hh:mm a"),
+
+            // Textual month names (d MMM yyyy / d MMMM yyyy)
+            createFormatter("d MMM yyyy HH:mm"),
+            createFormatter("d MMM yyyy HHmm"),
+            createFormatter("d MMM yyyy HH:mm:ss"),
+            createFormatter("d MMM yyyy h:mm a"),
+            createFormatter("d MMM yyyy hh:mm a"),
+            createFormatter("d MMMM yyyy HH:mm"),
+            createFormatter("d MMMM yyyy HHmm"),
+            createFormatter("d MMMM yyyy HH:mm:ss"),
+            createFormatter("d MMMM yyyy h:mm a"),
+            createFormatter("d MMMM yyyy hh:mm a"),
+
+            // ISO Local Date Time with 'T'
             DateTimeFormatter.ISO_LOCAL_DATE_TIME
     );
 
@@ -46,11 +108,29 @@ public class DateTimeParser {
      * List of supported date-only formatters attempted when no time is supplied.
      */
     private static final List<DateTimeFormatter> DATE_ONLY_FORMATTERS = List.of(
-            DateTimeFormatter.ofPattern("d/M/yyyy"),
-            DateTimeFormatter.ofPattern("d-M-yyyy"),
-            DateTimeFormatter.ofPattern("yyyy-M-d"),
+            createFormatter("d/M/yyyy"),
+            createFormatter("d-M-yyyy"),
+            createFormatter("yyyy-M-d"),
+            createFormatter("yyyy/M/d"),
+            createFormatter("d.M.yyyy"),
+            createFormatter("yyyy.M.d"),
+            createFormatter("d MMM yyyy"),
+            createFormatter("d MMMM yyyy"),
             DateTimeFormatter.ISO_LOCAL_DATE
     );
+
+    /**
+     * Creates a case-insensitive {@link DateTimeFormatter} for the given pattern in {@link Locale#ENGLISH}.
+     *
+     * @param pattern Date/time format pattern.
+     * @return Formatter configured for case-insensitive English parsing.
+     */
+    private static DateTimeFormatter createFormatter(String pattern) {
+        return new DateTimeFormatterBuilder()
+                .parseCaseInsensitive()
+                .appendPattern(pattern)
+                .toFormatter(Locale.ENGLISH);
+    }
 
     /**
      * Parses a date-time string into a {@link LocalDateTime} object.
