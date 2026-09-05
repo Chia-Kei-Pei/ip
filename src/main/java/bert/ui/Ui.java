@@ -70,13 +70,17 @@ public class Ui {
         return scanner.nextLine();
     }
 
+    public void showMsg(String msg) {
+        printStream.println(msg);
+    }
+
     /**
      * Displays an error message to the user.
      *
      * @param msg The error message text.
      */
     public void showError(String msg) {
-        printStream.println(msg);
+        printStream.println(String.format("ERROR!\n%s", msg));
     }
 
     /**
@@ -85,71 +89,11 @@ public class Ui {
      * @param msg The warning message text.
      */
     public void showWarning(String msg) {
-        printStream.println(msg);
+        printStream.println(String.format("Warning.\n%s", msg));
     }
 
-    /**
-     * Displays a confirmation when a task has been successfully added.
-     *
-     * @param todo The task that was added.
-     */
-    public void showAdded(Task todo) {
-        printStream.println("Added " + todo.getType());
-        printStream.println(todo);
-    }
-
-    /**
-     * Displays a confirmation when a task has been removed from the list.
-     *
-     * @param todo The task that was removed.
-     */
-    public void showRemoved(Task todo) {
-        printStream.println("Removed todo");
-        printStream.println(todo);
-    }
-
-    /**
-     * Displays a confirmation when a task is marked as completed.
-     *
-     * @param index The 1-based index of the task.
-     * @param todo The task that was marked.
-     */
-    public void showMarked(int index, Task todo) {
-        printStream.println("Marked Item.");
-        printStream.println(String.format("%d.%s", index, todo.toString()));
-    }
-
-    /**
-     * Displays a notice when a task was already marked as completed.
-     *
-     * @param index The 1-based index of the task.
-     * @param todo The task that is already marked.
-     */
-    public void showAlreadyMarked(int index, Task todo) {
-        printStream.println("Item already marked.");
-        printStream.println(String.format("%d.%s", index, todo.toString()));
-    }
-
-    /**
-     * Displays a confirmation when a task is unmarked.
-     *
-     * @param index The 1-based index of the task.
-     * @param todo The task that was unmarked.
-     */
-    public void showUnmarked(int index, Task todo) {
-        printStream.println("Unmarked Item.");
-        printStream.println(String.format("%d.%s", index, todo.toString()));
-    }
-
-    /**
-     * Displays a notice when a task was already unmarked.
-     *
-     * @param index The 1-based index of the task.
-     * @param todo The task that is already unmarked.
-     */
-    public void showAlreadyUnmarked(int index, Task todo) {
-        printStream.println("Item already unmarked.");
-        printStream.println(String.format("%d.%s", index, todo.toString()));
+    public void showTask(int index, Task task) {
+        printStream.println(String.format("%d.%s", index, task.toString()));
     }
 
     /**
