@@ -12,7 +12,7 @@ import bert.parser.CommandParser;
 import bert.parser.ParsedCommand;
 import bert.parser.TaskParser;
 import bert.storage.Storage;
-import bert.ui.Ui;
+import bert.ui.Cli;
 
 /**
  * The main application class for BERT task assistant.
@@ -22,7 +22,7 @@ public class Bert {
 
     private Storage storage;
     private TaskList taskList;
-    private Ui ui;
+    private Cli cli;
 
     /**
      * Constructs a {@code Bert} application instance with the specified task list file path.
@@ -32,7 +32,7 @@ public class Bert {
      * @param out Output stream for user responses.
      */
     public Bert(String todoListFilePath, InputStream in, OutputStream out) {
-        ui = new Ui(in, out);
+        cli = new Cli(in, out);
         storage = new Storage(todoListFilePath);
         taskList = new TaskList();
     }
@@ -45,31 +45,31 @@ public class Bert {
         try {
             storage.load(taskList);
         } catch (BertException e) {
-            ui.showWarning(e.getMessage());
+            cli.showWarning(e.getMessage());
         }
 
-        ui.greeting();
-        ui.showLine();
+        cli.greeting();
+        cli.showLine();
 
         while (true) {
-            String userPrompt = ui.userPrompt();
-            ui.showLine();
+            String userPrompt = cli.userPrompt();
+            cli.showLine();
 
             try {
                 ParsedCommand command = CommandParser.parse(userPrompt);
 
                 if (command.isExitCommand()) {
-                    ui.farewell();
+                    cli.farewell();
                     return;
                 }
 
                 executeCommand(command);
             } catch (BertException | IllegalArgumentException e) {
-                ui.showError(e.getMessage());
+                cli.showError(e.getMessage());
             } catch (IndexOutOfBoundsException e) {
-                ui.showError(e.getMessage());
+                cli.showError(e.getMessage());
             } finally {
-                ui.showLine();
+                cli.showLine();
             }
         }
     }
@@ -104,8 +104,8 @@ public class Bert {
      */
     private void addTask(Task task) {
         taskList.add(task);
-        ui.showMsg("Added " + task.getType());
-        ui.showTask(taskList.size(), task);
+        cli.showMsg("Added " + task.getType());
+        cli.showTask(taskList.size(), task);
         saveStorage();
     }
 
@@ -114,7 +114,7 @@ public class Bert {
      *
      */
     private void handleList() {
-        ui.showTodoList(taskList);
+        cli.showTodoList(taskList);
     }
 
     /**
@@ -124,7 +124,7 @@ public class Bert {
      */
     private void handleFind(String keyword) {
         TaskList matchingTasks = taskList.find(keyword);
-        ui.showFoundTasks(matchingTasks);
+        cli.showFoundTasks(matchingTasks);
     }
 
     /**
@@ -136,12 +136,12 @@ public class Bert {
     private void handleMark(int index) throws InvalidIndexException {
         Task task = taskList.get(index);
         if (task.isMarked()) {
-            ui.showMsg("Already marked " + task.getType());
-            ui.showTask(index, task);
+            cli.showMsg("Already marked " + task.getType());
+            cli.showTask(index, task);
         } else {
             taskList.mark(index);
-            ui.showMsg("Marked " + task.getType());
-            ui.showTask(index, task);
+            cli.showMsg("Marked " + task.getType());
+            cli.showTask(index, task);
             saveStorage();
         }
     }
@@ -155,12 +155,12 @@ public class Bert {
     private void handleUnmark(int index) throws InvalidIndexException {
         Task task = taskList.get(index);
         if (!task.isMarked()) {
-            ui.showMsg("Already unmarked " + task.getType());
-            ui.showTask(index, task);
+            cli.showMsg("Already unmarked " + task.getType());
+            cli.showTask(index, task);
         } else {
             taskList.unmark(index);
-            ui.showMsg("Unmarked " + task.getType());
-            ui.showTask(index, task);
+            cli.showMsg("Unmarked " + task.getType());
+            cli.showTask(index, task);
             saveStorage();
         }
     }
@@ -173,8 +173,8 @@ public class Bert {
      */
     private void handleDelete(int index) throws InvalidIndexException {
         Task task = taskList.remove(index);
-        ui.showMsg("Removed " + task.getType());
-        ui.showTask(index, task);
+        cli.showMsg("Removed " + task.getType());
+        cli.showTask(index, task);
         saveStorage();
     }
 
@@ -185,7 +185,7 @@ public class Bert {
         try {
             storage.save(taskList);
         } catch (BertException e) {
-            ui.showWarning(e.getMessage());
+            cli.showWarning(e.getMessage());
         }
     }
 

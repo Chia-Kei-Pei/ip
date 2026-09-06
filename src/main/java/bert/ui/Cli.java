@@ -11,7 +11,7 @@ import bert.datatypes.TaskList;
 /**
  * Handles all user interactions and console input/output for BERT assistant.
  */
-public class Ui {
+public class Cli {
     private static final String BANNER = """
          ____     ___  ____  ______
         |    \\   /  _]|    \\|      |
@@ -27,12 +27,12 @@ public class Ui {
     private final PrintStream printStream;
 
     /**
-     * Constructs a {@code Ui} instance connected to the specified input and output streams.
+     * Constructs a {@code Cli} instance connected to the specified input and output streams.
      *
      * @param inputStream The input stream for reading user commands.
      * @param outputStream The output stream for writing user responses.
      */
-    public Ui(InputStream inputStream, OutputStream outputStream) {
+    public Cli(InputStream inputStream, OutputStream outputStream) {
         this.scanner = new Scanner(inputStream);
         this.printStream = new PrintStream(outputStream);
     }
