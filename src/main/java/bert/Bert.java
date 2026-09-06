@@ -2,18 +2,15 @@ package bert;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
 
-import bert.datatypes.Deadline;
-import bert.datatypes.Event;
 import bert.datatypes.Task;
 import bert.datatypes.TaskList;
 import bert.exceptions.BertException;
 import bert.exceptions.InvalidIndexException;
 import bert.exceptions.UnknownCommandException;
 import bert.parser.CommandParser;
-import bert.parser.DateTimeParser;
 import bert.parser.ParsedCommand;
+import bert.parser.TaskParser;
 import bert.storage.Storage;
 import bert.ui.Ui;
 
@@ -45,7 +42,11 @@ public class Bert {
      * Initializes storage, loads saved tasks, and starts the command loop.
      */
     public void run() {
-        storage.load(taskList);
+        try {
+            storage.load(taskList);
+        } catch (BertException e) {
+            ui.showWarning(e.getMessage());
+        }
 
         ui.greeting();
         ui.showLine();
@@ -83,9 +84,10 @@ public class Bert {
     private void executeCommand(ParsedCommand cmd)
             throws BertException, IllegalArgumentException {
         switch (cmd.getCommandType()) {
-            case "todo" -> handleTodo(cmd.getArgument());
-            case "deadline" -> handleDeadline(cmd.getArgument(), cmd.getFlag("by"));
-            case "event" -> handleEvent(cmd.getArgument(), cmd.getFlag("from"), cmd.getFlag("to"));
+            case "todo" -> addTask(TaskParser.parseTodo(cmd.getArgument()));
+            case "deadline" -> addTask(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
+            case "event" -> addTask(TaskParser.parseEvent(cmd.getArgument(),
+                    cmd.getFlag("from"), cmd.getFlag("to")));
             case "list" -> handleList();
             case "find" -> handleFind(cmd.getArgument());
             case "mark" -> handleMark(cmd.getArgumentAsInt());
@@ -93,45 +95,6 @@ public class Bert {
             case "delete", "remove" -> handleDelete(cmd.getArgumentAsInt());
             default -> throw new UnknownCommandException(cmd.getCommandType());
         }
-    }
-
-    /**
-     * Programmatically adds a new {@link Task} task to the list and saves changes.
-     *
-     * @param description The description of the todo task.
-     */
-    private void handleTodo(String description) {
-        Task todo = new Task(description);
-        addTask(todo);
-    }
-
-    /**
-     * Programmatically adds a new {@link Deadline} task to the list and saves changes.
-     *
-     * @param description The description of the deadline.
-     * @param byDate The date or time string by which the task must be completed.
-     * @throws BertException If the date/time format is invalid.
-     */
-    private void handleDeadline(String description, String byDate)
-            throws BertException {
-        LocalDateTime parsedByDate = DateTimeParser.parse(byDate);
-        Deadline deadline = new Deadline(description, parsedByDate);
-        addTask(deadline);
-    }
-
-    /**
-     * Programmatically adds a new {@link Event} task to the list and saves changes.
-     *
-     * @param description The description of the event.
-     * @param fromDate The starting date or time of the event.
-     * @param toDate The ending date or time of the event.
-     * @throws BertException If the date/time format is invalid.
-     */
-    private void handleEvent(String description, String fromDate, String toDate) throws BertException {
-        LocalDateTime parsedFromDate = DateTimeParser.parse(fromDate);
-        LocalDateTime parsedToDate = DateTimeParser.parse(toDate);
-        Event event = new Event(description, parsedFromDate, parsedToDate);
-        addTask(event);
     }
 
     /**

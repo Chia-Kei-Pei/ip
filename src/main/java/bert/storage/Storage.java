@@ -3,16 +3,13 @@ package bert.storage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import bert.datatypes.Deadline;
-import bert.datatypes.Event;
 import bert.datatypes.Task;
 import bert.datatypes.TaskList;
 import bert.exceptions.BertException;
-import bert.parser.DateTimeParser;
+import bert.parser.TaskParser;
 import bert.ui.Ui;
 
 /**
@@ -41,7 +38,7 @@ public class Storage {
      *
      * @param taskList The list to populate with loaded tasks.
      */
-    public void load(TaskList taskList) {
+    public void load(TaskList taskList) throws BertException {
         Path path = Path.of(filePath);
 
         if (!Files.exists(path)) {
@@ -65,12 +62,11 @@ public class Storage {
                 String description = parts[2].trim();
 
                 switch (type) {
-                    case "todo" -> taskList.add(new Task(isMarked, description));
+                    case "todo" -> taskList.add(TaskParser.parseTodo(isMarked, description));
                     case "deadline" -> {
                         if (parts.length >= 4) {
                             try {
-                                LocalDateTime byDate = DateTimeParser.parse(parts[3].trim());
-                                taskList.add(new Deadline(isMarked, description, byDate));
+                                taskList.add(TaskParser.parseDeadline(isMarked, description, parts[3].trim()));
                             } catch (BertException e) {
                                 ui.showWarning("Warning: Skipping task with invalid deadline in "
                                         + filePath + ": " + line);
@@ -80,9 +76,8 @@ public class Storage {
                     case "event" -> {
                         if (parts.length >= 5) {
                             try {
-                                LocalDateTime fromDate = DateTimeParser.parse(parts[3].trim());
-                                LocalDateTime toDate = DateTimeParser.parse(parts[4].trim());
-                                taskList.add(new Event(isMarked, description, fromDate, toDate));
+                                taskList.add(TaskParser.parseEvent(isMarked, description,
+                                        parts[3].trim(), parts[4].trim()));
                             } catch (BertException e) {
                                 ui.showWarning("Warning: Skipping task with invalid event dates in "
                                         + filePath + ": " + line);
@@ -105,7 +100,7 @@ public class Storage {
      *
      * @param taskList The list containing tasks to save.
      */
-    public void save(TaskList taskList) {
+    public void save(TaskList taskList) throws BertException {
         Path path = Path.of(filePath);
 
         try {
@@ -120,7 +115,7 @@ public class Storage {
 
             Files.write(path, lines);
         } catch (IOException e) {
-            ui.showWarning("Warning: Unable to save data to " + filePath + " (" + e.getMessage() + ")");
+            throw new BertException("Warning: Unable to save data to " + filePath + " (" + e.getMessage() + ")");
         }
     }
 }
