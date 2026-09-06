@@ -1,8 +1,8 @@
-package bert.datatypes;
+package kpei.datatypes;
 
 import java.util.ArrayList;
 
-import bert.exceptions.InvalidIndexException;
+import kpei.exceptions.InvalidIndexException;
 
 /**
  * Represents an ordered, 1-based indexed collection of tasks (Todos, Deadlines, Events).

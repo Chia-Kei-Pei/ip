@@ -1,4 +1,4 @@
-package bert.exceptions;
+package kpei.exceptions;
 
 /**
  * Represents the base exception for application-specific errors in bert.Bert.

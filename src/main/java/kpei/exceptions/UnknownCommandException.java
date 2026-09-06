@@ -1,4 +1,4 @@
-package bert.exceptions;
+package kpei.exceptions;
 
 /**
  * Signals that an unrecognized or unsupported command was entered.

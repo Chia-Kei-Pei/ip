@@ -1,4 +1,4 @@
-package bert.parser;
+package kpei.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import bert.exceptions.BertException;
+import kpei.exceptions.BertException;
 
 /**
  * Tests the date and time parsing capabilities of {@link DateTimeParser}.

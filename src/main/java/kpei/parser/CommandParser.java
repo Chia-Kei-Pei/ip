@@ -1,12 +1,12 @@
-package bert.parser;
+package kpei.parser;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import bert.exceptions.BertException;
-import bert.exceptions.UnknownCommandException;
+import kpei.exceptions.BertException;
+import kpei.exceptions.UnknownCommandException;
 
 /**
  * Parses raw user input strings into structured {@link ParsedCommand} objects.

@@ -1,18 +1,18 @@
-package bert;
+package kpei;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import bert.datatypes.Task;
-import bert.datatypes.TaskList;
-import bert.exceptions.BertException;
-import bert.exceptions.InvalidIndexException;
-import bert.exceptions.UnknownCommandException;
-import bert.parser.CommandParser;
-import bert.parser.ParsedCommand;
-import bert.parser.TaskParser;
-import bert.storage.Storage;
-import bert.ui.Cli;
+import kpei.datatypes.Task;
+import kpei.datatypes.TaskList;
+import kpei.exceptions.BertException;
+import kpei.exceptions.InvalidIndexException;
+import kpei.exceptions.UnknownCommandException;
+import kpei.parser.CommandParser;
+import kpei.parser.ParsedCommand;
+import kpei.parser.TaskParser;
+import kpei.storage.Storage;
+import kpei.ui.Cli;
 
 /**
  * The main application class for BERT task assistant.

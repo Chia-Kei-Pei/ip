@@ -1,12 +1,12 @@
-package bert.ui;
+package kpei.ui;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import bert.datatypes.Task;
-import bert.datatypes.TaskList;
+import kpei.datatypes.Task;
+import kpei.datatypes.TaskList;
 
 /**
  * Handles all user interactions and console input/output for BERT assistant.

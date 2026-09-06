@@ -1,4 +1,4 @@
-package bert.parser;
+package kpei.parser;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,7 +9,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Locale;
 
-import bert.exceptions.BertException;
+import kpei.exceptions.BertException;
 
 /**
  * Utility class for parsing and formatting date and time strings.
