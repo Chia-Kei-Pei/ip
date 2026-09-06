@@ -42,4 +42,23 @@ public class Deadline extends Task {
     public String toFileFormat() {
         return String.format("%s | %s", super.toFileFormat(), DateTimeParser.formatForStorage(byDate));
     }
+
+    /**
+     * Returns the due date and time of this deadline.
+     *
+     * @return The due date and time.
+     */
+    public LocalDateTime getByDate() {
+        return byDate;
+    }
+
+    /**
+     * Returns a formatted string representation of the due date and time.
+     *
+     * @return Formatted date string for display.
+     */
+    public String getFormattedByDate() {
+        return DateTimeParser.format(byDate);
+    }
 }
+

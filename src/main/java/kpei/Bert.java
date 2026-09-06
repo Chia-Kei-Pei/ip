@@ -20,22 +20,39 @@ import kpei.ui.Cli;
  */
 public class Bert {
 
-    private Storage storage;
-    private TaskList taskList;
-    private Cli cli;
+    private final String storageFilePath;
+    private final Storage storage;
+    private final TaskList taskList;
+    private final Cli cli;
+    private final boolean isGuiMode;
 
     /**
-     * Constructs a {@code Bert} application instance with the specified task list file path.
+     * Constructs a {@code Bert} application instance with the specified task list file path and GUI mode.
+     *
+     * @param todoListFilePath The file path used for task persistence.
+     * @param in Input stream for user commands.
+     * @param out Output stream for user responses.
+     * @param isGuiMode Whether this instance is running in GUI mode.
+     */
+    public Bert(String todoListFilePath, InputStream in, OutputStream out, boolean isGuiMode) {
+        this.storageFilePath = todoListFilePath;
+        this.cli = new Cli(in, out);
+        this.storage = new Storage(todoListFilePath);
+        this.taskList = new TaskList();
+        this.isGuiMode = isGuiMode;
+    }
+
+    /**
+     * Constructs a {@code Bert} application instance in CLI mode with the specified task list file path.
      *
      * @param todoListFilePath The file path used for task persistence.
      * @param in Input stream for user commands.
      * @param out Output stream for user responses.
      */
     public Bert(String todoListFilePath, InputStream in, OutputStream out) {
-        cli = new Cli(in, out);
-        storage = new Storage(todoListFilePath);
-        taskList = new TaskList();
+        this(todoListFilePath, in, out, false);
     }
+
 
     /**
      * Entry point for running the BERT assistant CLI application.
@@ -110,11 +127,53 @@ public class Bert {
     }
 
     /**
+     * Initializes storage and displays the greeting message for GUI startup.
+     */
+    public void startGui() {
+        try {
+            storage.load(taskList);
+        } catch (BertException e) {
+            cli.showWarning(e.getMessage());
+        }
+        cli.greeting();
+        cli.showLine();
+    }
+
+    /**
+     * Executes a single command string submitted from the user interface.
+     *
+     * @param userPrompt The command line entered by the user.
+     * @return {@code true} if the command was an exit command, {@code false} otherwise.
+     */
+    public boolean handleUserCommand(String userPrompt) {
+        cli.showLine();
+        try {
+            ParsedCommand command = CommandParser.parse(userPrompt);
+
+            if (command.isExitCommand()) {
+                cli.farewell();
+                return true;
+            }
+
+            executeCommand(command);
+        } catch (BertException | IllegalArgumentException | IndexOutOfBoundsException e) {
+            cli.showError(e.getMessage());
+        } finally {
+            cli.showLine();
+        }
+        return false;
+    }
+
+    /**
      * Programmatically prints all items in the task list.
      *
      */
     private void handleList() {
-        cli.showTodoList(taskList);
+        if (isGuiMode) {
+            cli.showMsg("Displaying List.");
+        } else {
+            cli.showTodoList(taskList);
+        }
     }
 
     /**
@@ -190,12 +249,47 @@ public class Bert {
     }
 
     /**
-     * Starts the BERT application with default storage settings.
+     * Returns the task list managed by this BERT instance.
      *
-     * @param args Command line arguments (not used).
+     * @return The current task list.
+     */
+    public TaskList getTaskList() {
+        return taskList;
+    }
+
+    /**
+     * Returns the storage file path used for task persistence.
+     *
+     * @return The storage file path.
+     */
+    public String getStorageFilePath() {
+        return storageFilePath;
+    }
+
+    /**
+     * Starts the BERT application with default storage settings.
+     * Inspects arguments: if "--cli" is passed, runs in CLI mode;
+     * otherwise, launches the JavaFX GUI application.
+     *
+     * @param args Command line arguments.
      */
     public static void main(String[] args) {
-        Bert bert = new Bert("data/todo_list_1.txt", System.in, System.out);
-        bert.run();
+        boolean isCli = false;
+        if (args != null) {
+            for (String arg : args) {
+                if ("--cli".equalsIgnoreCase(arg.trim())) {
+                    isCli = true;
+                    break;
+                }
+            }
+        }
+
+        if (isCli) {
+            Bert bert = new Bert("data/todo_list_1.txt", System.in, System.out, false);
+            bert.run();
+        } else {
+            Launcher.launchGui(args);
+        }
     }
 }
+

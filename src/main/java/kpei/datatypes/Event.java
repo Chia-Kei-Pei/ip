@@ -51,4 +51,41 @@ public class Event extends Task {
                 DateTimeParser.formatForStorage(fromDate),
                 DateTimeParser.formatForStorage(toDate));
     }
+
+    /**
+     * Returns the starting date and time of this event.
+     *
+     * @return The starting date and time.
+     */
+    public LocalDateTime getFromDate() {
+        return fromDate;
+    }
+
+    /**
+     * Returns the ending date and time of this event.
+     *
+     * @return The ending date and time.
+     */
+    public LocalDateTime getToDate() {
+        return toDate;
+    }
+
+    /**
+     * Returns a formatted string representation of the starting date and time.
+     *
+     * @return Formatted start date string.
+     */
+    public String getFormattedFromDate() {
+        return DateTimeParser.format(fromDate);
+    }
+
+    /**
+     * Returns a formatted string representation of the ending date and time.
+     *
+     * @return Formatted end date string.
+     */
+    public String getFormattedToDate() {
+        return DateTimeParser.format(toDate);
+    }
 }
+

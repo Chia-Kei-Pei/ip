@@ -1,0 +1,149 @@
+/* Main Application Theme */
+.root-container {
+    -fx-background-color: #E2E6EB;
+    -fx-padding: 20;
+    -fx-spacing: 20;
+}
+
+/* Banner Component */
+.banner-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 6;
+    -fx-padding: 20;
+    -fx-alignment: center;
+    -fx-spacing: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 4, 0, 0, 1);
+}
+
+.banner-title {
+    -fx-font-family: "Segoe UI", "Arial Black", sans-serif;
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111111;
+}
+
+/* CLI Terminal Component */
+.terminal-container {
+    -fx-background-color: #4E5052;
+    -fx-background-radius: 6;
+    -fx-padding: 14;
+    -fx-spacing: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 6, 0, 0, 2);
+}
+
+.terminal-text-area {
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-size: 13px;
+    -fx-text-fill: #FFFFFF;
+    -fx-highlight-fill: #707579;
+    -fx-highlight-text-fill: #FFFFFF;
+}
+
+.terminal-text-area .content {
+    -fx-background-color: #4E5052;
+}
+
+.terminal-text-area:focused .content {
+    -fx-background-color: #4E5052;
+}
+
+.terminal-prompt-bar {
+    -fx-alignment: center-left;
+    -fx-spacing: 8;
+    -fx-padding: 4 0 0 0;
+}
+
+.terminal-prompt-symbol {
+    -fx-font-family: "Consolas", monospace;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+
+.terminal-input-field {
+    -fx-background-color: #3C3E40;
+    -fx-background-radius: 4;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Consolas", monospace;
+    -fx-font-size: 13px;
+    -fx-padding: 6 10;
+    -fx-prompt-text-fill: #A0A0A0;
+}
+
+.terminal-input-field:focused {
+    -fx-background-color: #353739;
+    -fx-border-color: #8E9296;
+    -fx-border-radius: 4;
+}
+
+/* List View Component (Right Column) */
+.list-view-container {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 6;
+    -fx-padding: 16;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 4, 0, 0, 1);
+}
+
+.list-view-title {
+    -fx-font-family: "Consolas", monospace;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #333333;
+    -fx-padding: 0 0 4 2;
+}
+
+.task-list-view {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.task-list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 0 4 0;
+}
+
+.task-list-view .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+/* Task List Item Card */
+.list-item-card {
+    -fx-background-color: #D4DCE4;
+    -fx-background-radius: 4;
+    -fx-padding: 10 14;
+    -fx-spacing: 3;
+}
+
+.list-item-card:hover {
+    -fx-background-color: #CBD5DF;
+}
+
+.list-item-title {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #1A1A1A;
+}
+
+.list-item-title-marked {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #666666;
+    -fx-strikethrough: true;
+}
+
+.list-item-type {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #333333;
+}
+
+.list-item-date {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #333333;
+}
