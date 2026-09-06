@@ -47,9 +47,9 @@ class BertTest {
         assertTrue(output.contains("[deadline][ ] Math homework (by: Aug 29 2026 at 16:00)"));
         assertTrue(output.contains("Added event"));
         assertTrue(output.contains("[event][ ] nerd con (from: May 31 2027, to: Jun 10 2027)"));
-        assertTrue(output.contains("Marked Item."));
+        assertTrue(output.contains("Marked todo"));
         assertTrue(output.contains("1.[todo][X] Clean my room"));
-        assertTrue(output.contains("Unmarked Item."));
+        assertTrue(output.contains("Unmarked todo"));
         assertTrue(output.contains("1.[todo][ ] Clean my room"));
         assertTrue(output.contains("Removed todo"));
         assertTrue(output.contains("1.[deadline][ ] Math homework (by: Aug 29 2026 at 16:00)"));
@@ -102,4 +102,4 @@ class BertTest {
 
         assertTrue(output.contains("No matching tasks found."));
     }
-}
+}

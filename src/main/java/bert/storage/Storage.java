@@ -3,17 +3,13 @@ package bert.storage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import bert.datatypes.Deadline;
-import bert.datatypes.Event;
 import bert.datatypes.Task;
 import bert.datatypes.TaskList;
 import bert.exceptions.BertException;
-import bert.parser.DateTimeParser;
-import bert.ui.Ui;
+import bert.parser.TaskParser;
 
 /**
  * Handles persistent storage of {@link TaskList} tasks to and from a local file.
@@ -21,17 +17,14 @@ import bert.ui.Ui;
  */
 public class Storage {
     private final String filePath;
-    private final Ui ui;
 
     /**
-     * Constructs a {@code Storage} handler with a custom file path and {@link Ui} instance.
+     * Constructs a {@code Storage} handler with a custom file path.
      *
      * @param filePath Relative or absolute path to the data storage file.
-     * @param ui The {@link Ui} instance used for displaying warning messages.
      */
-    public Storage(String filePath, Ui ui) {
+    public Storage(String filePath) {
         this.filePath = filePath;
-        this.ui = ui;
     }
 
     /**
@@ -40,8 +33,9 @@ public class Storage {
      * Corrupted or unrecognized lines are safely ignored.
      *
      * @param taskList The list to populate with loaded tasks.
+     * @throws BertException If an error occurs while reading or parsing the data file.
      */
-    public void load(TaskList taskList) {
+    public void load(TaskList taskList) throws BertException {
         Path path = Path.of(filePath);
 
         if (!Files.exists(path)) {
@@ -65,27 +59,25 @@ public class Storage {
                 String description = parts[2].trim();
 
                 switch (type) {
-                    case "todo" -> taskList.add(new Task(isMarked, description));
+                    case "todo" -> taskList.add(TaskParser.parseTodo(isMarked, description));
                     case "deadline" -> {
                         if (parts.length >= 4) {
                             try {
-                                LocalDateTime byDate = DateTimeParser.parse(parts[3].trim());
-                                taskList.add(new Deadline(isMarked, description, byDate));
+                                taskList.add(TaskParser.parseDeadline(isMarked, description, parts[3].trim()));
                             } catch (BertException e) {
-                                ui.showWarning("Warning: Skipping task with invalid deadline in "
-                                        + filePath + ": " + line);
+                                throw new BertException("Warning: Skipping task with invalid deadline in "
+                                        + filePath + ": " + line, e);
                             }
                         }
                     }
                     case "event" -> {
                         if (parts.length >= 5) {
                             try {
-                                LocalDateTime fromDate = DateTimeParser.parse(parts[3].trim());
-                                LocalDateTime toDate = DateTimeParser.parse(parts[4].trim());
-                                taskList.add(new Event(isMarked, description, fromDate, toDate));
+                                taskList.add(TaskParser.parseEvent(isMarked, description,
+                                        parts[3].trim(), parts[4].trim()));
                             } catch (BertException e) {
-                                ui.showWarning("Warning: Skipping task with invalid event dates in "
-                                        + filePath + ": " + line);
+                                throw new BertException("Warning: Skipping task with invalid event dates in "
+                                        + filePath + ": " + line, e);
                             }
                         }
                     }
@@ -95,7 +87,7 @@ public class Storage {
                 }
             }
         } catch (IOException e) {
-            ui.showWarning("Warning: Unable to load data from " + filePath + " (" + e.getMessage() + ")");
+            throw new BertException("Warning: Unable to load data from " + filePath + " (" + e.getMessage() + ")", e);
         }
     }
 
@@ -104,8 +96,9 @@ public class Storage {
      * Creates any missing parent directories automatically.
      *
      * @param taskList The list containing tasks to save.
+     * @throws BertException If an I/O error occurs while saving data.
      */
-    public void save(TaskList taskList) {
+    public void save(TaskList taskList) throws BertException {
         Path path = Path.of(filePath);
 
         try {
@@ -120,7 +113,7 @@ public class Storage {
 
             Files.write(path, lines);
         } catch (IOException e) {
-            ui.showWarning("Warning: Unable to save data to " + filePath + " (" + e.getMessage() + ")");
+            throw new BertException("Warning: Unable to save data to " + filePath + " (" + e.getMessage() + ")", e);
         }
     }
 }
