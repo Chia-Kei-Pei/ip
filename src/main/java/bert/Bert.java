@@ -33,7 +33,7 @@ public class Bert {
      */
     public Bert(String todoListFilePath, InputStream in, OutputStream out) {
         ui = new Ui(in, out);
-        storage = new Storage(todoListFilePath, ui);
+        storage = new Storage(todoListFilePath);
         taskList = new TaskList();
     }
 
@@ -106,7 +106,7 @@ public class Bert {
         taskList.add(task);
         ui.showMsg("Added " + task.getType());
         ui.showTask(taskList.size(), task);
-        storage.save(taskList);
+        saveStorage();
     }
 
     /**
@@ -142,7 +142,7 @@ public class Bert {
             taskList.mark(index);
             ui.showMsg("Marked " + task.getType());
             ui.showTask(index, task);
-            storage.save(taskList);
+            saveStorage();
         }
     }
 
@@ -161,7 +161,7 @@ public class Bert {
             taskList.unmark(index);
             ui.showMsg("Unmarked " + task.getType());
             ui.showTask(index, task);
-            storage.save(taskList);
+            saveStorage();
         }
     }
 
@@ -175,7 +175,18 @@ public class Bert {
         Task task = taskList.remove(index);
         ui.showMsg("Removed " + task.getType());
         ui.showTask(index, task);
-        storage.save(taskList);
+        saveStorage();
+    }
+
+    /**
+     * Saves the current task list to storage and displays a warning if saving fails.
+     */
+    private void saveStorage() {
+        try {
+            storage.save(taskList);
+        } catch (BertException e) {
+            ui.showWarning(e.getMessage());
+        }
     }
 
     /**
