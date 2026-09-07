@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import kpei.Bert;
+import kpei.exceptions.BertException;
+import kpei.ui.Cli;
 
 /**
  * Main window controller coordinating the Banner, CLI Terminal, and List View components.
@@ -28,7 +30,7 @@ public class MainWindowController {
     @FXML
     private ListViewController listViewController;
 
-    private Bert bert;
+    private Cli cli;
 
     /**
      * Initializes the controller and binds the terminal command consumer.
@@ -41,12 +43,31 @@ public class MainWindowController {
     }
 
     /**
-     * Injects the {@link Bert} application instance and refreshes the task list display.
+     * Injects the {@link Cli} interface instance and binds to its associated {@link Bert} controller.
      *
-     * @param bert The BERT domain controller instance.
+     * @param cli The CLI interface instance.
      */
-    public void setBert(Bert bert) {
-        this.bert = bert;
+    public void setCli(Cli cli) {
+        this.cli = cli;
+        refreshTaskList();
+    }
+
+    /**
+     * Starts the GUI session by loading tasks from storage, printing greetings, and refreshing the list.
+     */
+    public void startGui() {
+        if (cli == null) {
+            return;
+        }
+
+        try {
+            cli.getBert().load();
+        } catch (BertException e) {
+            cli.showWarning(e.getMessage());
+        }
+
+        cli.greeting();
+        cli.showLine();
         refreshTaskList();
     }
 
@@ -54,7 +75,8 @@ public class MainWindowController {
      * Refreshes the task list displayed in the right-hand List View component.
      */
     public void refreshTaskList() {
-        if (bert != null && listViewController != null) {
+        if (cli != null && listViewController != null) {
+            Bert bert = cli.getBert();
             listViewController.updateTasks(bert.getTaskList(), bert.getStorageFilePath());
         }
     }
@@ -65,16 +87,25 @@ public class MainWindowController {
      * @param input The command entered by the user.
      */
     private void handleCommand(String input) {
-        if (bert == null) {
+        if (cli == null) {
             return;
         }
 
-        boolean isExit = bert.handleUserCommand(input);
+        boolean isExit = cli.executeUserCommand(input);
         refreshTaskList();
 
         if (isExit) {
             Platform.exit();
         }
+    }
+
+    /**
+     * Returns the CLI interface instance.
+     *
+     * @return The {@link Cli} instance.
+     */
+    public Cli getCli() {
+        return cli;
     }
 
     /**

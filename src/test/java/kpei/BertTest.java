@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import kpei.ui.Cli;
+
 class BertTest {
 
     @TempDir
@@ -36,8 +38,8 @@ class BertTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         String testDataFilePath = tempDir.resolve("todo_list.txt").toString();
-        Bert bert = new Bert(testDataFilePath, in, out);
-        bert.run();
+        Cli cli = new Cli(testDataFilePath, in, out);
+        cli.run();
 
         String output = out.toString(StandardCharsets.UTF_8);
 
@@ -73,8 +75,8 @@ class BertTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         String testDataFilePath = tempDir.resolve("todo_list_find.txt").toString();
-        Bert bert = new Bert(testDataFilePath, in, out);
-        bert.run();
+        Cli cli = new Cli(testDataFilePath, in, out);
+        cli.run();
 
         String output = out.toString(StandardCharsets.UTF_8);
 
@@ -95,8 +97,8 @@ class BertTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         String testDataFilePath = tempDir.resolve("todo_list_find_empty.txt").toString();
-        Bert bert = new Bert(testDataFilePath, in, out);
-        bert.run();
+        Cli cli = new Cli(testDataFilePath, in, out);
+        cli.run();
 
         String output = out.toString(StandardCharsets.UTF_8);
 

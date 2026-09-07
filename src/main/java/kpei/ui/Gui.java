@@ -1,9 +1,7 @@
 package kpei.ui;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -65,12 +63,11 @@ public class Gui extends Application {
             }
         };
 
-        InputStream dummyInput = new ByteArrayInputStream(new byte[0]);
-        Bert bert = new Bert(DEFAULT_DATA_PATH, dummyInput, terminalOutputStream, true);
+        Bert bert = new Bert(DEFAULT_DATA_PATH);
+        Cli cli = new Cli(bert, terminalOutputStream, true);
 
-        mainWindowController.setBert(bert);
-        bert.startGui();
-        mainWindowController.refreshTaskList();
+        mainWindowController.setCli(cli);
+        mainWindowController.startGui();
 
         Scene scene = new Scene(root);
         stage.setTitle(APPLICATION_TITLE);

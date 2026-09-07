@@ -2,6 +2,7 @@ package kpei;
 
 import javafx.application.Application;
 
+import kpei.ui.Cli;
 import kpei.ui.Gui;
 
 /**
@@ -29,8 +30,8 @@ public class Launcher {
         }
 
         if (isCli) {
-            Bert bert = new Bert(DEFAULT_STORAGE_PATH, System.in, System.out, false);
-            bert.run();
+            Cli cli = new Cli(DEFAULT_STORAGE_PATH, System.in, System.out);
+            cli.run();
         } else {
             Application.launch(Gui.class, args);
         }
