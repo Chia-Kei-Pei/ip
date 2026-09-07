@@ -56,10 +56,10 @@ public class MainWindowController {
     /**
      * Refreshes the task list displayed in the right-hand List View component.
      *
-     * @param tasks The raw arraylist of tasks to display.
+     * @param tasks The TaskList of tasks to display.
      * @param storageFileName The file name of the storage file.
      */
-    public void refreshTaskList(ArrayList<Task> tasks, String storageFileName) {
+    public void refreshTaskList(TaskList tasks, String storageFileName) {
         listViewController.updateTasks(tasks, storageFileName);
     }
 

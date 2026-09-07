@@ -60,11 +60,11 @@ public class ListViewController {
      * @param tasks Current list of tasks to display.
      * @param storageFileName File name of the storage data file.
      */
-    public void updateTasks(ArrayList<Task> tasks, String storageFileName) {
+    public void updateTasks(TaskList tasks, String storageFileName) {
         listTitle.setText(storageFileName);
-        
+
         ObservableList<Task> items = FXCollections.observableArrayList();
-        items.addAll(tasks);
+        items.addAll(tasks.getTodos());
         taskListView.setItems(items);
     }
 }
