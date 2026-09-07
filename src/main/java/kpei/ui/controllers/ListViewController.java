@@ -2,6 +2,7 @@ package kpei.ui.controllers;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -54,21 +55,33 @@ public class ListViewController {
     }
 
     /**
+     * Updates the displayed tasks and sets the title to the file name.
+     *
+     * @param tasks Current list of tasks to display.
+     * @param storageFileName File name of the storage data file.
+     */
+    public void updateTasks(ArrayList<Task> tasks, String storageFileName) {
+        if (storageFileName != null && !storageFileName.isBlank()) {
+            listTitle.setText(storageFileName);
+        }
+
+        ObservableList<Task> items = FXCollections.observableArrayList();
+        if (tasks != null) {
+            items.addAll(tasks);
+        }
+        taskListView.setItems(items);
+    }
+
+    /**
      * Updates the displayed tasks and sets the title to the file name of the storage path.
      *
      * @param taskList Current task list to display.
      * @param storageFilePath File path of the storage data file.
      */
     public void updateTasks(TaskList taskList, String storageFilePath) {
-        if (storageFilePath != null && !storageFilePath.isBlank()) {
-            Path path = Path.of(storageFilePath);
-            listTitle.setText(path.getFileName().toString());
-        }
-
-        ObservableList<Task> items = FXCollections.observableArrayList();
-        if (taskList != null) {
-            items.addAll(taskList.getTodos());
-        }
-        taskListView.setItems(items);
+        String fileName = (storageFilePath != null && !storageFilePath.isBlank())
+                ? Path.of(storageFilePath).getFileName().toString()
+                : "";
+        updateTasks(taskList != null ? taskList.getTodos() : null, fileName);
     }
 }

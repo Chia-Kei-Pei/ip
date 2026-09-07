@@ -1,11 +1,13 @@
 package kpei.ui.controllers;
 
+import java.util.ArrayList;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import kpei.Bert;
+import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
-import kpei.exceptions.BertException;
 import kpei.storage.Storage;
 import kpei.ui.Cli;
 
@@ -53,20 +55,27 @@ public class MainWindowController {
      * @param storage The storage handler instance.
      * @param taskList The task list instance.
      * @param cli The CLI interface instance.
+     * @param bert The Bert controller instance.
      */
     public void setDependencies(Storage storage, TaskList taskList, Cli cli, Bert bert) {
         this.storage = storage;
         this.taskList = taskList;
         this.cli = cli;
         this.bert = bert;
-        refreshTaskList();
+        if (this.bert != null) {
+            this.bert.setMainWindowController(this);
+        }
+        refreshTaskList(taskList.getTodos(), storage.getFileName());
     }
 
     /**
      * Refreshes the task list displayed in the right-hand List View component.
+     *
+     * @param tasks The list of tasks to display.
+     * @param storageFileName The file name of the storage file.
      */
-    public void refreshTaskList() {
-        listViewController.updateTasks(taskList, storage.getFilePath());
+    public void refreshTaskList(ArrayList<Task> tasks, String storageFileName) {
+        listViewController.updateTasks(tasks, storageFileName);
     }
 
     /**
@@ -76,7 +85,6 @@ public class MainWindowController {
      */
     private void handleCommand(String input) {
         boolean isExit = bert.executeUserCommand(input);
-        refreshTaskList(); // Todo: should be moved into Bert handler methods
 
         if (isExit) {
             Platform.exit();

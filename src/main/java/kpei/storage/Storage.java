@@ -125,4 +125,16 @@ public class Storage {
     public String getFilePath() {
         return filePath;
     }
+
+    /**
+     * Returns the file name of the storage file path.
+     *
+     * @return The storage file name.
+     */
+    public String getFileName() {
+        if (filePath == null || filePath.isBlank()) {
+            return "";
+        }
+        return Path.of(filePath).getFileName().toString();
+    }
 }

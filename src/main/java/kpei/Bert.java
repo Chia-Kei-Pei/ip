@@ -10,6 +10,7 @@ import kpei.parser.ParsedCommand;
 import kpei.parser.TaskParser;
 import kpei.storage.Storage;
 import kpei.ui.Cli;
+import kpei.ui.controllers.MainWindowController;
 
 /**
  * Core coordinator and command handler for the BERT assistant.
@@ -21,6 +22,7 @@ public class Bert {
     private final Storage storage;
     private final TaskList taskList;
     private final Cli cli;
+    private MainWindowController mainWindowController;
 
     /**
      * Constructs a {@code Bert} instance with the given storage, task list, and CLI interface.
@@ -30,9 +32,23 @@ public class Bert {
      * @param cli CLI interface used to display messages to the user.
      */
     public Bert(Storage storage, TaskList taskList, Cli cli) {
+        this(storage, taskList, cli, null);
+    }
+
+    /**
+     * Constructs a {@code Bert} instance with the given storage, task list, CLI interface,
+     * and optional main window controller.
+     *
+     * @param storage Storage instance used for task persistence.
+     * @param taskList Task list holding the user tasks.
+     * @param cli CLI interface used to display messages to the user.
+     * @param mainWindowController Controller for the main GUI window.
+     */
+    public Bert(Storage storage, TaskList taskList, Cli cli, MainWindowController mainWindowController) {
         this.storage = storage;
         this.taskList = taskList;
         this.cli = cli;
+        this.mainWindowController = mainWindowController;
 
         try {
             this.storage.load(taskList);
@@ -42,6 +58,15 @@ public class Bert {
 
         this.cli.greeting();
         this.cli.showLine();
+    }
+
+    /**
+     * Sets the {@link MainWindowController} instance for GUI notifications.
+     *
+     * @param mainWindowController The main window controller.
+     */
+    public void setMainWindowController(MainWindowController mainWindowController) {
+        this.mainWindowController = mainWindowController;
     }
 
     /**
@@ -84,6 +109,7 @@ public class Bert {
         storage.save(taskList);
         cli.showMsg("Added " + task.getType());
         cli.showTask(taskList.size(), task);
+        refreshGuiTaskList();
     }
 
     private void handleList() {
@@ -109,6 +135,7 @@ public class Bert {
             storage.save(taskList);
             cli.showMsg("Marked " + task.getType());
             cli.showTask(index, task);
+            refreshGuiTaskList();
         }
     }
 
@@ -122,6 +149,7 @@ public class Bert {
             storage.save(taskList);
             cli.showMsg("Unmarked " + task.getType());
             cli.showTask(index, task);
+            refreshGuiTaskList();
         }
     }
 
@@ -130,6 +158,12 @@ public class Bert {
         storage.save(taskList);
         cli.showMsg("Removed " + removedTask.getType());
         cli.showTask(index, removedTask);
+        refreshGuiTaskList();
     }
 
+    private void refreshGuiTaskList() {
+        if (mainWindowController != null) {
+            mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
+        }
+    }
 }
