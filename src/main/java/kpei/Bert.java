@@ -45,15 +45,6 @@ public class Bert {
     }
 
     /**
-     * Saves the current task list to storage.
-     *
-     * @throws BertException If an error occurs while writing tasks to storage.
-     */
-    public void saveStorage() throws BertException {
-        storage.save(taskList);
-    }
-
-    /**
      * Dispatches a parsed command to the appropriate handler method.
      *
      * @param userPrompt The raw command string entered by the user.
@@ -90,7 +81,7 @@ public class Bert {
 
     private void handleAdd(Task task) throws BertException {
         taskList.add(task);
-        saveStorage();
+        storage.save(taskList);
         cli.showMsg("Added " + task.getType());
         cli.showTask(taskList.size(), task);
     }
@@ -115,7 +106,7 @@ public class Bert {
             cli.showTask(index, task);
         } else {
             taskList.mark(index);
-            saveStorage();
+            storage.save(taskList);
             cli.showMsg("Marked " + task.getType());
             cli.showTask(index, task);
         }
@@ -128,7 +119,7 @@ public class Bert {
             cli.showTask(index, task);
         } else {
             taskList.unmark(index);
-            saveStorage();
+            storage.save(taskList);
             cli.showMsg("Unmarked " + task.getType());
             cli.showTask(index, task);
         }
@@ -136,35 +127,8 @@ public class Bert {
 
     private void handleDelete(int index) throws InvalidIndexException, BertException {
         Task removedTask = taskList.remove(index);
-        saveStorage();
+        storage.save(taskList);
         cli.showMsg("Removed " + removedTask.getType());
         cli.showTask(index, removedTask);
-    }
-
-    /**
-     * Returns the task list managed by this instance.
-     *
-     * @return The task list.
-     */
-    public TaskList getTaskList() {
-        return taskList;
-    }
-
-    /**
-     * Returns the storage instance used by this instance.
-     *
-     * @return The storage instance.
-     */
-    public Storage getStorage() {
-        return storage;
-    }
-
-    /**
-     * Returns the CLI interface used by this instance.
-     *
-     * @return The {@link Cli} instance.
-     */
-    public Cli getCli() {
-        return cli;
     }
 }

@@ -60,20 +60,6 @@ public class MainWindowController {
     }
 
     /**
-     * Injects the {@link Cli} interface instance.
-     *
-     * @param cli The CLI interface instance.
-     */
-    public void setCli(Cli cli) {
-        this.cli = cli;
-        if (cli != null) {
-            this.storage = cli.getStorage();
-            this.taskList = cli.getTaskList();
-        }
-        refreshTaskList();
-    }
-
-    /**
      * Starts the GUI session by loading tasks from storage, printing greetings, and refreshing the list.
      */
     public void startGui() {
@@ -113,39 +99,12 @@ public class MainWindowController {
             return;
         }
 
-        boolean isExit = cli.executeUserCommand(input);
+        boolean isExit = cli.executeUserCommand(input); // TODO: should be calling Bert.executeUserCommand directly
         refreshTaskList();
 
         if (isExit) {
             Platform.exit();
         }
-    }
-
-    /**
-     * Returns the injected {@link Storage} instance.
-     *
-     * @return The storage instance.
-     */
-    public Storage getStorage() {
-        return storage;
-    }
-
-    /**
-     * Returns the injected {@link TaskList} instance.
-     *
-     * @return The task list instance.
-     */
-    public TaskList getTaskList() {
-        return taskList;
-    }
-
-    /**
-     * Returns the CLI interface instance.
-     *
-     * @return The {@link Cli} instance.
-     */
-    public Cli getCli() {
-        return cli;
     }
 
     /**
@@ -155,23 +114,5 @@ public class MainWindowController {
      */
     public CliTerminalController getCliTerminalController() {
         return cliTerminalController;
-    }
-
-    /**
-     * Returns the nested controller for the banner.
-     *
-     * @return The {@link BannerController} instance.
-     */
-    public BannerController getBannerController() {
-        return bannerController;
-    }
-
-    /**
-     * Returns the nested controller for the list view.
-     *
-     * @return The {@link ListViewController} instance.
-     */
-    public ListViewController getListViewController() {
-        return listViewController;
     }
 }

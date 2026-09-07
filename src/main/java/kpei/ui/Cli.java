@@ -42,27 +42,7 @@ public class Cli {
      * @param messageConsumer Consumer for output messages.
      */
     public Cli(Consumer<String> messageConsumer) {
-        this(null, messageConsumer);
-    }
-
-    /**
-     * Constructs a {@code Cli} instance with the given {@link Bert} controller and standard terminal output.
-     *
-     * @param bert The Bert controller instance.
-     */
-    public Cli(Bert bert) {
-        this(bert, System.out::print);
-    }
-
-    /**
-     * Constructs a {@code Cli} instance with the given {@link Bert} controller and custom message consumer.
-     *
-     * @param bert The Bert controller instance.
-     * @param messageConsumer Consumer for output messages.
-     */
-    public Cli(Bert bert, Consumer<String> messageConsumer) {
-        this.bert = bert;
-        this.messageConsumer = messageConsumer != null ? messageConsumer : System.out::print;
+        this.messageConsumer = messageConsumer;
     }
 
     /**
@@ -119,19 +99,6 @@ public class Cli {
                 return;
             }
         }
-    }
-
-    /**
-     * Delegates command execution to the underlying {@link Bert} controller.
-     *
-     * @param userPrompt The raw command string entered by the user.
-     * @return {@code true} if an exit command was executed, {@code false} otherwise.
-     */
-    public boolean executeUserCommand(String userPrompt) {
-        if (bert == null) {
-            throw new IllegalStateException("Bert controller must be set before executing commands.");
-        }
-        return bert.executeUserCommand(userPrompt);
     }
 
     /**
@@ -229,23 +196,5 @@ public class Cli {
 
     private void print(String message) {
         messageConsumer.accept(message + "\n");
-    }
-
-    /**
-     * Returns the task list managed by the controller.
-     *
-     * @return The task list.
-     */
-    public TaskList getTaskList() {
-        return bert != null ? bert.getTaskList() : null;
-    }
-
-    /**
-     * Returns the storage instance used by the controller.
-     *
-     * @return The storage instance.
-     */
-    public Storage getStorage() {
-        return bert != null ? bert.getStorage() : null;
     }
 }
