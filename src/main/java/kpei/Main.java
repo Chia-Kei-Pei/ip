@@ -27,59 +27,55 @@ public class Main extends Application {
     private static final double MIN_HEIGHT = 580;
 
     @Override
-    public void start(Stage stage) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(MAIN_WINDOW_FXML));
-            Parent root = fxmlLoader.load();
-            MainWindowController mainWindowController = fxmlLoader.getController();
+    public void start(Stage stage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(MAIN_WINDOW_FXML));
+        Parent root = fxmlLoader.load();
+        MainWindowController mainWindowController = fxmlLoader.getController();
 
-            OutputStream terminalOutputStream = new OutputStream() {
-                private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        OutputStream terminalOutputStream = new OutputStream() {
+            private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-                @Override
-                public void write(int b) {
-                    buffer.write(b);
-                    if (b == '\n') {
+            @Override
+            public void write(int b) {
+                buffer.write(b);
+                if (b == '\n') {
+                    flush();
+                }
+            }
+
+            @Override
+            public void write(byte[] b, int off, int len) {
+                buffer.write(b, off, len);
+                for (int i = off; i < off + len; i++) {
+                    if (b[i] == '\n') {
                         flush();
+                        break;
                     }
                 }
+            }
 
-                @Override
-                public void write(byte[] b, int off, int len) {
-                    buffer.write(b, off, len);
-                    for (int i = off; i < off + len; i++) {
-                        if (b[i] == '\n') {
-                            flush();
-                            break;
-                        }
-                    }
+            @Override
+            public void flush() {
+                if (buffer.size() > 0) {
+                    String text = buffer.toString(StandardCharsets.UTF_8);
+                    buffer.reset();
+                    mainWindowController.getCliTerminalController().appendOutput(text);
                 }
+            }
+        };
 
-                @Override
-                public void flush() {
-                    if (buffer.size() > 0) {
-                        String text = buffer.toString(StandardCharsets.UTF_8);
-                        buffer.reset();
-                        mainWindowController.getCliTerminalController().appendOutput(text);
-                    }
-                }
-            };
+        InputStream dummyInput = new ByteArrayInputStream(new byte[0]);
+        Bert bert = new Bert(DEFAULT_DATA_PATH, dummyInput, terminalOutputStream, true);
 
-            InputStream dummyInput = new ByteArrayInputStream(new byte[0]);
-            Bert bert = new Bert(DEFAULT_DATA_PATH, dummyInput, terminalOutputStream, true);
+        mainWindowController.setBert(bert);
+        bert.startGui();
+        mainWindowController.refreshTaskList();
 
-            mainWindowController.setBert(bert);
-            bert.startGui();
-            mainWindowController.refreshTaskList();
-
-            Scene scene = new Scene(root);
-            stage.setTitle(APPLICATION_TITLE);
-            stage.setMinWidth(MIN_WIDTH);
-            stage.setMinHeight(MIN_HEIGHT);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Scene scene = new Scene(root);
+        stage.setTitle(APPLICATION_TITLE);
+        stage.setMinWidth(MIN_WIDTH);
+        stage.setMinHeight(MIN_HEIGHT);
+        stage.setScene(scene);
+        stage.show();
     }
 }
