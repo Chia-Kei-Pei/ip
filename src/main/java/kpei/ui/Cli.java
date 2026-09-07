@@ -294,7 +294,7 @@ public class Cli {
     }
 
     private void print(String message) {
-        messageConsumer.accept(message);
+        messageConsumer.accept(message + "\n");
     }
 
     /**

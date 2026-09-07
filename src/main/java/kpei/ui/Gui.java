@@ -47,7 +47,7 @@ public class Gui extends Application {
         TaskList effectiveTaskList = taskList != null ? taskList : new TaskList();
 
         Cli cli = new Cli(effectiveStorage, effectiveTaskList,
-                msg -> mainWindowController.getCliTerminalController().appendOutput(msg + "\n"));
+                msg -> mainWindowController.getCliTerminalController().appendOutput(msg));
 
         mainWindowController.setDependencies(effectiveStorage, effectiveTaskList, cli);
         mainWindowController.startGui();
