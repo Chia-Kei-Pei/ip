@@ -3,19 +3,15 @@ package kpei.ui;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import kpei.Bert;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
-import kpei.exceptions.InvalidIndexException;
-import kpei.exceptions.UnknownCommandException;
-import kpei.parser.CommandParser;
-import kpei.parser.ParsedCommand;
-import kpei.parser.TaskParser;
 import kpei.storage.Storage;
 
 /**
- * Command-line interface and task coordinator for the BERT assistant.
- * Manages task list data, storage persistence, user prompt loop, and formatted output.
+ * Command-line interface and presentation layer for the BERT assistant.
+ * Handles reading user input from the terminal and formatting messages for display.
  */
 public class Cli {
 
@@ -30,59 +26,84 @@ public class Cli {
         """;
     private static final String HORIZONTAL_LINE = "____________________________________________________________";
 
-    private final Storage storage;
-    private final TaskList taskList;
     private final Consumer<String> messageConsumer;
+    private Bert bert;
 
     /**
-     * Constructs a {@code Cli} instance for CLI-only mode with standard terminal output.
-     *
-     * @param storage Storage instance used for task persistence.
-     * @param taskList Task list holding the user tasks.
+     * Constructs a {@code Cli} instance with standard terminal output.
      */
-    public Cli(Storage storage, TaskList taskList) {
-        this(storage, taskList, System.out::print);
+    public Cli() {
+        this(System.out::print);
     }
 
     /**
      * Constructs a {@code Cli} instance with a custom message consumer.
      *
-     * @param storage Storage instance used for task persistence.
-     * @param taskList Task list holding the user tasks.
-     * @param messageConsumer Consumer for output messages (e.g., terminal printing or GUI appending).
+     * @param messageConsumer Consumer for output messages.
      */
-    public Cli(Storage storage, TaskList taskList, Consumer<String> messageConsumer) {
-        this.storage = storage;
-        this.taskList = taskList;
-        this.messageConsumer = messageConsumer != null ? messageConsumer : System.out::println;
+    public Cli(Consumer<String> messageConsumer) {
+        this(null, messageConsumer);
     }
 
     /**
-     * Loads tasks from storage into the task list.
+     * Constructs a {@code Cli} instance with the given {@link Bert} controller and standard terminal output.
      *
-     * @throws BertException If an error occurs while reading tasks from storage.
+     * @param bert The Bert controller instance.
      */
-    public void loadStorage() throws BertException {
-        storage.load(taskList);
+    public Cli(Bert bert) {
+        this(bert, System.out::print);
     }
 
     /**
-     * Saves the current task list to storage.
+     * Constructs a {@code Cli} instance with the given {@link Bert} controller and custom message consumer.
      *
-     * @throws BertException If an error occurs while writing tasks to storage.
+     * @param bert The Bert controller instance.
+     * @param messageConsumer Consumer for output messages.
      */
-    public void saveStorage() throws BertException {
-        storage.save(taskList);
+    public Cli(Bert bert, Consumer<String> messageConsumer) {
+        this.bert = bert;
+        this.messageConsumer = messageConsumer != null ? messageConsumer : System.out::print;
     }
 
     /**
-     * Starts the CLI run loop, continuously prompting for commands until an exit command is received.
+     * Sets the {@link Bert} controller instance.
+     *
+     * @param bert The Bert controller instance.
+     */
+    public void setBert(Bert bert) {
+        this.bert = bert;
+    }
+
+    /**
+     * Returns the associated {@link Bert} controller instance.
+     *
+     * @return The Bert instance.
+     */
+    public Bert getBert() {
+        return bert;
+    }
+
+    /**
+     * Starts the CLI run loop using the configured {@link Bert} controller.
      */
     public void run() {
+        if (bert == null) {
+            throw new IllegalStateException("Bert controller must be set before calling run().");
+        }
+        run(bert);
+    }
+
+    /**
+     * Starts the CLI run loop with the specified {@link Bert} controller.
+     *
+     * @param bert The Bert controller instance to coordinate command execution.
+     */
+    public void run(Bert bert) {
+        this.bert = bert;
         Scanner scanner = new Scanner(System.in);
 
         try {
-            loadStorage();
+            bert.loadStorage();
         } catch (BertException e) {
             showWarning(e.getMessage());
         }
@@ -94,98 +115,23 @@ public class Cli {
             System.out.print("> ");
             String userPrompt = scanner.nextLine();
 
-            if (executeUserCommand(userPrompt)) {
+            if (bert.executeUserCommand(userPrompt)) {
                 return;
             }
         }
     }
 
     /**
-     * Dispatches a parsed command to the appropriate handler method.
+     * Delegates command execution to the underlying {@link Bert} controller.
      *
      * @param userPrompt The raw command string entered by the user.
      * @return {@code true} if an exit command was executed, {@code false} otherwise.
      */
     public boolean executeUserCommand(String userPrompt) {
-        try {
-            showLine();
-            ParsedCommand cmd = CommandParser.parse(userPrompt);
-
-            switch (cmd.getCommandType()) {
-                case "todo" -> handleAdd(TaskParser.parseTodo(cmd.getArgument()));
-                case "deadline" -> handleAdd(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
-                case "event" -> handleAdd(TaskParser.parseEvent(cmd.getArgument(),
-                        cmd.getFlag("from"), cmd.getFlag("to")));
-                case "list" -> handleList();
-                case "find" -> handleFind(cmd.getArgument());
-                case "mark" -> handleMark(cmd.getArgumentAsInt());
-                case "unmark" -> handleUnmark(cmd.getArgumentAsInt());
-                case "delete" -> handleDelete(cmd.getArgumentAsInt());
-                case "exit" -> {
-                    farewell();
-                    return true;
-                }
-                default -> throw new UnknownCommandException(cmd.getCommandType());
-            }
-        } catch (BertException | IllegalArgumentException | IndexOutOfBoundsException e) {
-            showError(e.getMessage());
-        } finally {
-            showLine();
-            return false;
+        if (bert == null) {
+            throw new IllegalStateException("Bert controller must be set before executing commands.");
         }
-    }
-
-    private void handleAdd(Task task) throws BertException {
-        taskList.add(task);
-        saveStorage();
-        print("Added " + task.getType());
-        showTask(taskList.size(), task);
-    }
-
-    private void handleList() {
-        if (taskList.isEmpty()) {
-            print("List is empty.");
-        } else {
-            showTodoList(taskList);
-        }
-    }
-
-    private void handleFind(String keyword) {
-        TaskList matchingTasks = taskList.find(keyword);
-        showFoundTasks(matchingTasks);
-    }
-
-    private void handleMark(int index) throws InvalidIndexException, BertException {
-        Task task = taskList.get(index);
-        if (task.isMarked()) {
-            print("Already marked " + task.getType());
-            showTask(index, task);
-        } else {
-            taskList.mark(index);
-            saveStorage();
-            print("Marked " + task.getType());
-            showTask(index, task);
-        }
-    }
-
-    private void handleUnmark(int index) throws InvalidIndexException, BertException {
-        Task task = taskList.get(index);
-        if (!task.isMarked()) {
-            print("Already unmarked " + task.getType());
-            showTask(index, task);
-        } else {
-            taskList.unmark(index);
-            saveStorage();
-            print("Unmarked " + task.getType());
-            showTask(index, task);
-        }
-    }
-
-    private void handleDelete(int index) throws InvalidIndexException, BertException {
-        Task removedTask = taskList.remove(index);
-        saveStorage();
-        print("Removed " + removedTask.getType());
-        showTask(index, removedTask);
+        return bert.executeUserCommand(userPrompt);
     }
 
     /**
@@ -209,6 +155,15 @@ public class Cli {
      */
     public void showLine() {
         print(HORIZONTAL_LINE);
+    }
+
+    /**
+     * Displays a general message to the user.
+     *
+     * @param msg The message text.
+     */
+    public void showMsg(String msg) {
+        print(msg);
     }
 
     /**
@@ -277,20 +232,20 @@ public class Cli {
     }
 
     /**
-     * Returns the task list managed by this instance.
+     * Returns the task list managed by the controller.
      *
      * @return The task list.
      */
     public TaskList getTaskList() {
-        return taskList;
+        return bert != null ? bert.getTaskList() : null;
     }
 
     /**
-     * Returns the {@link Storage} handler used by this instance.
+     * Returns the storage instance used by the controller.
      *
      * @return The storage instance.
      */
     public Storage getStorage() {
-        return storage;
+        return bert != null ? bert.getStorage() : null;
     }
 }

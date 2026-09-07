@@ -23,7 +23,9 @@ class BertTest {
         Storage storage = new Storage(testDataFilePath);
         TaskList taskList = new TaskList();
         StringBuilder output = new StringBuilder();
-        Cli cli = new Cli(storage, taskList, msg -> output.append(msg).append(System.lineSeparator()));
+        Cli cli = new Cli(msg -> output.append(msg));
+        Bert bert = new Bert(storage, taskList, cli);
+        cli.setBert(bert);
 
         InputStream originalIn = System.in;
         try {

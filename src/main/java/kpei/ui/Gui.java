@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import kpei.Bert;
 import kpei.datatypes.TaskList;
 import kpei.storage.Storage;
 import kpei.ui.controllers.MainWindowController;
@@ -46,8 +47,9 @@ public class Gui extends Application {
         Storage effectiveStorage = storage != null ? storage : new Storage(DEFAULT_DATA_PATH);
         TaskList effectiveTaskList = taskList != null ? taskList : new TaskList();
 
-        Cli cli = new Cli(effectiveStorage, effectiveTaskList,
-                msg -> mainWindowController.getCliTerminalController().appendOutput(msg));
+        Cli cli = new Cli(msg -> mainWindowController.getCliTerminalController().appendOutput(msg));
+        Bert bert = new Bert(effectiveStorage, effectiveTaskList, cli);
+        cli.setBert(bert);
 
         mainWindowController.setDependencies(effectiveStorage, effectiveTaskList, cli);
         mainWindowController.startGui();
