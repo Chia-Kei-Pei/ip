@@ -60,7 +60,9 @@ public class Bert {
         this.cli.greeting();
         this.cli.showLine();
 
-        updateGuiList(taskList, storage.getFileName());
+        displayList = this.taskList;
+        
+        updateGuiList(displayList, storage.getFileName());
     }
 
     /**
@@ -103,22 +105,25 @@ public class Bert {
         storage.save(taskList);
         cli.showMsg("Added " + task.getType());
         cli.showTask(taskList.size(), task);
-        updateGuiList(taskList, storage.getFileName());
+        displayList = taskList;
+        updateGuiList(displayList, storage.getFileName());
     }
 
     private void handleList() {
         if (taskList.isEmpty()) {
             cli.showMsg("List is empty.");
         } else {
+            displayList = taskList;
             if (mainWindowController == null) {
                 cli.showTodoList(taskList);
             }
-            updateGuiList(taskList, storage.getFileName());
+            updateGuiList(displayList, storage.getFileName());
         }
     }
 
     private void handleFind(String keyword) {
         TaskList matchingTasks = taskList.find(keyword);
+        displayList = matchingTasks;
         if (mainWindowController == null) {
             cli.showFoundTasks(matchingTasks);
         }
@@ -126,39 +131,39 @@ public class Bert {
     }
 
     private void handleMark(int index) throws InvalidIndexException, BertException {
-        Task task = taskList.get(index);
+        Task task = displayList.get(index);
         if (task.isMarked()) {
             cli.showMsg("Already marked " + task.getType());
             cli.showTask(index, task);
         } else {
-            taskList.mark(index);
-            storage.save(taskList);
+            displayList.mark(index);
+            storage.save(taskList); // do NOT save displaylist
             cli.showMsg("Marked " + task.getType());
             cli.showTask(index, task);
-            updateGuiList(taskList, storage.getFileName());
+            updateGuiList(displayList, storage.getFileName());
         }
     }
 
     private void handleUnmark(int index) throws InvalidIndexException, BertException {
-        Task task = taskList.get(index);
+        Task task = displayList.get(index);
         if (!task.isMarked()) {
             cli.showMsg("Already unmarked " + task.getType());
             cli.showTask(index, task);
         } else {
-            taskList.unmark(index);
-            storage.save(taskList);
+            displayList.unmark(index);
+            storage.save(taskList); // do NOT save displaylist
             cli.showMsg("Unmarked " + task.getType());
             cli.showTask(index, task);
-            updateGuiList(taskList, storage.getFileName());
+            updateGuiList(displayList, storage.getFileName());
         }
     }
 
     private void handleDelete(int index) throws InvalidIndexException, BertException {
-        Task removedTask = taskList.remove(index);
-        storage.save(taskList);
+        Task removedTask = displayList.remove(index);
+        storage.save(taskList); // do NOT save displaylist
         cli.showMsg("Removed " + removedTask.getType());
         cli.showTask(index, removedTask);
-
+        updateGuiList(displayList, storage.getFileName());
     }
 
     private void updateGuiList(TaskList tasks, String listName) {
