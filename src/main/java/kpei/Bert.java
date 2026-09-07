@@ -100,7 +100,7 @@ public class Bert {
         storage.save(taskList);
         cli.showMsg("Added " + task.getType());
         cli.showTask(taskList.size(), task);
-        mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
+        updateGUIList();
     }
 
     private void handleList() {
@@ -126,7 +126,7 @@ public class Bert {
             storage.save(taskList);
             cli.showMsg("Marked " + task.getType());
             cli.showTask(index, task);
-            mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
+            updateGUIList();
         }
     }
 
@@ -140,7 +140,7 @@ public class Bert {
             storage.save(taskList);
             cli.showMsg("Unmarked " + task.getType());
             cli.showTask(index, task);
-            mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
+            updateGUIList();
         }
     }
 
@@ -149,6 +149,12 @@ public class Bert {
         storage.save(taskList);
         cli.showMsg("Removed " + removedTask.getType());
         cli.showTask(index, removedTask);
-        mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
+
+    }
+
+    private void updateGUIList() {
+        if (mainWindowController != null) {
+            mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
+        }
     }
 }
