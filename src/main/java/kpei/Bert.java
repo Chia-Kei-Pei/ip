@@ -265,31 +265,5 @@ public class Bert {
     public String getStorageFilePath() {
         return storageFilePath;
     }
-
-    /**
-     * Starts the BERT application with default storage settings.
-     * Inspects arguments: if "--cli" is passed, runs in CLI mode;
-     * otherwise, launches the JavaFX GUI application.
-     *
-     * @param args Command line arguments.
-     */
-    public static void main(String[] args) {
-        boolean isCli = false;
-        if (args != null) {
-            for (String arg : args) {
-                if ("--cli".equalsIgnoreCase(arg.trim())) {
-                    isCli = true;
-                    break;
-                }
-            }
-        }
-
-        if (isCli) {
-            Bert bert = new Bert("data/todo_list_1.txt", System.in, System.out, false);
-            bert.run();
-        } else {
-            Launcher.launchGui(args);
-        }
-    }
 }
 
