@@ -33,7 +33,6 @@ public class Cli {
         """;
     private static final String HORIZONTAL_LINE = "____________________________________________________________";
 
-    private final String storageFilePath;
     private final Storage storage;
     private final TaskList taskList;
     private final Scanner scanner;
@@ -41,42 +40,56 @@ public class Cli {
     private final boolean isGuiMode;
 
     /**
-     * Constructs a {@code Cli} instance with the specified persistence path, I/O streams, and GUI mode.
+     * Constructs a {@code Cli} instance with the specified storage, task list, I/O streams, and GUI mode.
      *
-     * @param storageFilePath File path used for task storage.
+     * @param storage Storage instance used for task persistence.
+     * @param taskList Task list holding the user tasks.
      * @param inputStream Input stream for user commands (nullable in GUI mode).
      * @param outputStream Output stream for user responses.
      * @param isGuiMode Whether this interface is running within a GUI context.
      */
-    public Cli(String storageFilePath, InputStream inputStream, OutputStream outputStream, boolean isGuiMode) {
-        this.storageFilePath = storageFilePath;
-        this.storage = new Storage(storageFilePath);
-        this.taskList = new TaskList();
+    public Cli(Storage storage, TaskList taskList, InputStream inputStream,
+            OutputStream outputStream, boolean isGuiMode) {
+        this.storage = storage;
+        this.taskList = taskList;
         this.scanner = inputStream != null ? new Scanner(inputStream) : null;
         this.printStream = new PrintStream(outputStream);
         this.isGuiMode = isGuiMode;
     }
 
     /**
-     * Constructs a {@code Cli} instance for GUI mode with the specified persistence path and output stream.
+     * Constructs a {@code Cli} instance for GUI mode with the specified storage, task list, and output stream.
      *
-     * @param storageFilePath File path used for task storage.
+     * @param storage Storage instance used for task persistence.
+     * @param taskList Task list holding the user tasks.
      * @param outputStream Output stream for user responses.
      * @param isGuiMode Whether this interface is running within a GUI context.
      */
-    public Cli(String storageFilePath, OutputStream outputStream, boolean isGuiMode) {
-        this(storageFilePath, null, outputStream, isGuiMode);
+    public Cli(Storage storage, TaskList taskList, OutputStream outputStream, boolean isGuiMode) {
+        this(storage, taskList, null, outputStream, isGuiMode);
     }
 
     /**
-     * Constructs a {@code Cli} instance in CLI mode with the specified task persistence path.
+     * Constructs a {@code Cli} instance in CLI mode with the specified storage and task list.
+     *
+     * @param storage Storage instance used for task persistence.
+     * @param taskList Task list holding the user tasks.
+     * @param inputStream Input stream for user commands.
+     * @param outputStream Output stream for responses.
+     */
+    public Cli(Storage storage, TaskList taskList, InputStream inputStream, OutputStream outputStream) {
+        this(storage, taskList, inputStream, outputStream, false);
+    }
+
+    /**
+     * Constructs a {@code Cli} instance with a file path for backward-compatibility and tests.
      *
      * @param storageFilePath File path used for task storage.
      * @param inputStream Input stream for user commands.
      * @param outputStream Output stream for responses.
      */
     public Cli(String storageFilePath, InputStream inputStream, OutputStream outputStream) {
-        this(storageFilePath, inputStream, outputStream, false);
+        this(new Storage(storageFilePath), new TaskList(), inputStream, outputStream, false);
     }
 
     /**
@@ -347,6 +360,15 @@ public class Cli {
      * @return The storage file path.
      */
     public String getStorageFilePath() {
-        return storageFilePath;
+        return storage.getFilePath();
+    }
+
+    /**
+     * Returns the {@link Storage} handler used by this instance.
+     *
+     * @return The storage instance.
+     */
+    public Storage getStorage() {
+        return storage;
     }
 }

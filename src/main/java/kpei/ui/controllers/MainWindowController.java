@@ -3,7 +3,9 @@ package kpei.ui.controllers;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
+import kpei.storage.Storage;
 import kpei.ui.Cli;
 
 /**
@@ -29,6 +31,8 @@ public class MainWindowController {
     @FXML
     private ListViewController listViewController;
 
+    private Storage storage;
+    private TaskList taskList;
     private Cli cli;
 
     /**
@@ -42,12 +46,30 @@ public class MainWindowController {
     }
 
     /**
+     * Injects the shared storage, task list, and CLI interface instances.
+     *
+     * @param storage The storage handler instance.
+     * @param taskList The task list instance.
+     * @param cli The CLI interface instance.
+     */
+    public void setDependencies(Storage storage, TaskList taskList, Cli cli) {
+        this.storage = storage;
+        this.taskList = taskList;
+        this.cli = cli;
+        refreshTaskList();
+    }
+
+    /**
      * Injects the {@link Cli} interface instance.
      *
      * @param cli The CLI interface instance.
      */
     public void setCli(Cli cli) {
         this.cli = cli;
+        if (cli != null) {
+            this.storage = cli.getStorage();
+            this.taskList = cli.getTaskList();
+        }
         refreshTaskList();
     }
 
@@ -55,18 +77,20 @@ public class MainWindowController {
      * Starts the GUI session by loading tasks from storage, printing greetings, and refreshing the list.
      */
     public void startGui() {
-        if (cli == null) {
-            return;
+        if (storage != null && taskList != null) {
+            try {
+                storage.load(taskList);
+            } catch (BertException e) {
+                if (cli != null) {
+                    cli.showWarning(e.getMessage());
+                }
+            }
         }
 
-        try {
-            cli.loadStorage();
-        } catch (BertException e) {
-            cli.showWarning(e.getMessage());
+        if (cli != null) {
+            cli.greeting();
+            cli.showLine();
         }
-
-        cli.greeting();
-        cli.showLine();
         refreshTaskList();
     }
 
@@ -74,8 +98,8 @@ public class MainWindowController {
      * Refreshes the task list displayed in the right-hand List View component.
      */
     public void refreshTaskList() {
-        if (cli != null && listViewController != null) {
-            listViewController.updateTasks(cli.getTaskList(), cli.getStorageFilePath());
+        if (taskList != null && storage != null && listViewController != null) {
+            listViewController.updateTasks(taskList, storage.getFilePath());
         }
     }
 
@@ -95,6 +119,24 @@ public class MainWindowController {
         if (isExit) {
             Platform.exit();
         }
+    }
+
+    /**
+     * Returns the injected {@link Storage} instance.
+     *
+     * @return The storage instance.
+     */
+    public Storage getStorage() {
+        return storage;
+    }
+
+    /**
+     * Returns the injected {@link TaskList} instance.
+     *
+     * @return The task list instance.
+     */
+    public TaskList getTaskList() {
+        return taskList;
     }
 
     /**

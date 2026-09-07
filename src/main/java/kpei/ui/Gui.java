@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import kpei.datatypes.TaskList;
+import kpei.storage.Storage;
 import kpei.ui.controllers.MainWindowController;
 
 /**
@@ -23,6 +25,20 @@ public class Gui extends Application {
     private static final String APPLICATION_TITLE = "BERT Assistant";
     private static final double MIN_WIDTH = 850;
     private static final double MIN_HEIGHT = 580;
+
+    private static Storage storage;
+    private static TaskList taskList;
+
+    /**
+     * Sets the shared storage and task list dependencies initialized by Launcher.
+     *
+     * @param storageInstance The initialized Storage instance.
+     * @param taskListInstance The initialized TaskList instance.
+     */
+    public static void initDependencies(Storage storageInstance, TaskList taskListInstance) {
+        storage = storageInstance;
+        taskList = taskListInstance;
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -62,9 +78,12 @@ public class Gui extends Application {
             }
         };
 
-        Cli cli = new Cli(DEFAULT_DATA_PATH, terminalOutputStream, true);
+        Storage effectiveStorage = storage != null ? storage : new Storage(DEFAULT_DATA_PATH);
+        TaskList effectiveTaskList = taskList != null ? taskList : new TaskList();
 
-        mainWindowController.setCli(cli);
+        Cli cli = new Cli(effectiveStorage, effectiveTaskList, terminalOutputStream, true);
+
+        mainWindowController.setDependencies(effectiveStorage, effectiveTaskList, cli);
         mainWindowController.startGui();
 
         Scene scene = new Scene(root);

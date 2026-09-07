@@ -2,11 +2,13 @@ package kpei;
 
 import javafx.application.Application;
 
+import kpei.datatypes.TaskList;
+import kpei.storage.Storage;
 import kpei.ui.Cli;
 import kpei.ui.Gui;
 
 /**
- * Entry point that determines whether to start BERT in CLI mode or GUI mode based on arguments.
+ * Entry point that initializes core resources and launches BERT in CLI or GUI mode.
  */
 public class Launcher {
 
@@ -19,6 +21,9 @@ public class Launcher {
      * @param args Command line arguments.
      */
     public static void main(String[] args) {
+        Storage storage = new Storage(DEFAULT_STORAGE_PATH);
+        TaskList taskList = new TaskList();
+
         boolean isCli = false;
         if (args != null) {
             for (String arg : args) {
@@ -30,9 +35,10 @@ public class Launcher {
         }
 
         if (isCli) {
-            Cli cli = new Cli(DEFAULT_STORAGE_PATH, System.in, System.out);
+            Cli cli = new Cli(storage, taskList, System.in, System.out);
             cli.run();
         } else {
+            Gui.initDependencies(storage, taskList);
             Application.launch(Gui.class, args);
         }
     }

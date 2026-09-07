@@ -116,4 +116,13 @@ public class Storage {
             throw new BertException("Warning: Unable to save data to " + filePath + " (" + e.getMessage() + ")", e);
         }
     }
+
+    /**
+     * Returns the file path associated with this storage handler.
+     *
+     * @return The storage file path.
+     */
+    public String getFilePath() {
+        return filePath;
+    }
 }
