@@ -93,16 +93,6 @@ public class Cli {
     }
 
     /**
-     * Constructs a {@code Cli} instance in CLI mode with the default task storage path.
-     *
-     * @param inputStream Input stream for user commands.
-     * @param outputStream Output stream for responses.
-     */
-    public Cli(InputStream inputStream, OutputStream outputStream) {
-        this(DEFAULT_STORAGE_PATH, inputStream, outputStream);
-    }
-
-    /**
      * Loads tasks from storage into the task list.
      *
      * @throws BertException If an error occurs while reading tasks from storage.
