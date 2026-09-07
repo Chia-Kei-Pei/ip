@@ -34,9 +34,6 @@ public class MainWindowController {
     @FXML
     private ListViewController listViewController;
 
-    private Storage storage;
-    private TaskList taskList;
-    private Cli cli;
     private Bert bert;
 
     /**
@@ -48,25 +45,18 @@ public class MainWindowController {
     }
 
     /**
-     * Injects the shared storage, task list, and CLI interface instances.
+     * Injects the bert instance.
      *
-     * @param storage The storage handler instance.
-     * @param taskList The task list instance.
-     * @param cli The CLI interface instance.
      * @param bert The Bert controller instance.
      */
-    public void setDependencies(Storage storage, TaskList taskList, Cli cli, Bert bert) {
-        this.storage = storage;
-        this.taskList = taskList;
-        this.cli = cli;
+    public void setDependencies(Bert bert) {
         this.bert = bert;
-        refreshTaskList(taskList.getTodos(), storage.getFileName());
     }
 
     /**
      * Refreshes the task list displayed in the right-hand List View component.
      *
-     * @param tasks The list of tasks to display.
+     * @param tasks The raw arraylist of tasks to display.
      * @param storageFileName The file name of the storage file.
      */
     public void refreshTaskList(ArrayList<Task> tasks, String storageFileName) {
@@ -74,7 +64,7 @@ public class MainWindowController {
     }
 
     /**
-     * Handles command submission from the CLI terminal component.
+     * Handles command submission to bert.
      *
      * @param input The command entered by the user.
      */

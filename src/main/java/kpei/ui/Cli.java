@@ -6,8 +6,6 @@ import java.util.function.Consumer;
 import kpei.Bert;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
-import kpei.exceptions.BertException;
-import kpei.storage.Storage;
 
 /**
  * Command-line interface and presentation layer for the BERT assistant.

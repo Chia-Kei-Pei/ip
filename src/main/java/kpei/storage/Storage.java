@@ -118,15 +118,6 @@ public class Storage {
     }
 
     /**
-     * Returns the file path associated with this storage handler.
-     *
-     * @return The storage file path.
-     */
-    public String getFilePath() {
-        return filePath;
-    }
-
-    /**
      * Returns the file name of the storage file path.
      *
      * @return The storage file name.
