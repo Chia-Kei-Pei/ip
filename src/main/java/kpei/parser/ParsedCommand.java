@@ -89,13 +89,4 @@ public class ParsedCommand {
             throw new IllegalArgumentException("Invalid index format: " + argument);
         }
     }
-
-    /**
-     * Checks if this command signals termination of the application.
-     *
-     * @return {@code true} if the command is "bye", "exit", or "quit"; {@code false} otherwise.
-     */
-    public boolean isExitCommand() {
-        return commandType.equals("bye") || commandType.equals("exit") || commandType.equals("quit");
-    }
 }

@@ -41,7 +41,7 @@ public class Cli {
      * @param taskList Task list holding the user tasks.
      */
     public Cli(Storage storage, TaskList taskList) {
-        this(storage, taskList, System.out::println);
+        this(storage, taskList, System.out::print);
     }
 
     /**
@@ -79,6 +79,8 @@ public class Cli {
      * Starts the CLI run loop, continuously prompting for commands until an exit command is received.
      */
     public void run() {
+        Scanner scanner = new Scanner(System.in);
+
         try {
             loadStorage();
         } catch (BertException e) {
@@ -88,75 +90,61 @@ public class Cli {
         greeting();
         showLine();
 
-        Scanner scanner = new Scanner(System.in);
-
-        while (scanner.hasNextLine()) {
+        while (true) {
             System.out.print("> ");
             String userPrompt = scanner.nextLine();
-            showLine();
 
-            boolean isExit = executeUserCommand(userPrompt);
-            showLine();
-
-            if (isExit) {
+            if (executeUserCommand(userPrompt)) {
                 return;
             }
+
+            showLine();
         }
     }
 
     /**
-     * Executes a single user command string, sending responses or errors to the message consumer.
+     * Dispatches a parsed command to the appropriate handler method.
      *
      * @param userPrompt The raw command string entered by the user.
      * @return {@code true} if an exit command was executed, {@code false} otherwise.
      */
     public boolean executeUserCommand(String userPrompt) {
         try {
-            ParsedCommand command = CommandParser.parse(userPrompt);
+            ParsedCommand cmd = CommandParser.parse(userPrompt);
 
-            if (command.isExitCommand()) {
-                farewell();
-                return true;
+            switch (cmd.getCommandType()) {
+                case "todo" -> handleAdd(TaskParser.parseTodo(cmd.getArgument()));
+                case "deadline" -> handleAdd(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
+                case "event" -> handleAdd(TaskParser.parseEvent(cmd.getArgument(),
+                        cmd.getFlag("from"), cmd.getFlag("to")));
+                case "list" -> handleList();
+                case "find" -> handleFind(cmd.getArgument());
+                case "mark" -> handleMark(cmd.getArgumentAsInt());
+                case "unmark" -> handleUnmark(cmd.getArgumentAsInt());
+                case "delete" -> handleDelete(cmd.getArgumentAsInt());
+                case "exit" -> {
+                    farewell();
+                    return true;
+                }
+                default -> throw new UnknownCommandException(cmd.getCommandType());
             }
-
-            executeCommand(command);
         } catch (BertException | IllegalArgumentException | IndexOutOfBoundsException e) {
             showError(e.getMessage());
-        }
-        return false;
-    }
-
-    /**
-     * Dispatches a parsed command to the appropriate handler method.
-     *
-     * @param cmd The parsed command.
-     * @throws BertException If an application error occurs.
-     */
-    private void executeCommand(ParsedCommand cmd) throws BertException {
-        switch (cmd.getCommandType()) {
-            case "todo" -> handleAdd(TaskParser.parseTodo(cmd.getArgument()));
-            case "deadline" -> handleAdd(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
-            case "event" -> handleAdd(TaskParser.parseEvent(cmd.getArgument(),
-                    cmd.getFlag("from"), cmd.getFlag("to")));
-            case "list" -> handleList();
-            case "find" -> handleFind(cmd.getArgument());
-            case "mark" -> handleMark(cmd.getArgumentAsInt());
-            case "unmark" -> handleUnmark(cmd.getArgumentAsInt());
-            case "delete" -> handleDelete(cmd.getArgumentAsInt());
-            default -> throw new UnknownCommandException(cmd.getCommandType());
+        } finally {
+            return false;
         }
     }
 
     private void handleAdd(Task task) throws BertException {
         taskList.add(task);
         saveStorage();
-        showMsg("Added " + task.getType());
+        print("Added " + task.getType());
         showTask(taskList.size(), task);
     }
 
     private void handleList() {
         if (taskList.isEmpty()) {
-            showMsg("List is empty.");
+            print("List is empty.");
         } else {
             showTodoList(taskList);
         }
@@ -170,12 +158,12 @@ public class Cli {
     private void handleMark(int index) throws InvalidIndexException, BertException {
         Task task = taskList.get(index);
         if (task.isMarked()) {
-            showMsg("Already marked " + task.getType());
+            print("Already marked " + task.getType());
             showTask(index, task);
         } else {
             taskList.mark(index);
             saveStorage();
-            showMsg("Marked " + task.getType());
+            print("Marked " + task.getType());
             showTask(index, task);
         }
     }
@@ -183,12 +171,12 @@ public class Cli {
     private void handleUnmark(int index) throws InvalidIndexException, BertException {
         Task task = taskList.get(index);
         if (!task.isMarked()) {
-            showMsg("Already unmarked " + task.getType());
+            print("Already unmarked " + task.getType());
             showTask(index, task);
         } else {
             taskList.unmark(index);
             saveStorage();
-            showMsg("Unmarked " + task.getType());
+            print("Unmarked " + task.getType());
             showTask(index, task);
         }
     }
@@ -196,7 +184,7 @@ public class Cli {
     private void handleDelete(int index) throws InvalidIndexException, BertException {
         Task removedTask = taskList.remove(index);
         saveStorage();
-        showMsg("Removed " + removedTask.getType());
+        print("Removed " + removedTask.getType());
         showTask(index, removedTask);
     }
 
@@ -221,15 +209,6 @@ public class Cli {
      */
     public void showLine() {
         print(HORIZONTAL_LINE);
-    }
-
-    /**
-     * Displays a general message to the user.
-     *
-     * @param msg The message text.
-     */
-    public void showMsg(String msg) {
-        print(msg);
     }
 
     /**
