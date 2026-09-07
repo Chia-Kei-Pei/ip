@@ -286,15 +286,6 @@ public class Cli {
     }
 
     /**
-     * Returns the file path used for task storage.
-     *
-     * @return The storage file path.
-     */
-    public String getStorageFilePath() {
-        return storage.getFilePath();
-    }
-
-    /**
      * Returns the {@link Storage} handler used by this instance.
      *
      * @return The storage instance.
