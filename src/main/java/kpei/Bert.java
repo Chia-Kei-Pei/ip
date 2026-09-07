@@ -60,7 +60,7 @@ public class Bert {
         this.cli.greeting();
         this.cli.showLine();
 
-        updateGUIList(taskList, storage.getFileName());
+        updateGuiList(taskList, storage.getFileName());
     }
 
     /**
@@ -103,7 +103,7 @@ public class Bert {
         storage.save(taskList);
         cli.showMsg("Added " + task.getType());
         cli.showTask(taskList.size(), task);
-        updateGUIList(taskList, storage.getFileName());
+        updateGuiList(taskList, storage.getFileName());
     }
 
     private void handleList() {
@@ -113,14 +113,16 @@ public class Bert {
             if (mainWindowController == null) {
                 cli.showTodoList(taskList);
             }
-            updateGUIList(taskList, storage.getFileName());
+            updateGuiList(taskList, storage.getFileName());
         }
     }
 
     private void handleFind(String keyword) {
         TaskList matchingTasks = taskList.find(keyword);
-        cli.showFoundTasks(matchingTasks);
-        updateGUIList(matchingTasks, "Search results");
+        if (mainWindowController == null) {
+            cli.showFoundTasks(matchingTasks);
+        }
+        updateGuiList(matchingTasks, "Search results");
     }
 
     private void handleMark(int index) throws InvalidIndexException, BertException {
@@ -133,7 +135,7 @@ public class Bert {
             storage.save(taskList);
             cli.showMsg("Marked " + task.getType());
             cli.showTask(index, task);
-            updateGUIList(taskList, storage.getFileName());
+            updateGuiList(taskList, storage.getFileName());
         }
     }
 
@@ -147,7 +149,7 @@ public class Bert {
             storage.save(taskList);
             cli.showMsg("Unmarked " + task.getType());
             cli.showTask(index, task);
-            updateGUIList(taskList, storage.getFileName());
+            updateGuiList(taskList, storage.getFileName());
         }
     }
 
@@ -159,7 +161,7 @@ public class Bert {
 
     }
 
-    private void updateGUIList(TaskList tasks, String listName) {
+    private void updateGuiList(TaskList tasks, String listName) {
         if (mainWindowController != null) {
             mainWindowController.refreshTaskList(tasks, listName);
         }
