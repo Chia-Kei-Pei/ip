@@ -35,7 +35,7 @@ public class Launcher {
         }
 
         if (isCli) {
-            Cli cli = new Cli(storage, taskList, System.in, System.out);
+            Cli cli = new Cli(storage, taskList, System.out, false);
             cli.run();
         } else {
             Gui.initDependencies(storage, taskList);

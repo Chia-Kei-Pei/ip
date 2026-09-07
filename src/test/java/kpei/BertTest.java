@@ -34,11 +34,10 @@ class BertTest {
                 "bye"
         ) + System.lineSeparator();
 
-        ByteArrayInputStream in = new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8));
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         String testDataFilePath = tempDir.resolve("todo_list.txt").toString();
-        Cli cli = new Cli(testDataFilePath, in, out);
+        Cli cli = new Cli(testDataFilePath, out);
         cli.run();
 
         String output = out.toString(StandardCharsets.UTF_8);

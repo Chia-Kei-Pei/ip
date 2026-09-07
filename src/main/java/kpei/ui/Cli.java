@@ -35,27 +35,8 @@ public class Cli {
 
     private final Storage storage;
     private final TaskList taskList;
-    private final Scanner scanner;
     private final PrintStream printStream;
     private final boolean isGuiMode;
-
-    /**
-     * Constructs a {@code Cli} instance with the specified storage, task list, I/O streams, and GUI mode.
-     *
-     * @param storage Storage instance used for task persistence.
-     * @param taskList Task list holding the user tasks.
-     * @param inputStream Input stream for user commands (nullable in GUI mode).
-     * @param outputStream Output stream for user responses.
-     * @param isGuiMode Whether this interface is running within a GUI context.
-     */
-    public Cli(Storage storage, TaskList taskList, InputStream inputStream,
-            OutputStream outputStream, boolean isGuiMode) {
-        this.storage = storage;
-        this.taskList = taskList;
-        this.scanner = inputStream != null ? new Scanner(inputStream) : null;
-        this.printStream = new PrintStream(outputStream);
-        this.isGuiMode = isGuiMode;
-    }
 
     /**
      * Constructs a {@code Cli} instance for GUI mode with the specified storage, task list, and output stream.
@@ -66,30 +47,10 @@ public class Cli {
      * @param isGuiMode Whether this interface is running within a GUI context.
      */
     public Cli(Storage storage, TaskList taskList, OutputStream outputStream, boolean isGuiMode) {
-        this(storage, taskList, null, outputStream, isGuiMode);
-    }
-
-    /**
-     * Constructs a {@code Cli} instance in CLI mode with the specified storage and task list.
-     *
-     * @param storage Storage instance used for task persistence.
-     * @param taskList Task list holding the user tasks.
-     * @param inputStream Input stream for user commands.
-     * @param outputStream Output stream for responses.
-     */
-    public Cli(Storage storage, TaskList taskList, InputStream inputStream, OutputStream outputStream) {
-        this(storage, taskList, inputStream, outputStream, false);
-    }
-
-    /**
-     * Constructs a {@code Cli} instance with a file path for backward-compatibility and tests.
-     *
-     * @param storageFilePath File path used for task storage.
-     * @param inputStream Input stream for user commands.
-     * @param outputStream Output stream for responses.
-     */
-    public Cli(String storageFilePath, InputStream inputStream, OutputStream outputStream) {
-        this(new Storage(storageFilePath), new TaskList(), inputStream, outputStream, false);
+        this.storage = storage;
+        this.taskList = taskList;
+        this.printStream = new PrintStream(outputStream);
+        this.isGuiMode = isGuiMode;
     }
 
     /**
@@ -123,8 +84,11 @@ public class Cli {
         greeting();
         showLine();
 
+        Scanner scanner = new Scanner(System.in);
+
         while (scanner != null && scanner.hasNextLine()) {
-            String userPrompt = userPrompt();
+            printStream.print("> ");
+            String userPrompt = scanner.nextLine();
             showLine();
 
             boolean isExit = executeUserCommand(userPrompt);
@@ -253,16 +217,6 @@ public class Cli {
      */
     public void showLine() {
         printStream.println(HORIZONTAL_LINE);
-    }
-
-    /**
-     * Prompts the user for command input and returns the entered string.
-     *
-     * @return Command string entered by the user.
-     */
-    public String userPrompt() {
-        printStream.print("> ");
-        return scanner.nextLine();
     }
 
     /**
