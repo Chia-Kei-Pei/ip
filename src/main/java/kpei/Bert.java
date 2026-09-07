@@ -43,7 +43,7 @@ public class Bert {
         this.cli.greeting();
         this.cli.showLine();
     }
- 
+
     /**
      * Dispatches a parsed command to the appropriate handler method.
      *
