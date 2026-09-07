@@ -3,6 +3,7 @@ package kpei.ui.controllers;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import kpei.Bert;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
 import kpei.storage.Storage;
@@ -34,6 +35,7 @@ public class MainWindowController {
     private Storage storage;
     private TaskList taskList;
     private Cli cli;
+    private Bert bert;
 
     /**
      * Initializes the controller and binds the terminal command consumer.
@@ -52,31 +54,11 @@ public class MainWindowController {
      * @param taskList The task list instance.
      * @param cli The CLI interface instance.
      */
-    public void setDependencies(Storage storage, TaskList taskList, Cli cli) {
+    public void setDependencies(Storage storage, TaskList taskList, Cli cli, Bert bert) {
         this.storage = storage;
         this.taskList = taskList;
         this.cli = cli;
-        refreshTaskList();
-    }
-
-    /**
-     * Starts the GUI session by loading tasks from storage, printing greetings, and refreshing the list.
-     */
-    public void startGui() {
-        if (storage != null && taskList != null) {
-            try {
-                storage.load(taskList);
-            } catch (BertException e) {
-                if (cli != null) {
-                    cli.showWarning(e.getMessage());
-                }
-            }
-        }
-
-        if (cli != null) {
-            cli.greeting();
-            cli.showLine();
-        }
+        this.bert = bert;
         refreshTaskList();
     }
 
@@ -84,9 +66,7 @@ public class MainWindowController {
      * Refreshes the task list displayed in the right-hand List View component.
      */
     public void refreshTaskList() {
-        if (taskList != null && storage != null && listViewController != null) {
-            listViewController.updateTasks(taskList, storage.getFilePath());
-        }
+        listViewController.updateTasks(taskList, storage.getFilePath());
     }
 
     /**
@@ -95,12 +75,8 @@ public class MainWindowController {
      * @param input The command entered by the user.
      */
     private void handleCommand(String input) {
-        if (cli == null) {
-            return;
-        }
-
-        boolean isExit = cli.executeUserCommand(input); // TODO: should be calling Bert.executeUserCommand directly
-        refreshTaskList();
+        boolean isExit = bert.executeUserCommand(input);
+        refreshTaskList(); // Todo: should be moved into Bert handler methods
 
         if (isExit) {
             Platform.exit();

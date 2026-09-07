@@ -80,17 +80,8 @@ public class Cli {
      */
     public void run(Bert bert) {
         this.bert = bert;
+
         Scanner scanner = new Scanner(System.in);
-
-        try {
-            bert.loadStorage();
-        } catch (BertException e) {
-            showWarning(e.getMessage());
-        }
-
-        greeting();
-        showLine();
-
         while (true) {
             System.out.print("> ");
             String userPrompt = scanner.nextLine();

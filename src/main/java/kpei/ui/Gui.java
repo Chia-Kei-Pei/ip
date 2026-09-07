@@ -51,8 +51,7 @@ public class Gui extends Application {
         Bert bert = new Bert(effectiveStorage, effectiveTaskList, cli);
         cli.setBert(bert);
 
-        mainWindowController.setDependencies(effectiveStorage, effectiveTaskList, cli);
-        mainWindowController.startGui();
+        mainWindowController.setDependencies(effectiveStorage, effectiveTaskList, cli, bert);
 
         Scene scene = new Scene(root);
         stage.setTitle(APPLICATION_TITLE);

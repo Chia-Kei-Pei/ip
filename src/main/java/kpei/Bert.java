@@ -33,17 +33,17 @@ public class Bert {
         this.storage = storage;
         this.taskList = taskList;
         this.cli = cli;
-    }
 
-    /**
-     * Loads tasks from storage into the task list.
-     *
-     * @throws BertException If an error occurs while reading tasks from storage.
-     */
-    public void loadStorage() throws BertException {
-        storage.load(taskList);
-    }
+        try {
+            this.storage.load(taskList);
+        } catch (BertException e) {
+            this.cli.showWarning(e.getMessage());
+        }
 
+        this.cli.greeting();
+        this.cli.showLine();
+    }
+ 
     /**
      * Dispatches a parsed command to the appropriate handler method.
      *
@@ -131,4 +131,5 @@ public class Bert {
         cli.showMsg("Removed " + removedTask.getType());
         cli.showTask(index, removedTask);
     }
+
 }
