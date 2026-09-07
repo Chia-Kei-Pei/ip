@@ -1,9 +1,6 @@
 package kpei.ui;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -46,42 +43,11 @@ public class Gui extends Application {
         Parent root = fxmlLoader.load();
         MainWindowController mainWindowController = fxmlLoader.getController();
 
-        OutputStream terminalOutputStream = new OutputStream() {
-            private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
-            @Override
-            public void write(int b) {
-                buffer.write(b);
-                if (b == '\n') {
-                    flush();
-                }
-            }
-
-            @Override
-            public void write(byte[] b, int off, int len) {
-                buffer.write(b, off, len);
-                for (int i = off; i < off + len; i++) {
-                    if (b[i] == '\n') {
-                        flush();
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void flush() {
-                if (buffer.size() > 0) {
-                    String text = buffer.toString(StandardCharsets.UTF_8);
-                    buffer.reset();
-                    mainWindowController.getCliTerminalController().appendOutput(text);
-                }
-            }
-        };
-
         Storage effectiveStorage = storage != null ? storage : new Storage(DEFAULT_DATA_PATH);
         TaskList effectiveTaskList = taskList != null ? taskList : new TaskList();
 
-        Cli cli = new Cli(effectiveStorage, effectiveTaskList, terminalOutputStream, true);
+        Cli cli = new Cli(effectiveStorage, effectiveTaskList,
+                msg -> mainWindowController.getCliTerminalController().appendOutput(msg + "\n"));
 
         mainWindowController.setDependencies(effectiveStorage, effectiveTaskList, cli);
         mainWindowController.startGui();

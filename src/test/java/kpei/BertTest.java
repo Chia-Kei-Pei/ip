@@ -3,19 +3,38 @@ package kpei;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import kpei.datatypes.TaskList;
+import kpei.storage.Storage;
 import kpei.ui.Cli;
 
 class BertTest {
 
     @TempDir
     Path tempDir;
+
+    private String runCliWithInput(String testDataFilePath, String simulatedInput) {
+        Storage storage = new Storage(testDataFilePath);
+        TaskList taskList = new TaskList();
+        StringBuilder output = new StringBuilder();
+        Cli cli = new Cli(storage, taskList, msg -> output.append(msg).append(System.lineSeparator()));
+
+        InputStream originalIn = System.in;
+        try {
+            System.setIn(new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8)));
+            cli.run();
+        } finally {
+            System.setIn(originalIn);
+        }
+
+        return output.toString();
+    }
 
     /*
      * Runs all possible cli commands that a user would normally use, expecting no errors.
@@ -34,13 +53,8 @@ class BertTest {
                 "bye"
         ) + System.lineSeparator();
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
         String testDataFilePath = tempDir.resolve("todo_list.txt").toString();
-        Cli cli = new Cli(testDataFilePath, out);
-        cli.run();
-
-        String output = out.toString(StandardCharsets.UTF_8);
+        String output = runCliWithInput(testDataFilePath, simulatedInput);
 
         assertTrue(output.contains("Added todo"));
         assertTrue(output.contains("[todo][ ] Clean my room"));
@@ -70,14 +84,8 @@ class BertTest {
                 "bye"
         ) + System.lineSeparator();
 
-        ByteArrayInputStream in = new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8));
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
         String testDataFilePath = tempDir.resolve("todo_list_find.txt").toString();
-        Cli cli = new Cli(testDataFilePath, in, out);
-        cli.run();
-
-        String output = out.toString(StandardCharsets.UTF_8);
+        String output = runCliWithInput(testDataFilePath, simulatedInput);
 
         assertTrue(output.contains("Matching tasks:"));
         assertTrue(output.contains("1.[todo][ ] Clean my room"));
@@ -92,14 +100,8 @@ class BertTest {
                 "bye"
         ) + System.lineSeparator();
 
-        ByteArrayInputStream in = new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8));
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
         String testDataFilePath = tempDir.resolve("todo_list_find_empty.txt").toString();
-        Cli cli = new Cli(testDataFilePath, in, out);
-        cli.run();
-
-        String output = out.toString(StandardCharsets.UTF_8);
+        String output = runCliWithInput(testDataFilePath, simulatedInput);
 
         assertTrue(output.contains("No matching tasks found."));
     }

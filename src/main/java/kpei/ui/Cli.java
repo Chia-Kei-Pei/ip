@@ -1,9 +1,7 @@
 package kpei.ui;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
@@ -21,7 +19,6 @@ import kpei.storage.Storage;
  */
 public class Cli {
 
-    private static final String DEFAULT_STORAGE_PATH = "data/todo_list_1.txt";
     private static final String BANNER = """
          ____     ___  ____  ______
         |    \\   /  _]|    \\|      |
@@ -35,22 +32,29 @@ public class Cli {
 
     private final Storage storage;
     private final TaskList taskList;
-    private final PrintStream printStream;
-    private final boolean isGuiMode;
+    private final Consumer<String> messageConsumer;
 
     /**
-     * Constructs a {@code Cli} instance for GUI mode with the specified storage, task list, and output stream.
+     * Constructs a {@code Cli} instance for CLI-only mode with standard terminal output.
      *
      * @param storage Storage instance used for task persistence.
      * @param taskList Task list holding the user tasks.
-     * @param outputStream Output stream for user responses.
-     * @param isGuiMode Whether this interface is running within a GUI context.
      */
-    public Cli(Storage storage, TaskList taskList, OutputStream outputStream, boolean isGuiMode) {
+    public Cli(Storage storage, TaskList taskList) {
+        this(storage, taskList, System.out::println);
+    }
+
+    /**
+     * Constructs a {@code Cli} instance with a custom message consumer.
+     *
+     * @param storage Storage instance used for task persistence.
+     * @param taskList Task list holding the user tasks.
+     * @param messageConsumer Consumer for output messages (e.g., terminal printing or GUI appending).
+     */
+    public Cli(Storage storage, TaskList taskList, Consumer<String> messageConsumer) {
         this.storage = storage;
         this.taskList = taskList;
-        this.printStream = new PrintStream(outputStream);
-        this.isGuiMode = isGuiMode;
+        this.messageConsumer = messageConsumer != null ? messageConsumer : System.out::println;
     }
 
     /**
@@ -86,8 +90,8 @@ public class Cli {
 
         Scanner scanner = new Scanner(System.in);
 
-        while (scanner != null && scanner.hasNextLine()) {
-            printStream.print("> ");
+        while (scanner.hasNextLine()) {
+            System.out.print("> ");
             String userPrompt = scanner.nextLine();
             showLine();
 
@@ -101,7 +105,7 @@ public class Cli {
     }
 
     /**
-     * Executes a single user command string, printing responses or errors to the output stream.
+     * Executes a single user command string, sending responses or errors to the message consumer.
      *
      * @param userPrompt The raw command string entered by the user.
      * @return {@code true} if an exit command was executed, {@code false} otherwise.
@@ -138,7 +142,7 @@ public class Cli {
             case "find" -> handleFind(cmd.getArgument());
             case "mark" -> handleMark(cmd.getArgumentAsInt());
             case "unmark" -> handleUnmark(cmd.getArgumentAsInt());
-            case "delete", "remove" -> handleDelete(cmd.getArgumentAsInt());
+            case "delete" -> handleDelete(cmd.getArgumentAsInt());
             default -> throw new UnknownCommandException(cmd.getCommandType());
         }
     }
@@ -151,8 +155,8 @@ public class Cli {
     }
 
     private void handleList() {
-        if (isGuiMode) {
-            showMsg("Displaying List.");
+        if (taskList.isEmpty()) {
+            showMsg("List is empty.");
         } else {
             showTodoList(taskList);
         }
@@ -200,23 +204,23 @@ public class Cli {
      * Prints the welcome greeting and banner.
      */
     public void greeting() {
-        printStream.println(BANNER);
-        printStream.println("I am  BERT.");
-        printStream.println("What do you need?");
+        print(BANNER);
+        print("I am  BERT.");
+        print("What do you need?");
     }
 
     /**
      * Prints the farewell message upon exiting.
      */
     public void farewell() {
-        printStream.println("Goodbye.");
+        print("Goodbye.");
     }
 
     /**
      * Prints a horizontal separator line.
      */
     public void showLine() {
-        printStream.println(HORIZONTAL_LINE);
+        print(HORIZONTAL_LINE);
     }
 
     /**
@@ -225,7 +229,7 @@ public class Cli {
      * @param msg The message text.
      */
     public void showMsg(String msg) {
-        printStream.println(msg);
+        print(msg);
     }
 
     /**
@@ -234,7 +238,7 @@ public class Cli {
      * @param msg The error message text.
      */
     public void showError(String msg) {
-        printStream.println(String.format("ERROR!\n%s", msg));
+        print(String.format("ERROR!\n%s", msg));
     }
 
     /**
@@ -243,7 +247,7 @@ public class Cli {
      * @param msg The warning message text.
      */
     public void showWarning(String msg) {
-        printStream.println(String.format("Warning.\n%s", msg));
+        print(String.format("Warning.\n%s", msg));
     }
 
     /**
@@ -253,7 +257,7 @@ public class Cli {
      * @param task The task to display.
      */
     public void showTask(int index, Task task) {
-        printStream.println(String.format("%d.%s", index, task.toString()));
+        print(String.format("%d.%s", index, task.toString()));
     }
 
     /**
@@ -263,12 +267,12 @@ public class Cli {
      */
     public void showTodoList(TaskList taskList) {
         if (taskList.isEmpty()) {
-            printStream.println("List is empty.");
+            print("List is empty.");
             return;
         }
 
         for (int i = 0; i < taskList.size(); i++) {
-            printStream.println(String.format("%d.%s", i + 1, taskList.getTodos().get(i).toString()));
+            print(String.format("%d.%s", i + 1, taskList.getTodos().get(i).toString()));
         }
     }
 
@@ -279,14 +283,18 @@ public class Cli {
      */
     public void showFoundTasks(TaskList foundTasks) {
         if (foundTasks.isEmpty()) {
-            printStream.println("No matching tasks found.");
+            print("No matching tasks found.");
             return;
         }
 
-        printStream.println("Matching tasks:");
+        print("Matching tasks:");
         for (int i = 0; i < foundTasks.size(); i++) {
-            printStream.println(String.format("%d.%s", i + 1, foundTasks.getTodos().get(i).toString()));
+            print(String.format("%d.%s", i + 1, foundTasks.getTodos().get(i).toString()));
         }
+    }
+
+    private void print(String message) {
+        messageConsumer.accept(message);
     }
 
     /**
