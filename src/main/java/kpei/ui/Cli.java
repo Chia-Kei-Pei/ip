@@ -97,8 +97,6 @@ public class Cli {
             if (executeUserCommand(userPrompt)) {
                 return;
             }
-
-            showLine();
         }
     }
 
@@ -110,6 +108,7 @@ public class Cli {
      */
     public boolean executeUserCommand(String userPrompt) {
         try {
+            showLine();
             ParsedCommand cmd = CommandParser.parse(userPrompt);
 
             switch (cmd.getCommandType()) {
@@ -131,6 +130,7 @@ public class Cli {
         } catch (BertException | IllegalArgumentException | IndexOutOfBoundsException e) {
             showError(e.getMessage());
         } finally {
+            showLine();
             return false;
         }
     }
