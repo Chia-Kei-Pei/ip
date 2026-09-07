@@ -1,4 +1,4 @@
-package kpei;
+package kpei.ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,12 +13,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import kpei.Bert;
 import kpei.ui.controllers.MainWindowController;
 
 /**
- * Main JavaFX Application class for BERT Assistant GUI.
+ * JavaFX Application class bootstrapping the GUI for BERT Assistant.
  */
-public class Main extends Application {
+public class Gui extends Application {
 
     private static final String MAIN_WINDOW_FXML = "/kpei/views/MainWindow.fxml";
     private static final String DEFAULT_DATA_PATH = "data/todo_list_1.txt";

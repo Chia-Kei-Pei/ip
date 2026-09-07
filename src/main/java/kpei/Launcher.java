@@ -2,6 +2,8 @@ package kpei;
 
 import javafx.application.Application;
 
+import kpei.ui.Gui;
+
 /**
  * Entry point that determines whether to start BERT in CLI mode or GUI mode based on arguments.
  */
@@ -30,7 +32,7 @@ public class Launcher {
             Bert bert = new Bert(DEFAULT_STORAGE_PATH, System.in, System.out, false);
             bert.run();
         } else {
-            Application.launch(Main.class, args);
+            Application.launch(Gui.class, args);
         }
     }
 }
