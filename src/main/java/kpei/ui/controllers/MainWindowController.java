@@ -44,9 +44,7 @@ public class MainWindowController {
      */
     @FXML
     public void initialize() {
-        if (cliTerminalController != null) {
-            cliTerminalController.setCommandConsumer(this::handleCommand);
-        }
+        cliTerminalController.setCommandConsumer(this::handleCommand);
     }
 
     /**
@@ -62,9 +60,6 @@ public class MainWindowController {
         this.taskList = taskList;
         this.cli = cli;
         this.bert = bert;
-        if (this.bert != null) {
-            this.bert.setMainWindowController(this);
-        }
         refreshTaskList(taskList.getTodos(), storage.getFileName());
     }
 

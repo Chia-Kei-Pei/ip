@@ -132,9 +132,6 @@ public class Storage {
      * @return The storage file name.
      */
     public String getFileName() {
-        if (filePath == null || filePath.isBlank()) {
-            return "";
-        }
         return Path.of(filePath).getFileName().toString();
     }
 }

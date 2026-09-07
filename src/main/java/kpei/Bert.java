@@ -22,7 +22,7 @@ public class Bert {
     private final Storage storage;
     private final TaskList taskList;
     private final Cli cli;
-    private MainWindowController mainWindowController;
+    private final MainWindowController mainWindowController;
 
     /**
      * Constructs a {@code Bert} instance with the given storage, task list, and CLI interface.
@@ -37,7 +37,7 @@ public class Bert {
 
     /**
      * Constructs a {@code Bert} instance with the given storage, task list, CLI interface,
-     * and optional main window controller.
+     * and main window controller.
      *
      * @param storage Storage instance used for task persistence.
      * @param taskList Task list holding the user tasks.
@@ -58,15 +58,6 @@ public class Bert {
 
         this.cli.greeting();
         this.cli.showLine();
-    }
-
-    /**
-     * Sets the {@link MainWindowController} instance for GUI notifications.
-     *
-     * @param mainWindowController The main window controller.
-     */
-    public void setMainWindowController(MainWindowController mainWindowController) {
-        this.mainWindowController = mainWindowController;
     }
 
     /**
@@ -109,7 +100,7 @@ public class Bert {
         storage.save(taskList);
         cli.showMsg("Added " + task.getType());
         cli.showTask(taskList.size(), task);
-        refreshGuiTaskList();
+        mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
     }
 
     private void handleList() {
@@ -135,7 +126,7 @@ public class Bert {
             storage.save(taskList);
             cli.showMsg("Marked " + task.getType());
             cli.showTask(index, task);
-            refreshGuiTaskList();
+            mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
         }
     }
 
@@ -149,7 +140,7 @@ public class Bert {
             storage.save(taskList);
             cli.showMsg("Unmarked " + task.getType());
             cli.showTask(index, task);
-            refreshGuiTaskList();
+            mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
         }
     }
 
@@ -158,12 +149,6 @@ public class Bert {
         storage.save(taskList);
         cli.showMsg("Removed " + removedTask.getType());
         cli.showTask(index, removedTask);
-        refreshGuiTaskList();
-    }
-
-    private void refreshGuiTaskList() {
-        if (mainWindowController != null) {
-            mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
-        }
+        mainWindowController.refreshTaskList(taskList.getTodos(), storage.getFileName());
     }
 }

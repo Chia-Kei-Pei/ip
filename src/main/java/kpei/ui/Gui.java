@@ -19,7 +19,6 @@ import kpei.ui.controllers.MainWindowController;
 public class Gui extends Application {
 
     private static final String MAIN_WINDOW_FXML = "/kpei/views/MainWindow.fxml";
-    private static final String DEFAULT_DATA_PATH = "data/todo_list_1.txt";
     private static final String APPLICATION_TITLE = "BERT Assistant";
     private static final double MIN_WIDTH = 850;
     private static final double MIN_HEIGHT = 580;
@@ -44,14 +43,11 @@ public class Gui extends Application {
         Parent root = fxmlLoader.load();
         MainWindowController mainWindowController = fxmlLoader.getController();
 
-        Storage effectiveStorage = storage != null ? storage : new Storage(DEFAULT_DATA_PATH);
-        TaskList effectiveTaskList = taskList != null ? taskList : new TaskList();
-
         Cli cli = new Cli(msg -> mainWindowController.getCliTerminalController().appendOutput(msg));
-        Bert bert = new Bert(effectiveStorage, effectiveTaskList, cli, mainWindowController);
+        Bert bert = new Bert(storage, taskList, cli, mainWindowController);
         cli.setBert(bert);
 
-        mainWindowController.setDependencies(effectiveStorage, effectiveTaskList, cli, bert);
+        mainWindowController.setDependencies(storage, taskList, cli, bert);
 
         Scene scene = new Scene(root);
         stage.setTitle(APPLICATION_TITLE);

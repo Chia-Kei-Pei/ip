@@ -61,27 +61,10 @@ public class ListViewController {
      * @param storageFileName File name of the storage data file.
      */
     public void updateTasks(ArrayList<Task> tasks, String storageFileName) {
-        if (storageFileName != null && !storageFileName.isBlank()) {
-            listTitle.setText(storageFileName);
-        }
-
+        listTitle.setText(storageFileName);
+        
         ObservableList<Task> items = FXCollections.observableArrayList();
-        if (tasks != null) {
-            items.addAll(tasks);
-        }
+        items.addAll(tasks);
         taskListView.setItems(items);
-    }
-
-    /**
-     * Updates the displayed tasks and sets the title to the file name of the storage path.
-     *
-     * @param taskList Current task list to display.
-     * @param storageFilePath File path of the storage data file.
-     */
-    public void updateTasks(TaskList taskList, String storageFilePath) {
-        String fileName = (storageFilePath != null && !storageFilePath.isBlank())
-                ? Path.of(storageFilePath).getFileName().toString()
-                : "";
-        updateTasks(taskList != null ? taskList.getTodos() : null, fileName);
     }
 }
