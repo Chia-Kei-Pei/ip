@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import kpei.Bert;
 import kpei.ui.controllers.MainWindowController;
 
 /**
@@ -63,8 +62,7 @@ public class Gui extends Application {
             }
         };
 
-        Bert bert = new Bert(DEFAULT_DATA_PATH);
-        Cli cli = new Cli(bert, terminalOutputStream, true);
+        Cli cli = new Cli(DEFAULT_DATA_PATH, terminalOutputStream, true);
 
         mainWindowController.setCli(cli);
         mainWindowController.startGui();

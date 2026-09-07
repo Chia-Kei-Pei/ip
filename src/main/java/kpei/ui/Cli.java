@@ -5,18 +5,19 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import kpei.Bert;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
+import kpei.exceptions.InvalidIndexException;
 import kpei.exceptions.UnknownCommandException;
 import kpei.parser.CommandParser;
 import kpei.parser.ParsedCommand;
 import kpei.parser.TaskParser;
+import kpei.storage.Storage;
 
 /**
- * Command-line interface for the BERT assistant.
- * Manages the CLI run loop, user prompts, command execution, and formatted console output.
+ * Command-line interface and task coordinator for the BERT assistant.
+ * Manages task list data, storage persistence, user prompt loop, and formatted output.
  */
 public class Cli {
 
@@ -32,46 +33,50 @@ public class Cli {
         """;
     private static final String HORIZONTAL_LINE = "____________________________________________________________";
 
-    private final Bert bert;
+    private final String storageFilePath;
+    private final Storage storage;
+    private final TaskList taskList;
     private final Scanner scanner;
     private final PrintStream printStream;
     private final boolean isGuiMode;
 
     /**
-     * Constructs a {@code Cli} instance with a specified {@link Bert} instance and I/O streams.
+     * Constructs a {@code Cli} instance with the specified persistence path, I/O streams, and GUI mode.
      *
-     * @param bert The BERT domain controller instance.
+     * @param storageFilePath File path used for task storage.
      * @param inputStream Input stream for user commands (nullable in GUI mode).
      * @param outputStream Output stream for user responses.
      * @param isGuiMode Whether this interface is running within a GUI context.
      */
-    public Cli(Bert bert, InputStream inputStream, OutputStream outputStream, boolean isGuiMode) {
-        this.bert = bert;
+    public Cli(String storageFilePath, InputStream inputStream, OutputStream outputStream, boolean isGuiMode) {
+        this.storageFilePath = storageFilePath;
+        this.storage = new Storage(storageFilePath);
+        this.taskList = new TaskList();
         this.scanner = inputStream != null ? new Scanner(inputStream) : null;
         this.printStream = new PrintStream(outputStream);
         this.isGuiMode = isGuiMode;
     }
 
     /**
-     * Constructs a {@code Cli} instance for GUI mode where inputs are passed as event strings.
+     * Constructs a {@code Cli} instance for GUI mode with the specified persistence path and output stream.
      *
-     * @param bert The BERT domain controller instance.
-     * @param outputStream Output stream for displaying responses.
+     * @param storageFilePath File path used for task storage.
+     * @param outputStream Output stream for user responses.
      * @param isGuiMode Whether this interface is running within a GUI context.
      */
-    public Cli(Bert bert, OutputStream outputStream, boolean isGuiMode) {
-        this(bert, null, outputStream, isGuiMode);
+    public Cli(String storageFilePath, OutputStream outputStream, boolean isGuiMode) {
+        this(storageFilePath, null, outputStream, isGuiMode);
     }
 
     /**
      * Constructs a {@code Cli} instance in CLI mode with the specified task persistence path.
      *
-     * @param todoListFilePath File path used for task storage.
+     * @param storageFilePath File path used for task storage.
      * @param inputStream Input stream for user commands.
      * @param outputStream Output stream for responses.
      */
-    public Cli(String todoListFilePath, InputStream inputStream, OutputStream outputStream) {
-        this(new Bert(todoListFilePath), inputStream, outputStream, false);
+    public Cli(String storageFilePath, InputStream inputStream, OutputStream outputStream) {
+        this(storageFilePath, inputStream, outputStream, false);
     }
 
     /**
@@ -85,11 +90,29 @@ public class Cli {
     }
 
     /**
+     * Loads tasks from storage into the task list.
+     *
+     * @throws BertException If an error occurs while reading tasks from storage.
+     */
+    public void loadStorage() throws BertException {
+        storage.load(taskList);
+    }
+
+    /**
+     * Saves the current task list to storage.
+     *
+     * @throws BertException If an error occurs while writing tasks to storage.
+     */
+    public void saveStorage() throws BertException {
+        storage.save(taskList);
+    }
+
+    /**
      * Starts the CLI run loop, continuously prompting for commands until an exit command is received.
      */
     public void run() {
         try {
-            bert.load();
+            loadStorage();
         } catch (BertException e) {
             showWarning(e.getMessage());
         }
@@ -154,50 +177,54 @@ public class Cli {
     }
 
     private void handleAdd(Task task) throws BertException {
-        bert.addTask(task);
+        taskList.add(task);
+        saveStorage();
         showMsg("Added " + task.getType());
-        showTask(bert.getTaskList().size(), task);
+        showTask(taskList.size(), task);
     }
 
     private void handleList() {
         if (isGuiMode) {
             showMsg("Displaying List.");
         } else {
-            showTodoList(bert.getTaskList());
+            showTodoList(taskList);
         }
     }
 
     private void handleFind(String keyword) {
-        TaskList matchingTasks = bert.findTasks(keyword);
+        TaskList matchingTasks = taskList.find(keyword);
         showFoundTasks(matchingTasks);
     }
 
-    private void handleMark(int index) throws BertException {
-        Task task = bert.getTaskList().get(index);
+    private void handleMark(int index) throws InvalidIndexException, BertException {
+        Task task = taskList.get(index);
         if (task.isMarked()) {
             showMsg("Already marked " + task.getType());
             showTask(index, task);
         } else {
-            Task markedTask = bert.markTask(index);
-            showMsg("Marked " + markedTask.getType());
-            showTask(index, markedTask);
+            taskList.mark(index);
+            saveStorage();
+            showMsg("Marked " + task.getType());
+            showTask(index, task);
         }
     }
 
-    private void handleUnmark(int index) throws BertException {
-        Task task = bert.getTaskList().get(index);
+    private void handleUnmark(int index) throws InvalidIndexException, BertException {
+        Task task = taskList.get(index);
         if (!task.isMarked()) {
             showMsg("Already unmarked " + task.getType());
             showTask(index, task);
         } else {
-            Task unmarkedTask = bert.unmarkTask(index);
-            showMsg("Unmarked " + unmarkedTask.getType());
-            showTask(index, unmarkedTask);
+            taskList.unmark(index);
+            saveStorage();
+            showMsg("Unmarked " + task.getType());
+            showTask(index, task);
         }
     }
 
-    private void handleDelete(int index) throws BertException {
-        Task removedTask = bert.deleteTask(index);
+    private void handleDelete(int index) throws InvalidIndexException, BertException {
+        Task removedTask = taskList.remove(index);
+        saveStorage();
         showMsg("Removed " + removedTask.getType());
         showTask(index, removedTask);
     }
@@ -306,11 +333,20 @@ public class Cli {
     }
 
     /**
-     * Returns the {@link Bert} domain controller associated with this interface.
+     * Returns the task list managed by this instance.
      *
-     * @return The BERT instance.
+     * @return The task list.
      */
-    public Bert getBert() {
-        return bert;
+    public TaskList getTaskList() {
+        return taskList;
+    }
+
+    /**
+     * Returns the file path used for task storage.
+     *
+     * @return The storage file path.
+     */
+    public String getStorageFilePath() {
+        return storageFilePath;
     }
 }

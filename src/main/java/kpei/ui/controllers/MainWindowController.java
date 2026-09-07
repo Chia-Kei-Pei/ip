@@ -3,7 +3,6 @@ package kpei.ui.controllers;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import kpei.Bert;
 import kpei.exceptions.BertException;
 import kpei.ui.Cli;
 
@@ -43,7 +42,7 @@ public class MainWindowController {
     }
 
     /**
-     * Injects the {@link Cli} interface instance and binds to its associated {@link Bert} controller.
+     * Injects the {@link Cli} interface instance.
      *
      * @param cli The CLI interface instance.
      */
@@ -61,7 +60,7 @@ public class MainWindowController {
         }
 
         try {
-            cli.getBert().load();
+            cli.loadStorage();
         } catch (BertException e) {
             cli.showWarning(e.getMessage());
         }
@@ -76,8 +75,7 @@ public class MainWindowController {
      */
     public void refreshTaskList() {
         if (cli != null && listViewController != null) {
-            Bert bert = cli.getBert();
-            listViewController.updateTasks(bert.getTaskList(), bert.getStorageFilePath());
+            listViewController.updateTasks(cli.getTaskList(), cli.getStorageFilePath());
         }
     }
 
