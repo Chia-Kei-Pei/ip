@@ -23,6 +23,8 @@ public class Bert {
     private final TaskList taskList;
     private final Cli cli;
     private final MainWindowController mainWindowController;
+    private final boolean isGuiEnabled;
+
     private TaskList displayList;
 
     /**
@@ -33,7 +35,7 @@ public class Bert {
      * @param cli CLI interface used to display messages to the user.
      */
     public Bert(Storage storage, TaskList taskList, Cli cli) {
-        this(storage, taskList, cli, null);
+        this(storage, taskList, cli, null, false);
     }
 
     /**
@@ -46,10 +48,17 @@ public class Bert {
      * @param mainWindowController Controller for the main GUI window.
      */
     public Bert(Storage storage, TaskList taskList, Cli cli, MainWindowController mainWindowController) {
+        this(storage, taskList, cli, mainWindowController, true);
+    }
+
+
+    private Bert(Storage storage, TaskList taskList, Cli cli, MainWindowController mainWindowController,
+                boolean isGuiEnabled) {
         this.storage = storage;
         this.taskList = taskList;
         this.cli = cli;
         this.mainWindowController = mainWindowController;
+        this.isGuiEnabled = isGuiEnabled;
 
         try {
             this.storage.load(taskList);
@@ -114,7 +123,7 @@ public class Bert {
             cli.showMsg("List is empty.");
         } else {
             displayList = taskList;
-            if (mainWindowController == null) {
+            if (!isGuiEnabled) {
                 cli.showTodoList(taskList);
             }
             updateGuiList(displayList, storage.getFileName());
@@ -124,7 +133,7 @@ public class Bert {
     private void handleFind(String keyword) {
         TaskList matchingTasks = taskList.find(keyword);
         displayList = matchingTasks;
-        if (mainWindowController == null) {
+        if (!isGuiEnabled) {
             cli.showFoundTasks(matchingTasks);
         }
         updateGuiList(matchingTasks, "Search results");
@@ -167,7 +176,7 @@ public class Bert {
     }
 
     private void updateGuiList(TaskList tasks, String listName) {
-        if (mainWindowController != null) {
+        if (isGuiEnabled) {
             mainWindowController.refreshTaskList(tasks, listName);
         }
     }
