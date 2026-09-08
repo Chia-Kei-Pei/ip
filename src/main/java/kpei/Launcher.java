@@ -7,6 +7,8 @@ import kpei.storage.Storage;
 import kpei.ui.Cli;
 import kpei.ui.Gui;
 
+import javax.swing.*;
+
 /**
  * Entry point that initializes core resources and launches BERT in CLI or GUI mode.
  */
@@ -21,9 +23,6 @@ public class Launcher {
      * @param args Command line arguments.
      */
     public static void main(String[] args) {
-        Storage storage = new Storage(DEFAULT_STORAGE_PATH);
-        TaskList taskList = new TaskList();
-
         boolean isCli = false;
         if (args != null) {
             for (String arg : args) {
@@ -35,12 +34,14 @@ public class Launcher {
         }
 
         if (isCli) {
+            Storage storage = new Storage(DEFAULT_STORAGE_PATH);
+            TaskList taskList = new TaskList();
             Cli cli = new Cli();
             Bert bert = new Bert(storage, taskList, cli);
             cli.setBert(bert);
             cli.run();
         } else {
-            Gui.initDependencies(storage, taskList);
+            Gui.initDependencies(DEFAULT_STORAGE_PATH);
             Application.launch(Gui.class, args);
         }
     }
