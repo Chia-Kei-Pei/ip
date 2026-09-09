@@ -116,10 +116,10 @@ public class Cli {
     /**
      * Displays a general message to the user.
      *
-     * @param msg The message text.
+     * @param message The message text.
      */
-    public void showMsg(String msg) {
-        print(msg);
+    public void print(String message) {
+        messageConsumer.accept(message + "\n");
     }
 
     /**
@@ -181,9 +181,5 @@ public class Cli {
         for (int i = 0; i < foundTasks.size(); i++) {
             print(String.format("%d.%s", i + 1, foundTasks.getTodos().get(i).toString()));
         }
-    }
-
-    private void print(String message) {
-        messageConsumer.accept(message + "\n");
     }
 }
