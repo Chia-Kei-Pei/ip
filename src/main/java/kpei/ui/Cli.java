@@ -109,7 +109,7 @@ public class Cli {
     /**
      * Prints a horizontal separator line.
      */
-    public void showLine() {
+    public void horizontalLine() {
         print(HORIZONTAL_LINE);
     }
 
@@ -127,7 +127,7 @@ public class Cli {
      *
      * @param msg The error message text.
      */
-    public void showError(String msg) {
+    public void error(String msg) {
         print(String.format("ERROR!\n%s", msg));
     }
 
@@ -136,7 +136,7 @@ public class Cli {
      *
      * @param msg The warning message text.
      */
-    public void showWarning(String msg) {
+    public void warning(String msg) {
         print(String.format("Warning.\n%s", msg));
     }
 
@@ -146,7 +146,7 @@ public class Cli {
      * @param index The 1-based index of the task.
      * @param task The task to display.
      */
-    public void showTask(int index, Task task) {
+    public void printTask(int index, Task task) {
         print(String.format("%d.%s", index, task.toString()));
     }
 
@@ -155,7 +155,7 @@ public class Cli {
      *
      * @param taskList The list of tasks to display.
      */
-    public void showTodoList(TaskList taskList) {
+    public void printList(TaskList taskList) {
         if (taskList.isEmpty()) {
             print("List is empty.");
             return;
@@ -163,23 +163,6 @@ public class Cli {
 
         for (int i = 0; i < taskList.size(); i++) {
             print(String.format("%d.%s", i + 1, taskList.getTodos().get(i).toString()));
-        }
-    }
-
-    /**
-     * Displays all matching tasks found from a search, or a message indicating no matches were found.
-     *
-     * @param foundTasks The list of matching tasks.
-     */
-    public void showFoundTasks(TaskList foundTasks) {
-        if (foundTasks.isEmpty()) {
-            print("No matching tasks found.");
-            return;
-        }
-
-        print("Matching tasks:");
-        for (int i = 0; i < foundTasks.size(); i++) {
-            print(String.format("%d.%s", i + 1, foundTasks.getTodos().get(i).toString()));
         }
     }
 }

@@ -63,15 +63,15 @@ public class Bert {
         try {
             this.storage.load(taskList);
         } catch (BertException e) {
-            this.cli.showWarning(e.getMessage());
+            this.cli.warning(e.getMessage());
         }
 
         this.cli.greeting();
-        this.cli.showLine();
+        this.cli.horizontalLine();
 
         displayList = this.taskList;
         
-        updateGuiList(displayList, storage.getFileName());
+        displayListOnGui(displayList, storage.getFileName());
     }
 
     /**
@@ -82,7 +82,7 @@ public class Bert {
      */
     public boolean executeUserCommand(String userPrompt) {
         try {
-            cli.showLine();
+            cli.horizontalLine();
             ParsedCommand cmd = CommandParser.parse(userPrompt);
 
             switch (cmd.getCommandType()) {
@@ -102,9 +102,9 @@ public class Bert {
                 default -> throw new UnknownCommandException(cmd.getCommandType());
             }
         } catch (BertException | IllegalArgumentException | IndexOutOfBoundsException e) {
-            cli.showError(e.getMessage());
+            cli.error(e.getMessage());
         } finally {
-            cli.showLine();
+            cli.horizontalLine();
         }
         return false;
     }
@@ -113,9 +113,9 @@ public class Bert {
         taskList.add(task);
         storage.save(taskList);
         cli.print("Added " + task.getType());
-        cli.showTask(taskList.size(), task);
+        cli.printTask(taskList.size(), task);
         displayList = taskList;
-        updateGuiList(displayList, storage.getFileName());
+        displayListOnGui(displayList, storage.getFileName());
     }
 
     private void handleList() {
@@ -123,11 +123,11 @@ public class Bert {
             cli.print("List is empty.");
         } else {
             displayList = taskList;
+            cli.print(String.format("Displaying list of size %d.", displayList.size()));
             if (!isGuiEnabled) {
-                cli.showTodoList(taskList);
+                cli.printList(taskList);
             } else {
-                cli.print(String.format("Displayed list of size %d.", displayList.size()));
-                updateGuiList(displayList, storage.getFileName());
+                displayListOnGui(displayList, storage.getFileName());
             }
         }
     }
@@ -135,11 +135,11 @@ public class Bert {
     private void handleFind(String keyword) {
         TaskList matchingTasks = taskList.find(keyword);
         displayList = matchingTasks;
+        cli.print(String.format("Found %d matching tasks.", displayList.size()));
         if (!isGuiEnabled) {
-            cli.showFoundTasks(matchingTasks);
+            cli.printList(displayList);
         } else {
-            cli.print(String.format("Found %d matching tasks.", displayList.size()));
-            updateGuiList(displayList, "Search results");
+            displayListOnGui(displayList, "Search results");
         }
     }
 
@@ -147,13 +147,13 @@ public class Bert {
         Task task = displayList.get(index);
         if (task.isMarked()) {
             cli.print("Already marked " + task.getType());
-            cli.showTask(index, task);
+            cli.printTask(index, task);
         } else {
             displayList.mark(index);
             storage.save(taskList); // do NOT save displaylist
             cli.print("Marked " + task.getType());
-            cli.showTask(index, task);
-            updateGuiList(displayList, storage.getFileName());
+            cli.printTask(index, task);
+            displayListOnGui(displayList, storage.getFileName());
         }
     }
 
@@ -161,13 +161,13 @@ public class Bert {
         Task task = displayList.get(index);
         if (!task.isMarked()) {
             cli.print("Already unmarked " + task.getType());
-            cli.showTask(index, task);
+            cli.printTask(index, task);
         } else {
             displayList.unmark(index);
             storage.save(taskList); // do NOT save displaylist
             cli.print("Unmarked " + task.getType());
-            cli.showTask(index, task);
-            updateGuiList(displayList, storage.getFileName());
+            cli.printTask(index, task);
+            displayListOnGui(displayList, storage.getFileName());
         }
     }
 
@@ -175,11 +175,11 @@ public class Bert {
         Task removedTask = displayList.remove(index);
         storage.save(taskList); // do NOT save displaylist
         cli.print("Removed " + removedTask.getType());
-        cli.showTask(index, removedTask);
-        updateGuiList(displayList, storage.getFileName());
+        cli.printTask(index, removedTask);
+        displayListOnGui(displayList, storage.getFileName());
     }
 
-    private void updateGuiList(TaskList tasks, String listName) {
+    private void displayListOnGui(TaskList tasks, String listName) {
         if (isGuiEnabled) {
             mainWindowController.refreshTaskList(tasks, listName);
         }
