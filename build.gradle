@@ -57,7 +57,7 @@ test {
 }
 
 application {
-    mainClass = 'bert.Bert'
+    mainClass = 'kpei.Launcher'
 }
 
 jar {

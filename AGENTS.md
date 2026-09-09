@@ -37,4 +37,16 @@ Strictly stick to agents/GIT_CONVENTIONS.md when handing git.
 
 ## Java Coding Standards
 
-Strictly stick to the styling rules described in agents/JAVA_CODING_STANDARD.md when writing Java code. 
+Strictly stick to the styling rules described in agents/JAVA_CODING_STANDARD.md when writing Java code.
+
+## Filesystem MCP
+
+Always use the filesystem MCP for manipulating files. Do not use PowerShell just for accessing files unless strictly necessary - when filesystem fails.
+
+Available tools include:
+- Read/write files
+- Create/list/delete directories
+- Move files/directories
+- Search files
+- Get file metadata
+- Dynamic directory access control
