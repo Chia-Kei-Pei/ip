@@ -190,7 +190,7 @@
 
 .task-list-view .list-cell {
     -fx-background-color: transparent;
-    -fx-padding: 4 0 4 0;
+    -fx-padding: 4 8 4 8;
 }
 
 .task-list-view .list-cell:empty {
@@ -200,8 +200,8 @@
 /* Task List Scrollbar Styling (Light) */
 .task-list-view .scroll-bar:vertical {
     -fx-background-color: transparent;
-    -fx-pref-width: 16px;
-    -fx-padding: 0 0 0 8;
+    -fx-pref-width: 8px;
+    -fx-padding: 0 1px 0 0;
 }
 
 .task-list-view .scroll-bar:vertical .track {
