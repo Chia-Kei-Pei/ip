@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 
-<HBox alignment="CENTER" prefHeight="120.0" prefWidth="480.0" spacing="20.0" styleClass="banner-card" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kpei.ui.controllers.BannerController">
+<StackPane fx:id="bannerContainer" alignment="CENTER" prefHeight="120.0" maxHeight="120.0" maxWidth="Infinity" styleClass="banner-card" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kpei.ui.controllers.BannerController">
     <stylesheets>
         <URL value="@../styles/main.css" />
     </stylesheets>
     <children>
-        <Label fx:id="bannerTitle" styleClass="banner-title" text="BERT" />
-        <ImageView fx:id="bannerImageView" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="bannerImageView" fitHeight="110.0" pickOnBounds="true" preserveRatio="true" />
     </children>
-</HBox>
+</StackPane>

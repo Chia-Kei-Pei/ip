@@ -3,9 +3,9 @@ package kpei.ui.controllers;
 import java.io.InputStream;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 /**
  * Controller for the Banner component displayed at the top-left of the application.
@@ -15,7 +15,7 @@ public class BannerController {
     private static final String BANNER_IMAGE_PATH = "/kpei/images/banner.png";
 
     @FXML
-    private Label bannerTitle;
+    private StackPane bannerContainer;
 
     @FXML
     private ImageView bannerImageView;
@@ -29,14 +29,6 @@ public class BannerController {
         if (imageStream != null) {
             bannerImageView.setImage(new Image(imageStream));
         }
-    }
-
-    /**
-     * Sets a custom title for the banner.
-     *
-     * @param title The title text to display.
-     */
-    public void setTitle(String title) {
-        bannerTitle.setText(title);
+        bannerImageView.fitHeightProperty().bind(bannerContainer.heightProperty().subtract(10));
     }
 }

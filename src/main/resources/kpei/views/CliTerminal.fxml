@@ -12,7 +12,7 @@
         <URL value="@../styles/main.css" />
     </stylesheets>
     <children>
-        <TextArea fx:id="terminalOutput" prefHeight="380.0" prefWidth="480.0" styleClass="terminal-text-area" VBox.vgrow="ALWAYS" />
+        <TextArea fx:id="terminalOutput" focusTraversable="false" prefHeight="380.0" prefWidth="480.0" styleClass="terminal-text-area" VBox.vgrow="ALWAYS" />
         <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="terminal-prompt-bar">
             <children>
                 <Label styleClass="terminal-prompt-symbol" text="&gt;" />

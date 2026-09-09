@@ -27,6 +27,7 @@ public class CliTerminalController {
     public void initialize() {
         terminalOutput.setEditable(false);
         terminalOutput.setWrapText(true);
+        terminalOutput.setFocusTraversable(false);
     }
 
     /**
