@@ -29,6 +29,5 @@ public class BannerController {
         if (imageStream != null) {
             bannerImageView.setImage(new Image(imageStream));
         }
-        bannerImageView.fitHeightProperty().bind(bannerContainer.heightProperty().subtract(10));
     }
 }
