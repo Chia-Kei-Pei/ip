@@ -38,8 +38,7 @@ public class Launcher {
             TaskList taskList = new TaskList();
             Cli cli = new Cli();
             Bert bert = new Bert(storage, taskList, cli);
-            cli.setBert(bert);
-            cli.run();
+            cli.run(bert);
         } else {
             Gui.initDependencies(DEFAULT_STORAGE_PATH);
             Application.launch(Gui.class, args);

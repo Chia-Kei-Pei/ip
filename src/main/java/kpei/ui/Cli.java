@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import kpei.Bert;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
+import kpei.exceptions.InvalidIndexException;
 
 /**
  * Command-line interface and presentation layer for the BERT assistant.
@@ -25,7 +26,6 @@ public class Cli {
     private static final String HORIZONTAL_LINE = "____________________________________________________________";
 
     private final Consumer<String> messageConsumer;
-    private Bert bert;
 
     /**
      * Constructs a {@code Cli} instance with standard terminal output.
@@ -44,47 +44,15 @@ public class Cli {
     }
 
     /**
-     * Sets the {@link Bert} controller instance.
-     *
-     * @param bert The Bert controller instance.
-     */
-    public void setBert(Bert bert) {
-        this.bert = bert;
-    }
-
-    /**
-     * Returns the associated {@link Bert} controller instance.
-     *
-     * @return The Bert instance.
-     */
-    public Bert getBert() {
-        return bert;
-    }
-
-    /**
      * Starts the CLI run loop using the configured {@link Bert} controller.
      */
-    public void run() {
-        if (bert == null) {
-            throw new IllegalStateException("Bert controller must be set before calling run().");
-        }
-        run(bert);
-    }
-
-    /**
-     * Starts the CLI run loop with the specified {@link Bert} controller.
-     *
-     * @param bert The Bert controller instance to coordinate command execution.
-     */
     public void run(Bert bert) {
-        this.bert = bert;
-
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print("> ");
             String userPrompt = scanner.nextLine();
 
-            if (bert.executeUserCommand(userPrompt)) {
+            if (bert.executeCommand(userPrompt)) {
                 return;
             }
         }
@@ -155,14 +123,14 @@ public class Cli {
      *
      * @param taskList The list of tasks to display.
      */
-    public void printList(TaskList taskList) {
+    public void printList(TaskList taskList) throws InvalidIndexException {
         if (taskList.isEmpty()) {
             print("List is empty.");
             return;
         }
 
-        for (int i = 0; i < taskList.size(); i++) {
-            print(String.format("%d.%s", i + 1, taskList.getTodos().get(i).toString()));
+        for (int i = 1; i <= taskList.size(); i++) {
+            printTask(i, taskList.get(i));
         }
     }
 }

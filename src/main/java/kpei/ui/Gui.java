@@ -44,7 +44,6 @@ public class Gui extends Application {
         TaskList taskList = new TaskList();
         Cli cli = new Cli(msg -> mainWindowController.getCliTerminalController().appendOutput(msg));
         Bert bert = new Bert(storage, taskList, cli, mainWindowController);
-        cli.setBert(bert);
 
         mainWindowController.setDependencies(bert);
 

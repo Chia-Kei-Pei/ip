@@ -25,12 +25,11 @@ class BertTest {
         StringBuilder output = new StringBuilder();
         Cli cli = new Cli(msg -> output.append(msg));
         Bert bert = new Bert(storage, taskList, cli);
-        cli.setBert(bert);
 
         InputStream originalIn = System.in;
         try {
             System.setIn(new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8)));
-            cli.run();
+            cli.run(bert);
         } finally {
             System.setIn(originalIn);
         }

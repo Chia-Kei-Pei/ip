@@ -80,7 +80,7 @@ public class Bert {
      * @param userPrompt The raw command string entered by the user.
      * @return {@code true} if an exit command was executed, {@code false} otherwise.
      */
-    public boolean executeUserCommand(String userPrompt) {
+    public boolean executeCommand(String userPrompt) {
         try {
             cli.horizontalLine();
             ParsedCommand cmd = CommandParser.parse(userPrompt);
@@ -118,7 +118,7 @@ public class Bert {
         displayListOnGui(displayList, storage.getFileName());
     }
 
-    private void handleList() {
+    private void handleList() throws InvalidIndexException {
         if (taskList.isEmpty()) {
             cli.print("List is empty.");
         } else {
@@ -132,7 +132,7 @@ public class Bert {
         }
     }
 
-    private void handleFind(String keyword) {
+    private void handleFind(String keyword) throws InvalidIndexException {
         TaskList matchingTasks = taskList.find(keyword);
         displayList = matchingTasks;
         cli.print(String.format("Found %d matching tasks.", displayList.size()));

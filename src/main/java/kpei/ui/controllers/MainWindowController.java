@@ -1,15 +1,10 @@
 package kpei.ui.controllers;
 
-import java.util.ArrayList;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import kpei.Bert;
-import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
-import kpei.storage.Storage;
-import kpei.ui.Cli;
 
 /**
  * Main window controller coordinating the Banner, CLI Terminal, and List View components.
@@ -69,7 +64,7 @@ public class MainWindowController {
      * @param input The command entered by the user.
      */
     private void handleCommand(String input) {
-        boolean isExit = bert.executeUserCommand(input);
+        boolean isExit = bert.executeCommand(input);
 
         if (isExit) {
             Platform.exit();
