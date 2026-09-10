@@ -74,7 +74,7 @@ public class CommandCenter {
 
         displayList = this.taskList;
 
-        displayListOnGui();
+        displayListGui();
     }
 
     /**
@@ -118,7 +118,7 @@ public class CommandCenter {
         cli.print("Added " + task.getType());
         cli.printTask(taskList.size(), task);
         displayList = taskList;
-        displayListOnGui();
+        displayListGui();
     }
 
     private void handleList() throws InvalidIndexException {
@@ -130,7 +130,7 @@ public class CommandCenter {
             if (!isGuiEnabled) {
                 cli.printList(taskList);
             } else {
-                displayListOnGui();
+                displayListGui();
             }
         }
     }
@@ -142,7 +142,7 @@ public class CommandCenter {
         if (!isGuiEnabled) {
             cli.printList(displayList);
         } else {
-            displayListOnGui();
+            displayListGui();
         }
     }
 
@@ -156,7 +156,7 @@ public class CommandCenter {
             saveList();
             cli.print("Marked " + task.getType());
             cli.printTask(index, task);
-            displayListOnGui();
+            displayListGui();
         }
     }
 
@@ -170,7 +170,7 @@ public class CommandCenter {
             saveList();
             cli.print("Unmarked " + task.getType());
             cli.printTask(index, task);
-            displayListOnGui();
+            displayListGui();
         }
     }
 
@@ -179,14 +179,14 @@ public class CommandCenter {
         saveList();
         cli.print("Removed " + removedTask.getType());
         cli.printTask(index, removedTask);
-        displayListOnGui();
+        displayListGui();
     }
 
     private void saveList() throws BertException {
         storage.save(taskList); // do NOT save displaylist
     }
 
-    private void displayListOnGui() {
+    private void displayListGui() {
         if (isGuiEnabled) {
             mainWindowController.refreshTaskList(displayList);
         }
