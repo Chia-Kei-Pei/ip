@@ -71,7 +71,7 @@ public class Bert {
 
         displayList = this.taskList;
         
-        displayListOnGui(displayList, storage.getFileName());
+        displayListOnGui();
     }
 
     /**
@@ -115,7 +115,7 @@ public class Bert {
         cli.print("Added " + task.getType());
         cli.printTask(taskList.size(), task);
         displayList = taskList;
-        displayListOnGui(displayList, storage.getFileName());
+        displayListOnGui();
     }
 
     private void handleList() throws InvalidIndexException {
@@ -127,7 +127,7 @@ public class Bert {
             if (!isGuiEnabled) {
                 cli.printList(taskList);
             } else {
-                displayListOnGui(displayList, storage.getFileName());
+                displayListOnGui();
             }
         }
     }
@@ -139,7 +139,7 @@ public class Bert {
         if (!isGuiEnabled) {
             cli.printList(displayList);
         } else {
-            displayListOnGui(displayList, "Search results");
+            displayListOnGui("Search results");
         }
     }
 
@@ -153,7 +153,7 @@ public class Bert {
             storage.save(taskList); // do NOT save displaylist
             cli.print("Marked " + task.getType());
             cli.printTask(index, task);
-            displayListOnGui(displayList, storage.getFileName());
+            displayListOnGui();
         }
     }
 
@@ -167,7 +167,7 @@ public class Bert {
             storage.save(taskList); // do NOT save displaylist
             cli.print("Unmarked " + task.getType());
             cli.printTask(index, task);
-            displayListOnGui(displayList, storage.getFileName());
+            displayListOnGui();
         }
     }
 
@@ -176,12 +176,16 @@ public class Bert {
         storage.save(taskList); // do NOT save displaylist
         cli.print("Removed " + removedTask.getType());
         cli.printTask(index, removedTask);
-        displayListOnGui(displayList, storage.getFileName());
+        displayListOnGui();
     }
 
-    private void displayListOnGui(TaskList tasks, String listName) {
+    private void displayListOnGui(String listName) {
         if (isGuiEnabled) {
-            mainWindowController.refreshTaskList(tasks, listName);
+            mainWindowController.refreshTaskList(displayList, listName);
         }
+    }
+
+    private void displayListOnGui() {
+        displayListOnGui(storage.getFileName());
     }
 }
