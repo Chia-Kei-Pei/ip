@@ -20,19 +20,15 @@ class BertTest {
     Path tempDir;
 
     private String runCliWithInput(String testDataFilePath, String simulatedInput) {
-        Storage storage = new Storage(testDataFilePath);
-        TaskList taskList = new TaskList();
+        InputStream input = new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8));
         StringBuilder output = new StringBuilder();
+
+        Storage storage = new Storage(testDataFilePath);
+        TaskList taskList = new TaskList("todo_list.txt");
         Cli cli = new Cli(msg -> output.append(msg));
         Bert bert = new Bert(storage, taskList, cli);
 
-        InputStream originalIn = System.in;
-        try {
-            System.setIn(new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8)));
-            cli.run(bert);
-        } finally {
-            System.setIn(originalIn);
-        }
+        cli.run(input, bert);
 
         return output.toString();
     }
@@ -51,7 +47,7 @@ class BertTest {
                 "unmark 1",
                 "delete 1",
                 "list",
-                "bye"
+                "exit"
         ) + System.lineSeparator();
 
         String testDataFilePath = tempDir.resolve("todo_list.txt").toString();
@@ -82,7 +78,7 @@ class BertTest {
                 "find room",
                 "find \"Math homework\"",
                 "find MATH",
-                "bye"
+                "exit"
         ) + System.lineSeparator();
 
         String testDataFilePath = tempDir.resolve("todo_list_find.txt").toString();
@@ -98,7 +94,7 @@ class BertTest {
         String simulatedInput = String.join(System.lineSeparator(),
                 "todo \"Clean my room\"",
                 "find \"non-existent keyword\"",
-                "bye"
+                "exit"
         ) + System.lineSeparator();
 
         String testDataFilePath = tempDir.resolve("todo_list_find_empty.txt").toString();
