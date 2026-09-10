@@ -139,7 +139,7 @@ public class Bert {
         if (!isGuiEnabled) {
             cli.printList(displayList);
         } else {
-            displayListOnGui("Search results");
+            displayListOnGui();
         }
     }
 
@@ -179,13 +179,9 @@ public class Bert {
         displayListOnGui();
     }
 
-    private void displayListOnGui(String listName) {
-        if (isGuiEnabled) {
-            mainWindowController.refreshTaskList(displayList, listName);
-        }
-    }
-
     private void displayListOnGui() {
-        displayListOnGui(storage.getFileName());
+        if (isGuiEnabled) {
+            mainWindowController.refreshTaskList(displayList);
+        }
     }
 }

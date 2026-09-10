@@ -16,6 +16,7 @@ public class Launcher {
 
     private static final String CLI_FLAG = "--cli";
     private static final String DEFAULT_STORAGE_PATH = "data/todo_list_1.txt";
+    private static final String DEFAULT_LIST_DESCRIPTION = "todo_list_1.txt";
 
     /**
      * Main method deciding whether to launch the CLI or GUI version of BERT.
@@ -35,12 +36,12 @@ public class Launcher {
 
         if (isCli) {
             Storage storage = new Storage(DEFAULT_STORAGE_PATH);
-            TaskList taskList = new TaskList();
+            TaskList taskList = new TaskList(DEFAULT_LIST_DESCRIPTION);
             Cli cli = new Cli(System.out::print);
             Bert bert = new Bert(storage, taskList, cli);
             cli.run(System.in, bert);
         } else {
-            Gui.initDependencies(DEFAULT_STORAGE_PATH);
+            Gui.initDependencies(DEFAULT_STORAGE_PATH, DEFAULT_LIST_DESCRIPTION);
             Application.launch(Gui.class, args);
         }
     }

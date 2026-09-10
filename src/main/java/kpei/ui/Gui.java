@@ -24,14 +24,16 @@ public class Gui extends Application {
     private static final double MIN_HEIGHT = 580;
 
     private static String DEFAULT_STORAGE_PATH;
+    private static String DEFAULT_LIST_DESCRIPTION;
 
     /**
      * Sets the shared storage and task list dependencies initialized by Launcher.
      *
      * @param defaultStoragePath The file path of the task list save file.
      */
-    public static void initDependencies(String defaultStoragePath) {
+    public static void initDependencies(String defaultStoragePath, String defaultListDescription) {
         DEFAULT_STORAGE_PATH = defaultStoragePath;
+        DEFAULT_LIST_DESCRIPTION = defaultListDescription;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class Gui extends Application {
         MainWindowController mainWindowController = fxmlLoader.getController();
 
         Storage storage = new Storage(DEFAULT_STORAGE_PATH);
-        TaskList taskList = new TaskList();
+        TaskList taskList = new TaskList(DEFAULT_LIST_DESCRIPTION);
         Cli cli = new Cli(outputMsg -> mainWindowController.getCliTerminalController().appendOutput(outputMsg));
         Bert bert = new Bert(storage, taskList, cli, mainWindowController);
 

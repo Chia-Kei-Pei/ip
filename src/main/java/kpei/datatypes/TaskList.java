@@ -10,12 +10,18 @@ import kpei.exceptions.InvalidIndexException;
  */
 public class TaskList {
     private final ArrayList<Task> todos;
+    private String description;
 
     /**
      * Initializes an empty todo list.
      */
-    public TaskList() {
+    public TaskList(String description) {
         this.todos = new ArrayList<>();
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     /**
@@ -119,7 +125,7 @@ public class TaskList {
      * @return A {@code TaskList} containing all matching tasks.
      */
     public TaskList find(String keyword) {
-        TaskList matchingTasks = new TaskList();
+        TaskList matchingTasks = new TaskList("Matching tasks");
         String lowerKeyword = keyword.toLowerCase();
         for (Task todo : todos) {
             if (todo.getDescription().toLowerCase().contains(lowerKeyword)) {
