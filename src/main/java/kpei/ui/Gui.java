@@ -42,7 +42,7 @@ public class Gui extends Application {
 
         Storage storage = new Storage(DEFAULT_STORAGE_PATH);
         TaskList taskList = new TaskList();
-        Cli cli = new Cli(msg -> mainWindowController.getCliTerminalController().appendOutput(msg));
+        Cli cli = new Cli(outputMsg -> mainWindowController.getCliTerminalController().appendOutput(outputMsg));
         Bert bert = new Bert(storage, taskList, cli, mainWindowController);
 
         mainWindowController.setDependencies(bert);

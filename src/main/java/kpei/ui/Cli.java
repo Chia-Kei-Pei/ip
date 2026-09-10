@@ -1,5 +1,6 @@
 package kpei.ui;
 
+import java.io.InputStream;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -25,22 +26,22 @@ public class Cli {
         """;
     private static final String HORIZONTAL_LINE = "____________________________________________________________";
 
-    private final Consumer<String> messageConsumer;
+    private final Consumer<String> output;
 
     /**
      * Constructs a {@code Cli} instance with a custom message consumer.
      *
-     * @param messageConsumer Consumer for output messages.
+     * @param output Consumer for output messages.
      */
-    public Cli(Consumer<String> messageConsumer) {
-        this.messageConsumer = messageConsumer;
+    public Cli(Consumer<String> output) {
+        this.output = output;
     }
 
     /**
      * Starts the CLI run loop using the configured {@link Bert} controller.
      */
-    public void run(Bert bert) {
-        Scanner scanner = new Scanner(System.in);
+    public void run(InputStream input, Bert bert) {
+        Scanner scanner = new Scanner(input);
         while (true) {
             System.out.print("> ");
             String userPrompt = scanner.nextLine();
@@ -80,7 +81,7 @@ public class Cli {
      * @param message The message text.
      */
     public void print(String message) {
-        messageConsumer.accept(message + "\n");
+        output.accept(message + "\n");
     }
 
     /**
