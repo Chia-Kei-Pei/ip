@@ -111,7 +111,7 @@ public class CommandCenter {
 
     private void handleAdd(Task task) throws BertException {
         taskList.add(task);
-        storage.save(taskList);
+        saveList();
         cli.print("Added " + task.getType());
         cli.printTask(taskList.size(), task);
         displayList = taskList;
@@ -150,7 +150,7 @@ public class CommandCenter {
             cli.printTask(index, task);
         } else {
             displayList.mark(index);
-            storage.save(taskList); // do NOT save displaylist
+            saveList();
             cli.print("Marked " + task.getType());
             cli.printTask(index, task);
             displayListOnGui();
@@ -164,7 +164,7 @@ public class CommandCenter {
             cli.printTask(index, task);
         } else {
             displayList.unmark(index);
-            storage.save(taskList); // do NOT save displaylist
+            saveList();
             cli.print("Unmarked " + task.getType());
             cli.printTask(index, task);
             displayListOnGui();
@@ -173,10 +173,14 @@ public class CommandCenter {
 
     private void handleDelete(int index) throws InvalidIndexException, BertException {
         Task removedTask = displayList.remove(index);
-        storage.save(taskList); // do NOT save displaylist
+        saveList();
         cli.print("Removed " + removedTask.getType());
         cli.printTask(index, removedTask);
         displayListOnGui();
+    }
+
+    private void saveList() throws BertException {
+        storage.save(taskList); // do NOT save displaylist
     }
 
     private void displayListOnGui() {
