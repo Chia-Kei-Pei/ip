@@ -36,7 +36,7 @@ public class Launcher {
         if (isCli) {
             Storage storage = new Storage(DEFAULT_STORAGE_PATH);
             TaskList taskList = new TaskList();
-            Cli cli = new Cli();
+            Cli cli = new Cli(System.out::print);
             Bert bert = new Bert(storage, taskList, cli);
             cli.run(bert);
         } else {

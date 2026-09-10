@@ -28,13 +28,6 @@ public class Cli {
     private final Consumer<String> messageConsumer;
 
     /**
-     * Constructs a {@code Cli} instance with standard terminal output.
-     */
-    public Cli() {
-        this(System.out::print);
-    }
-
-    /**
      * Constructs a {@code Cli} instance with a custom message consumer.
      *
      * @param messageConsumer Consumer for output messages.
