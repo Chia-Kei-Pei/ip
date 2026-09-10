@@ -1,7 +1,7 @@
 package kpei.exceptions;
 
 /**
- * Represents the base exception for application-specific errors in bert.Bert.
+ * Represents the base exception for application-specific errors in bert.CommandCenter.
  */
 public class BertException extends Exception {
     /**

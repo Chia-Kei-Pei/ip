@@ -17,7 +17,7 @@ import kpei.ui.controllers.MainWindowController;
  * Processes user input commands, mutates application state and storage,
  * and instructs the user interface on what to display.
  */
-public class Bert {
+public class CommandCenter {
 
     private final Storage storage;
     private final TaskList taskList;
@@ -28,18 +28,18 @@ public class Bert {
     private TaskList displayList;
 
     /**
-     * Constructs a {@code Bert} instance with the given storage, task list, and CLI interface.
+     * Constructs a {@code CommandCenter} instance with the given storage, task list, and CLI interface.
      *
      * @param storage Storage instance used for task persistence.
      * @param taskList Task list holding the user tasks.
      * @param cli CLI interface used to display messages to the user.
      */
-    public Bert(Storage storage, TaskList taskList, Cli cli) {
+    public CommandCenter(Storage storage, TaskList taskList, Cli cli) {
         this(storage, taskList, cli, null, false);
     }
 
     /**
-     * Constructs a {@code Bert} instance with the given storage, task list, CLI interface,
+     * Constructs a {@code CommandCenter} instance with the given storage, task list, CLI interface,
      * and main window controller.
      *
      * @param storage Storage instance used for task persistence.
@@ -47,13 +47,13 @@ public class Bert {
      * @param cli CLI interface used to display messages to the user.
      * @param mainWindowController Controller for the main GUI window.
      */
-    public Bert(Storage storage, TaskList taskList, Cli cli, MainWindowController mainWindowController) {
+    public CommandCenter(Storage storage, TaskList taskList, Cli cli, MainWindowController mainWindowController) {
         this(storage, taskList, cli, mainWindowController, true);
     }
 
 
-    private Bert(Storage storage, TaskList taskList, Cli cli, MainWindowController mainWindowController,
-                boolean isGuiEnabled) {
+    private CommandCenter(Storage storage, TaskList taskList, Cli cli, MainWindowController mainWindowController,
+                          boolean isGuiEnabled) {
         this.storage = storage;
         this.taskList = taskList;
         this.cli = cli;

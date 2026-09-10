@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-import kpei.Bert;
+import kpei.CommandCenter;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.InvalidIndexException;
@@ -38,15 +38,15 @@ public class Cli {
     }
 
     /**
-     * Starts the CLI run loop using the configured {@link Bert} controller.
+     * Starts the CLI run loop using the configured {@link CommandCenter} controller.
      */
-    public void run(InputStream input, Bert bert) {
+    public void run(InputStream input, CommandCenter commandCenter) {
         Scanner scanner = new Scanner(input);
         while (true) {
             System.out.print("> ");
             String userPrompt = scanner.nextLine();
 
-            if (bert.executeCommand(userPrompt)) {
+            if (commandCenter.executeCommand(userPrompt)) {
                 return;
             }
         }

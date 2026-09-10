@@ -3,7 +3,7 @@ package kpei.ui.controllers;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import kpei.Bert;
+import kpei.CommandCenter;
 import kpei.datatypes.TaskList;
 
 /**
@@ -29,7 +29,7 @@ public class MainWindowController {
     @FXML
     private ListViewController listViewController;
 
-    private Bert bert;
+    private CommandCenter commandCenter;
 
     /**
      * Initializes the controller and binds the terminal command consumer.
@@ -40,12 +40,12 @@ public class MainWindowController {
     }
 
     /**
-     * Injects the bert instance.
+     * Injects the commandCenter instance.
      *
-     * @param bert The Bert controller instance.
+     * @param commandCenter The CommandCenter controller instance.
      */
-    public void setDependencies(Bert bert) {
-        this.bert = bert;
+    public void setDependencies(CommandCenter commandCenter) {
+        this.commandCenter = commandCenter;
     }
 
     /**
@@ -58,12 +58,12 @@ public class MainWindowController {
     }
 
     /**
-     * Handles command submission to bert.
+     * Handles command submission to commandCenter.
      *
      * @param input The command entered by the user.
      */
     private void handleCommand(String input) {
-        boolean isExit = bert.executeCommand(input);
+        boolean isExit = commandCenter.executeCommand(input);
 
         if (isExit) {
             Platform.exit();

@@ -26,9 +26,9 @@ class BertTest {
         Storage storage = new Storage(testDataFilePath);
         TaskList taskList = new TaskList("todo_list.txt");
         Cli cli = new Cli(msg -> output.append(msg));
-        Bert bert = new Bert(storage, taskList, cli);
+        CommandCenter commandCenter = new CommandCenter(storage, taskList, cli);
 
-        cli.run(input, bert);
+        cli.run(input, commandCenter);
 
         return output.toString();
     }
