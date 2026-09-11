@@ -123,7 +123,8 @@ public class Cli {
             return;
         }
 
-        for (int i = 1; i <= taskList.size(); i++) {
+        for (int i = 0; i <= taskList.size(); i++) {
+            assert i >=1 && i <= taskList.size() : "i should always be between 1 and the size of the list inclusive";
             printTask(i, taskList.get(i));
         }
     }
