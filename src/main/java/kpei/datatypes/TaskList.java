@@ -81,9 +81,10 @@ public class TaskList {
      * @throws InvalidIndexException If the index is outside the valid range.
      */
     public Task mark(int index) throws InvalidIndexException {
-        Task task = get(index);
-        task.mark();
-        return task;
+        Task todo = get(index);
+        todo.mark();
+        assert todo.isMarked() : "A task should be marked after mark()";
+        return todo;
     }
 
     /**
@@ -94,9 +95,10 @@ public class TaskList {
      * @throws InvalidIndexException If the index is outside the valid range.
      */
     public Task unmark(int index) throws InvalidIndexException {
-        Task task = get(index);
-        task.unmark();
-        return task;
+        Task todo = get(index);
+        todo.unmark();
+        assert !todo.isMarked() : "A task should be unmarked after unmark()";
+        return todo;
     }
 
     /**

@@ -39,9 +39,16 @@ Strictly stick to agents/GIT_CONVENTIONS.md when handing git.
 
 Strictly stick to the styling rules described in agents/JAVA_CODING_STANDARD.md when writing Java code.
 
+Additionally, adhere to these rules:
+
+* Never create getter and setter methods for attributes in classes that are not datatypes.
+* Do not create extra constructors with less parameters than the main constructor.
+  * Prefer passing in appropriate arguments to object initialization.
+
 ## Filesystem MCP
 
-Always use the filesystem MCP for manipulating files. Do not use PowerShell just for accessing files unless strictly necessary - when filesystem fails.
+Always use the filesystem MCP for manipulating files.
+Do not use PowerShell just for accessing files unless strictly necessary, such as if filesystem fails or is not installed.
 
 Available tools include:
 - Read/write files

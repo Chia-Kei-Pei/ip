@@ -110,6 +110,8 @@ public class Storage {
             for (Task todo : taskList.getTodos()) {
                 lines.add(todo.toFileFormat());
             }
+            assert lines.size() == taskList.size()
+                    : "Each task should produce exactly one storage line";
 
             Files.write(path, lines);
         } catch (IOException e) {
