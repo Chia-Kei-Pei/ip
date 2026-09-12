@@ -43,51 +43,100 @@ public class Storage {
         }
 
         try {
-            List<String> lines = Files.readAllLines(path);
-            for (String line : lines) {
-                if (line.isBlank()) {
-                    continue;
-                }
-
-                String[] parts = line.split("\\s*\\|\\s*");
-                if (parts.length < 3) {
-                    continue;
-                }
-
-                String type = parts[0].trim();
-                boolean isMarked = Boolean.parseBoolean(parts[1].trim()) || parts[1].trim().equals("1");
-                String description = parts[2].trim();
-
-                switch (type) {
-                    case "todo" -> taskList.add(TaskParser.parseTask(isMarked, description));
-                    case "deadline" -> {
-                        if (parts.length >= 4) {
-                            try {
-                                taskList.add(TaskParser.parseDeadline(isMarked, description, parts[3].trim()));
-                            } catch (BertException e) {
-                                throw new BertException("Warning: Skipping task with invalid deadline in "
-                                        + filePath + ": " + line, e);
-                            }
-                        }
-                    }
-                    case "event" -> {
-                        if (parts.length >= 5) {
-                            try {
-                                taskList.add(TaskParser.parseEvent(isMarked, description,
-                                        parts[3].trim(), parts[4].trim()));
-                            } catch (BertException e) {
-                                throw new BertException("Warning: Skipping task with invalid event dates in "
-                                        + filePath + ": " + line, e);
-                            }
-                        }
-                    }
-                    default -> {
-                        // Ignore unrecognized task types
-                    }
-                }
+            for (String line : Files.readAllLines(path)) {
+                loadTask(taskList, line);
             }
         } catch (IOException e) {
             throw new BertException("Warning: Unable to load data from " + filePath + " (" + e.getMessage() + ")", e);
+        }
+    }
+
+    /**
+     * Parses a storage line and adds its task to the provided list when valid.
+     *
+     * @param taskList The list receiving the restored task.
+     * @param line A line read from the storage file.
+     * @throws BertException If a recognized task has invalid data.
+     */
+    private void loadTask(TaskList taskList, String line) throws BertException {
+        Task task = parseStoredTask(line);
+        if (task != null) {
+            taskList.add(task);
+        }
+    }
+
+    /**
+     * Parses one storage line into a task.
+     *
+     * @param line A line read from the storage file.
+     * @return The parsed task, or {@code null} for blank, incomplete, or unrecognized lines.
+     * @throws BertException If a recognized task has invalid data.
+     */
+    private Task parseStoredTask(String line) throws BertException {
+        if (line.isBlank()) {
+            return null;
+        }
+
+        String[] fields = line.split("\\s*\\|\\s*");
+        if (fields.length < 3) {
+            return null;
+        }
+
+        String type = fields[0].trim();
+        boolean isMarked = Boolean.parseBoolean(fields[1].trim()) || fields[1].trim().equals("1");
+        String description = fields[2].trim();
+
+        return switch (type) {
+            case "todo" -> TaskParser.parseTask(isMarked, description);
+            case "deadline" -> parseStoredDeadline(line, fields, isMarked, description);
+            case "event" -> parseStoredEvent(line, fields, isMarked, description);
+            default -> null;
+        };
+    }
+
+    /**
+     * Parses a stored deadline when its required due-date field is present.
+     *
+     * @param line The original storage line.
+     * @param fields The fields extracted from the storage line.
+     * @param isMarked Whether the deadline is completed.
+     * @param description The deadline description.
+     * @return The parsed deadline, or {@code null} when its due date is absent.
+     * @throws BertException If the deadline fields are invalid.
+     */
+    private Task parseStoredDeadline(String line, String[] fields, boolean isMarked, String description)
+            throws BertException {
+        if (fields.length < 4) {
+            return null;
+        }
+
+        try {
+            return TaskParser.parseDeadline(isMarked, description, fields[3].trim());
+        } catch (BertException e) {
+            throw new BertException("Warning: Skipping task with invalid deadline in " + filePath + ": " + line, e);
+        }
+    }
+
+    /**
+     * Parses a stored event when its required start and end fields are present.
+     *
+     * @param line The original storage line.
+     * @param fields The fields extracted from the storage line.
+     * @param isMarked Whether the event is completed.
+     * @param description The event description.
+     * @return The parsed event, or {@code null} when either date is absent.
+     * @throws BertException If the event fields are invalid.
+     */
+    private Task parseStoredEvent(String line, String[] fields, boolean isMarked, String description)
+            throws BertException {
+        if (fields.length < 5) {
+            return null;
+        }
+
+        try {
+            return TaskParser.parseEvent(isMarked, description, fields[3].trim(), fields[4].trim());
+        } catch (BertException e) {
+            throw new BertException("Warning: Skipping task with invalid event dates in " + filePath + ": " + line, e);
         }
     }
 
