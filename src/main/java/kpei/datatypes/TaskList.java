@@ -83,6 +83,7 @@ public class TaskList {
     public Task mark(int index) throws InvalidIndexException {
         Task todo = get(index);
         todo.mark();
+        assert todo.isMarked() : "A task should be marked after mark()";
         return todo;
     }
 
@@ -96,6 +97,7 @@ public class TaskList {
     public Task unmark(int index) throws InvalidIndexException {
         Task todo = get(index);
         todo.unmark();
+        assert !todo.isMarked() : "A task should be unmarked after unmark()";
         return todo;
     }
 
