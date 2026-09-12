@@ -13,7 +13,7 @@ public class TaskList {
     private String description;
 
     /**
-     * Initializes an empty todo list.
+     * Initializes an empty task list.
      */
     public TaskList(String description) {
         this.todos = new ArrayList<>();
@@ -27,10 +27,10 @@ public class TaskList {
     /**
      * Adds a task to the end of the list.
      *
-     * @param todo The task to add.
+     * @param task The task to add.
      */
-    public void add(Task todo) {
-        todos.add(todo);
+    public void add(Task task) {
+        todos.add(task);
     }
 
     /**
@@ -129,9 +129,9 @@ public class TaskList {
     public TaskList find(String keyword) {
         TaskList matchingTasks = new TaskList("Matching tasks");
         String lowerKeyword = keyword.toLowerCase();
-        for (Task todo : todos) {
-            if (todo.getDescription().toLowerCase().contains(lowerKeyword)) {
-                matchingTasks.add(todo);
+        for (Task task : todos) {
+            if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
+                matchingTasks.add(task);
             }
         }
         return matchingTasks;

@@ -59,10 +59,7 @@ public class CommandCenter {
         this.cli = cli;
         this.mainWindowController = mainWindowController;
         this.isGuiEnabled = isGuiEnabled;
-        startup();
-    }
 
-    private void startup() {
         try {
             this.storage.load(taskList);
         } catch (BertException e) {
