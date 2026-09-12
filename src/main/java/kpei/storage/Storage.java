@@ -2,6 +2,7 @@ package kpei.storage;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import kpei.parser.TaskParser;
  * Uses a human-readable pipe-delimited plain text format.
  */
 public class Storage {
-    private final String filePath;
+    private final Path filePath;
 
     /**
      * Constructs a {@code Storage} handler with a custom file path.
@@ -24,7 +25,22 @@ public class Storage {
      * @param filePath Relative or absolute path to the data storage file.
      */
     public Storage(String filePath) {
-        this.filePath = filePath;
+        this.filePath = parseFilePath(filePath);
+    }
+
+    /**
+     * Converts a storage file path string into a valid {@link Path}.
+     *
+     * @param filePath The storage file path string.
+     * @return The parsed storage file path.
+     * @throws IllegalArgumentException If the path string has invalid syntax.
+     */
+    private Path parseFilePath(String filePath) {
+        try {
+            return Path.of(filePath);
+        } catch (InvalidPathException e) {
+            throw new IllegalArgumentException("Invalid storage file path: " + filePath, e);
+        }
     }
 
     /**
@@ -36,54 +52,14 @@ public class Storage {
      * @throws BertException If an error occurs while reading or parsing the data file.
      */
     public void load(TaskList taskList) throws BertException {
-        Path path = Path.of(filePath);
-
-        if (!Files.exists(path)) {
+        if (!Files.exists(filePath)) {
             return;
         }
 
         try {
-            List<String> lines = Files.readAllLines(path);
-            for (String line : lines) {
-                if (line.isBlank()) {
-                    continue;
-                }
-
-                String[] parts = line.split("\\s*\\|\\s*");
-                if (parts.length < 3) {
-                    continue;
-                }
-
-                String type = parts[0].trim();
-                boolean isMarked = Boolean.parseBoolean(parts[1].trim()) || parts[1].trim().equals("1");
-                String description = parts[2].trim();
-
-                switch (type) {
-                    case "todo" -> taskList.add(TaskParser.parseTodo(isMarked, description));
-                    case "deadline" -> {
-                        if (parts.length >= 4) {
-                            try {
-                                taskList.add(TaskParser.parseDeadline(isMarked, description, parts[3].trim()));
-                            } catch (BertException e) {
-                                throw new BertException("Warning: Skipping task with invalid deadline in "
-                                        + filePath + ": " + line, e);
-                            }
-                        }
-                    }
-                    case "event" -> {
-                        if (parts.length >= 5) {
-                            try {
-                                taskList.add(TaskParser.parseEvent(isMarked, description,
-                                        parts[3].trim(), parts[4].trim()));
-                            } catch (BertException e) {
-                                throw new BertException("Warning: Skipping task with invalid event dates in "
-                                        + filePath + ": " + line, e);
-                            }
-                        }
-                    }
-                    default -> {
-                        // Ignore unrecognized task types
-                    }
+            for (String line : Files.readAllLines(filePath)) {
+                if (TaskParser.isStoredTask(line)) {
+                    taskList.add(TaskParser.parseStoredTask(line));
                 }
             }
         } catch (IOException e) {
@@ -99,21 +75,17 @@ public class Storage {
      * @throws BertException If an I/O error occurs while saving data.
      */
     public void save(TaskList taskList) throws BertException {
-        Path path = Path.of(filePath);
-
         try {
-            if (path.getParent() != null) {
-                Files.createDirectories(path.getParent());
-            }
+            Files.createDirectories(filePath.toAbsolutePath().getParent());
 
             List<String> lines = new ArrayList<>();
-            for (Task todo : taskList.getTodos()) {
-                lines.add(todo.toFileFormat());
+            for (Task task : taskList.getTasks()) {
+                lines.add(task.toFileFormat());
             }
             assert lines.size() == taskList.size()
                     : "Each task should produce exactly one storage line";
 
-            Files.write(path, lines);
+            Files.write(filePath, lines);
         } catch (IOException e) {
             throw new BertException("Warning: Unable to save data to " + filePath + " (" + e.getMessage() + ")", e);
         }
@@ -125,6 +97,6 @@ public class Storage {
      * @return The storage file name.
      */
     public String getFileName() {
-        return Path.of(filePath).getFileName().toString();
+        return filePath.getFileName().toString();
     }
 }

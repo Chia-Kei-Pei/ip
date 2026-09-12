@@ -13,8 +13,7 @@ import kpei.ui.Gui;
 public class Launcher {
 
     private static final String CLI_FLAG = "--cli";
-    private static final String DEFAULT_STORAGE_PATH = "data/todo_list_1.txt";
-    private static final String DEFAULT_LIST_DESCRIPTION = "todo_list_1.txt";
+    private static final String DEFAULT_STORAGE_PATH = "data/task_list_1.txt";
 
     /**
      * Main method deciding whether to launch the CLI or GUI version of BERT.
@@ -34,12 +33,12 @@ public class Launcher {
 
         if (isCli) {
             Storage storage = new Storage(DEFAULT_STORAGE_PATH);
-            TaskList taskList = new TaskList(DEFAULT_LIST_DESCRIPTION);
+            TaskList taskList = new TaskList(storage.getFileName());
             Cli cli = new Cli(System.out::print);
             CommandCenter commandCenter = new CommandCenter(storage, taskList, cli);
             cli.run(System.in, commandCenter);
         } else {
-            Gui.initDependencies(DEFAULT_STORAGE_PATH, DEFAULT_LIST_DESCRIPTION);
+            Gui.initDependencies(DEFAULT_STORAGE_PATH);
             Application.launch(Gui.class, args);
         }
     }

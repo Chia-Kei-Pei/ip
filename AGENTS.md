@@ -44,6 +44,10 @@ Additionally, adhere to these rules:
 * Never create getter and setter methods for attributes in classes that are not datatypes.
 * Do not create extra constructors with less parameters than the main constructor.
   * Prefer passing in appropriate arguments to object initialization.
+* Null values
+  * Instead of null return values, throw exceptions when parsers cannot parse values into variables.
+  * Instead of null checks, Use booleans to check for specific states.
+  * If a variable must be set to null in the rare case that the variable will never be used, alert the human programmer.
 
 ## Filesystem MCP
 
