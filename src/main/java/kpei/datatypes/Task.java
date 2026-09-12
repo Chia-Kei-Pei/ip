@@ -25,7 +25,7 @@ public class Task {
     /**
      * Constructs an unmarked {@code Task} task with default completion status set to {@code false}.
      *
-     * @param description The description of the todo task.
+     * @param description The description of the task.
      */
     public Task(String description) {
         this(false, description);

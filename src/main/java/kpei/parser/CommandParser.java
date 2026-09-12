@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import kpei.exceptions.BertException;
 import kpei.exceptions.UnknownCommandException;
@@ -19,6 +20,33 @@ import kpei.exceptions.UnknownCommandException;
 public class CommandParser {
 
     /**
+     * Parses a raw command string from the user into a {@link ParsedCommand}.
+     * Enforces that each argument or flag value is a single token or a quoted string.
+     *
+     * @param rawInput The raw input string entered by the user.
+     * @return A {@link ParsedCommand} containing the parsed command type, arguments, and flags.
+     * @throws BertException If the command type is unknown or invalid.
+     * @throws IllegalArgumentException If arguments with spaces are not quoted, or required fields are missing.
+     */
+    public static ParsedCommand parse(String rawInput) throws BertException, IllegalArgumentException {
+        List<String> tokens = tokenize(rawInput);
+        if (tokens.isEmpty()) {
+            throw new IllegalArgumentException("Command should not be empty");
+        }
+
+        String commandType = tokens.get(0).toLowerCase();
+        List<String> arguments = new ArrayList<>();
+        Map<String, String> flags = new LinkedHashMap<>();
+
+        collectArgumentsAndFlags(tokens, commandType, arguments, flags);
+        String argument = arguments.isEmpty() ? "" : arguments.get(0);
+
+        validateCommand(commandType, argument, flags);
+
+        return new ParsedCommand(commandType, argument, flags);
+    }
+
+    /**
      * Tokenizes a raw input string into individual tokens, taking quoted strings into account.
      * Characters enclosed in single or double quotes are treated as a single token.
      *
@@ -27,7 +55,7 @@ public class CommandParser {
      */
     public static List<String> tokenize(String input) {
         List<String> tokens = new ArrayList<>();
-        if (input == null || input.isBlank()) {
+        if (input.isBlank()) {
             return tokens;
         }
 
@@ -68,85 +96,104 @@ public class CommandParser {
      *
      * @param token The token string to inspect.
      * @param commandType The command context in lowercase.
-     * @return The normalized flag name (without prefixes), or {@code null} if the token is not a flag.
+     * @return The normalized flag name, if the token is a flag.
      */
-    private static String extractFlagName(String token, String commandType) {
+    private static Optional<String> extractFlagName(String token, String commandType) {
         if (token.startsWith("/")) {
-            return token.substring(1).toLowerCase();
+            return Optional.of(token.substring(1).toLowerCase());
         }
         if (token.startsWith("--")) {
-            return token.substring(2).toLowerCase();
+            return Optional.of(token.substring(2).toLowerCase());
         }
         if (token.startsWith("-") && token.length() > 1 && !Character.isDigit(token.charAt(1))) {
-            return token.substring(1).toLowerCase();
+            return Optional.of(token.substring(1).toLowerCase());
         }
-        // Context-aware flag keywords
         if (commandType.equals("deadline") && token.equalsIgnoreCase("by")) {
-            return "by";
+            return Optional.of("by");
         }
         if (commandType.equals("event") && (token.equalsIgnoreCase("from")
                 || token.equalsIgnoreCase("to"))) {
-            return token.toLowerCase();
+            return Optional.of(token.toLowerCase());
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
-     * Parses a raw command string from the user into a {@link ParsedCommand}.
-     * Enforces that each argument or flag value is a single token or a quoted string.
+     * Collects the positional argument and named flags from command tokens.
      *
-     * @param rawInput The raw input string entered by the user.
-     * @return A {@link ParsedCommand} containing the parsed command type, arguments, and flags.
-     * @throws BertException If the command type is unknown or invalid.
-     * @throws IllegalArgumentException If arguments with spaces are not quoted, or required fields are missing.
+     * @param tokens The tokens in the command.
+     * @param commandType The command word.
+     * @param arguments The list receiving the positional argument.
+     * @param flags The map receiving flag names and values.
      */
-    public static ParsedCommand parse(String rawInput) throws BertException, IllegalArgumentException {
-        List<String> tokens = tokenize(rawInput);
-        if (tokens.isEmpty()) {
-            throw new IllegalArgumentException("Command should not be empty");
-        }
+    private static void collectArgumentsAndFlags(List<String> tokens, String commandType, List<String> arguments,
+                                                 Map<String, String> flags) {
+        int tokenIndex = 1;
+        while (tokenIndex < tokens.size()) {
+            String token = tokens.get(tokenIndex);
+            Optional<String> flagName = extractFlagName(token, commandType);
 
-        String commandType = tokens.get(0).toLowerCase();
-        String argument = null;
-        Map<String, String> flags = new LinkedHashMap<>();
-
-        int i = 1;
-        while (i < tokens.size()) {
-            String token = tokens.get(i);
-            String flagName = extractFlagName(token, commandType);
-
-            // A token is treated as a flag if it matches flag syntax and either:
-            // 1. It explicitly starts with a flag prefix ('/' or '-'), or
-            // 2. The primary positional argument has already been populated.
-            if (flagName != null && (argument != null || token.startsWith("/") || token.startsWith("-"))) {
-                if (i + 1 >= tokens.size()) {
-                    throw new IllegalArgumentException("Missing value for flag: " + token);
-                }
-                String flagValue = tokens.get(i + 1);
-                if (flagValue.startsWith("/") || flagValue.startsWith("--")) {
-                    throw new IllegalArgumentException("Missing value for flag: " + token);
-                }
-                flags.put(flagName, flagValue);
-                i += 2;
+            if (isFlag(flagName, arguments, token)) {
+                tokenIndex = addFlag(tokens, tokenIndex, token, flagName.orElseThrow(), flags);
             } else {
-                if (argument == null) {
-                    argument = token;
-                    i++;
-                } else {
-                    throw new IllegalArgumentException(
-                            "Unexpected argument: \"" + token + "\"."
-                            + " Arguments containing spaces must be enclosed in quotes.");
-                }
+                addArgument(arguments, token);
+                tokenIndex++;
             }
         }
+    }
 
-        if (argument == null) {
-            argument = "";
+    /**
+     * Checks whether a token should be treated as a flag in the current command context.
+     *
+     * @param flagName The optional normalized flag name.
+     * @param arguments The positional arguments parsed so far.
+     * @param token The original token.
+     * @return {@code true} if the token is a flag, {@code false} otherwise.
+     */
+    private static boolean isFlag(Optional<String> flagName, List<String> arguments, String token) {
+        return flagName.isPresent()
+                && (!arguments.isEmpty() || token.startsWith("/") || token.startsWith("-"));
+    }
+
+    /**
+     * Adds a flag and its value to the parsed flag map.
+     *
+     * @param tokens The tokens in the command.
+     * @param flagIndex The index of the flag token.
+     * @param token The original flag token.
+     * @param flagName The normalized flag name.
+     * @param flags The map receiving the flag value.
+     * @return The index of the next unprocessed token.
+     */
+    private static int addFlag(List<String> tokens, int flagIndex, String token, String flagName,
+                               Map<String, String> flags) {
+        if (flagIndex + 1 >= tokens.size()) {
+            throw new IllegalArgumentException("Missing value for flag: " + token);
         }
 
-        validateCommand(commandType, argument, flags);
+        String flagValue = tokens.get(flagIndex + 1);
+        if (flagValue.startsWith("/") || flagValue.startsWith("--")) {
+            throw new IllegalArgumentException("Missing value for flag: " + token);
+        }
 
-        return new ParsedCommand(commandType, argument, flags);
+        flags.put(flagName, flagValue);
+        return flagIndex + 2;
+    }
+
+    /**
+     * Adds the command's only positional argument.
+     *
+     * @param arguments The list receiving the positional argument.
+     * @param token The token to add as an argument.
+     */
+    private static void addArgument(List<String> arguments, String token) {
+        if (!arguments.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Unexpected argument: \"" + token + "\"."
+                    + " Arguments containing spaces must be enclosed in quotes.");
+        }
+
+        arguments.add(token);
     }
 
     /**
@@ -163,15 +210,14 @@ public class CommandParser {
         switch (commandType) {
             case "todo":
                 if (argument.isEmpty()) {
-                    throw new IllegalArgumentException("Name of todo should not be empty");
+                    throw new IllegalArgumentException("Task description should not be empty");
                 }
                 break;
             case "deadline":
                 if (argument.isEmpty()) {
                     throw new IllegalArgumentException("Name of deadline should not be empty");
                 }
-                String byDate = flags.get("by");
-                if (byDate == null || byDate.isEmpty()) {
+                if (!flags.containsKey("by") || flags.get("by").isEmpty()) {
                     throw new IllegalArgumentException("ByDate of deadline should not be empty");
                 }
                 break;
@@ -179,12 +225,10 @@ public class CommandParser {
                 if (argument.isEmpty()) {
                     throw new IllegalArgumentException("Name of event should not be empty");
                 }
-                String fromDate = flags.get("from");
-                if (fromDate == null || fromDate.isEmpty()) {
+                if (!flags.containsKey("from") || flags.get("from").isEmpty()) {
                     throw new IllegalArgumentException("FromDate of event should not be empty");
                 }
-                String toDate = flags.get("to");
-                if (toDate == null || toDate.isEmpty()) {
+                if (!flags.containsKey("to") || flags.get("to").isEmpty()) {
                     throw new IllegalArgumentException("ToDate of event should not be empty");
                 }
                 break;

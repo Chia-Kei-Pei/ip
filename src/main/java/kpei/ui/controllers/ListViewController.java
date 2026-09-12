@@ -63,7 +63,7 @@ public class ListViewController {
         listTitle.setText(taskList.getDescription());
 
         ObservableList<Task> items = FXCollections.observableArrayList();
-        items.addAll(taskList.getTodos());
+        items.addAll(taskList.getTasks());
         taskListView.setItems(items);
     }
 }
