@@ -13,14 +13,14 @@ import kpei.exceptions.BertException;
 public class TaskParser {
 
     /**
-     * Creates a {@link Task} representing a todo with the specified completion status and description.
+     * Creates a {@link Task} with the specified completion status and description.
      *
-     * @param isMarked Whether the todo is marked as completed.
-     * @param description The description of the todo.
+     * @param isMarked Whether the task is marked as completed.
+     * @param description The description of the task.
      * @return The created {@link Task} instance.
      * @throws BertException If the description is null or blank.
      */
-    public static Task parseTodo(boolean isMarked, String description) throws BertException {
+    public static Task parseTask(boolean isMarked, String description) throws BertException {
         if (description == null || description.isBlank()) {
             throw new BertException("Failed to create task. Some fields are invalid");
         }
@@ -28,14 +28,14 @@ public class TaskParser {
     }
 
     /**
-     * Creates an unmarked {@link Task} representing a todo with the specified description.
+     * Creates an unmarked {@link Task} with the specified description.
      *
-     * @param description The description of the todo.
+     * @param description The description of the task.
      * @return The created {@link Task} instance.
      * @throws BertException If the description is null or blank.
      */
-    public static Task parseTodo(String description) throws BertException {
-        return parseTodo(false, description);
+    public static Task parseTask(String description) throws BertException {
+        return parseTask(false, description);
     }
 
     /**

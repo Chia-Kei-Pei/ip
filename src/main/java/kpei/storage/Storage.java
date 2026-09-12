@@ -58,8 +58,12 @@ public class Storage {
                 boolean isMarked = Boolean.parseBoolean(parts[1].trim()) || parts[1].trim().equals("1");
                 String description = parts[2].trim();
 
+                if (Task.isStandardType(type)) {
+                    taskList.add(TaskParser.parseTask(isMarked, description));
+                    continue;
+                }
+
                 switch (type) {
-                    case "todo" -> taskList.add(TaskParser.parseTodo(isMarked, description));
                     case "deadline" -> {
                         if (parts.length >= 4) {
                             try {
@@ -107,8 +111,8 @@ public class Storage {
             }
 
             List<String> lines = new ArrayList<>();
-            for (Task todo : taskList.getTodos()) {
-                lines.add(todo.toFileFormat());
+            for (Task task : taskList.getTasks()) {
+                lines.add(task.toFileFormat());
             }
             assert lines.size() == taskList.size()
                     : "Each task should produce exactly one storage line";

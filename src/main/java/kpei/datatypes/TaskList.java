@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import kpei.exceptions.InvalidIndexException;
 
 /**
- * Represents an ordered, 1-based indexed collection of tasks (Todos, Deadlines, Events).
+ * Represents an ordered, 1-based indexed collection of tasks (Task, Deadline, Event).
  * Handles adding, retrieving, removing, marking, and unmarking tasks with range validation.
  */
 public class TaskList {
-    private final ArrayList<Task> todos;
+    private final ArrayList<Task> tasks;
     private String description;
 
     /**
      * Initializes an empty task list.
      */
     public TaskList(String description) {
-        this.todos = new ArrayList<>();
+        this.tasks = new ArrayList<>();
         this.description = description;
     }
 
@@ -30,18 +30,18 @@ public class TaskList {
      * @param task The task to add.
      */
     public void add(Task task) {
-        todos.add(task);
+        tasks.add(task);
     }
 
     /**
      * Validates that the specified 1-based index is within valid list bounds.
      *
      * @param index The 1-based index to validate.
-     * @throws InvalidIndexException If the index is less than 1 or greater than the number of todos.
+     * @throws InvalidIndexException If the index is less than 1 or greater than the number of tasks.
      */
     private void validateIndex(int index) throws InvalidIndexException {
-        if (index < 1 || index > todos.size()) {
-            throw new InvalidIndexException(index, todos.size());
+        if (index < 1 || index > tasks.size()) {
+            throw new InvalidIndexException(index, tasks.size());
         }
     }
 
@@ -54,11 +54,11 @@ public class TaskList {
      */
     public Task get(int index) throws InvalidIndexException {
         validateIndex(index);
-        return todos.get(index - 1);
+        return tasks.get(index - 1);
     }
 
-    public ArrayList<Task> getTodos() {
-        return todos;
+    public ArrayList<Task> getTasks() {
+        return tasks;
     }
 
     /**
@@ -70,7 +70,7 @@ public class TaskList {
      */
     public Task remove(int index) throws InvalidIndexException {
         validateIndex(index);
-        return todos.remove(index - 1);
+        return tasks.remove(index - 1);
     }
 
     /**
@@ -81,10 +81,10 @@ public class TaskList {
      * @throws InvalidIndexException If the index is outside the valid range.
      */
     public Task mark(int index) throws InvalidIndexException {
-        Task todo = get(index);
-        todo.mark();
-        assert todo.isMarked() : "A task should be marked after mark()";
-        return todo;
+        Task task = get(index);
+        task.mark();
+        assert task.isMarked() : "A task should be marked after mark()";
+        return task;
     }
 
     /**
@@ -95,10 +95,10 @@ public class TaskList {
      * @throws InvalidIndexException If the index is outside the valid range.
      */
     public Task unmark(int index) throws InvalidIndexException {
-        Task todo = get(index);
-        todo.unmark();
-        assert !todo.isMarked() : "A task should be unmarked after unmark()";
-        return todo;
+        Task task = get(index);
+        task.unmark();
+        assert !task.isMarked() : "A task should be unmarked after unmark()";
+        return task;
     }
 
     /**
@@ -107,7 +107,7 @@ public class TaskList {
      * @return The number of tasks.
      */
     public int size() {
-        return todos.size();
+        return tasks.size();
     }
 
     /**
@@ -116,7 +116,7 @@ public class TaskList {
      * @return {@code true} if the list is empty, {@code false} otherwise.
      */
     public boolean isEmpty() {
-        return todos.isEmpty();
+        return tasks.isEmpty();
     }
 
     /**
@@ -129,7 +129,7 @@ public class TaskList {
     public TaskList find(String keyword) {
         TaskList matchingTasks = new TaskList("Matching tasks");
         String lowerKeyword = keyword.toLowerCase();
-        for (Task task : todos) {
+        for (Task task : tasks) {
             if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
                 matchingTasks.add(task);
             }

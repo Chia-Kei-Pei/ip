@@ -16,7 +16,7 @@ public class ParsedCommand {
     /**
      * Constructs a {@code ParsedCommand} with the given command type, positional argument, and flags.
      *
-     * @param commandType The primary command word in lowercase (e.g., "todo", "deadline", "list").
+     * @param commandType The primary command word in lowercase (e.g., "deadline", "list").
      * @param argument The primary positional argument (e.g., task description or index).
      * @param flags A map of flag names to their corresponding values.
      */
@@ -29,7 +29,7 @@ public class ParsedCommand {
     /**
      * Returns the command type in lowercase.
      *
-     * @return The command name (e.g., "todo", "deadline", "mark").
+     * @return The command name (e.g., "deadline", "mark").
      */
     public String getCommandType() {
         return commandType;

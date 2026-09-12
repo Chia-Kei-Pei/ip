@@ -13,8 +13,8 @@ import kpei.ui.Gui;
 public class Launcher {
 
     private static final String CLI_FLAG = "--cli";
-    private static final String DEFAULT_STORAGE_PATH = "data/todo_list_1.txt";
-    private static final String DEFAULT_LIST_DESCRIPTION = "todo_list_1.txt";
+    private static final String DEFAULT_STORAGE_PATH = "data/task_list_1.txt";
+    private static final String DEFAULT_LIST_DESCRIPTION = "task_list_1.txt";
 
     /**
      * Main method deciding whether to launch the CLI or GUI version of BERT.

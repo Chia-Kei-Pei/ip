@@ -5,6 +5,8 @@ package kpei.datatypes;
  * Serves as the base class for specialized task types such as {@link Deadline} and {@link Event}.
  */
 public class Task {
+    private static final String TYPE = "todo";
+
     protected String type;
     protected boolean isMarked;
     protected String description;
@@ -17,7 +19,7 @@ public class Task {
      * @param description The description of the task.
      */
     public Task(boolean isMarked, String description) {
-        this.type = "todo";
+        this.type = TYPE;
         this.isMarked = isMarked;
         this.description = description;
     }
@@ -25,7 +27,7 @@ public class Task {
     /**
      * Constructs an unmarked {@code Task} task with default completion status set to {@code false}.
      *
-     * @param description The description of the todo task.
+     * @param description The description of the task.
      */
     public Task(String description) {
         this(false, description);
@@ -47,6 +49,16 @@ public class Task {
      */
     public String getType() {
         return type;
+    }
+
+    /**
+     * Checks whether a storage type represents a standard task.
+     *
+     * @param type The storage type to check.
+     * @return {@code true} if the type represents a standard task, {@code false} otherwise.
+     */
+    public static boolean isStandardType(String type) {
+        return TYPE.equals(type);
     }
 
     /**

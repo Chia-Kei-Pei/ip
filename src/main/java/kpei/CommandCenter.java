@@ -86,7 +86,7 @@ public class CommandCenter {
             ParsedCommand cmd = CommandParser.parse(userPrompt);
 
             switch (cmd.getCommandType()) {
-                case "todo" -> handleAdd(TaskParser.parseTodo(cmd.getArgument()));
+                case "todo" -> handleAdd(TaskParser.parseTask(cmd.getArgument()));
                 case "deadline" -> handleAdd(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
                 case "event" -> handleAdd(TaskParser.parseEvent(cmd.getArgument(),
                         cmd.getFlag("from"), cmd.getFlag("to")));

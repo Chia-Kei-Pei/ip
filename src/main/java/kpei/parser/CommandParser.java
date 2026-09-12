@@ -163,7 +163,7 @@ public class CommandParser {
         switch (commandType) {
             case "todo":
                 if (argument.isEmpty()) {
-                    throw new IllegalArgumentException("Name of todo should not be empty");
+                    throw new IllegalArgumentException("Task description should not be empty");
                 }
                 break;
             case "deadline":
