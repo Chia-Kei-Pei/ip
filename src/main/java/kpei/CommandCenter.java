@@ -12,6 +12,10 @@ import kpei.storage.Storage;
 import kpei.ui.Cli;
 import kpei.ui.controllers.MainWindowController;
 
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.List;
+
 /**
  * Core coordinator and command handler for the BERT assistant.
  * Processes user input commands, mutates application state and storage,
@@ -82,8 +86,13 @@ public class CommandCenter {
      */
     public boolean executeCommand(String userPrompt) {
         try {
+            CommandParser commandParser = new CommandParser();
+
             cli.horizontalLine();
-            ParsedCommand cmd = CommandParser.parse(userPrompt);
+
+//            ParsedCommand cmd = CommandParser.parse(userPrompt);
+            List<String> tokens = commandParser.tokenize(userPrompt);
+            ParsedCommand parsedCommand = commandParser.parse(tokens);
 
             switch (cmd.getCommandType()) {
                 case "todo" -> handleAdd(TaskParser.parseTask(cmd.getArgument()));

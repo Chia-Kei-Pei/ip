@@ -1,12 +1,9 @@
 package kpei.parser;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import kpei.exceptions.BertException;
+import kpei.exceptions.MissingArgumentException;
 import kpei.exceptions.UnknownCommandException;
 
 /**
@@ -28,22 +25,40 @@ public class CommandParser {
      * @throws BertException If the command type is unknown or invalid.
      * @throws IllegalArgumentException If arguments with spaces are not quoted, or required fields are missing.
      */
-    public static ParsedCommand parse(String rawInput) throws BertException, IllegalArgumentException {
-        List<String> tokens = tokenize(rawInput);
+    public ParsedCommand parse(List<String> tokens) throws BertException, IllegalArgumentException {
         if (tokens.isEmpty()) {
             throw new IllegalArgumentException("Command should not be empty");
         }
 
         String commandType = tokens.get(0).toLowerCase();
-        List<String> arguments = new ArrayList<>();
-        Map<String, String> flags = new LinkedHashMap<>();
+        List<String> positionalParameters = new ArrayList<>();
+        Map<String, String> flaggedParameters = new LinkedHashMap<>();
 
-        collectArgumentsAndFlags(tokens, commandType, arguments, flags);
-        String argument = arguments.isEmpty() ? "" : arguments.get(0);
+        int i = 1;
 
-        validateCommand(commandType, argument, flags);
+        // collect positional arguments
+        while (i < tokens.size()) {
+            if (isFlag(tokens.get(i))) {
+                break;
+            }
+            positionalParameters.add(tokens.get(i));
+            i++;
+        }
 
-        return new ParsedCommand(commandType, argument, flags);
+        // collect flagged arguments
+        while (i < tokens.size()) {
+            assert isFlag(tokens.get(i)) : tokens.get(i) + " at index " + i + " should be a flag";
+
+            String flag = tokens.get(i);
+            i++;
+            if (i > tokens.size()) {
+                throw new MissingArgumentException(flag);
+            }
+            String value = tokens.get(i);
+            flaggedParameters.put(flag, value);
+        }
+
+        return new ParsedCommand(commandType, positionalParameters, flaggedParameters);
     }
 
     /**
@@ -53,7 +68,7 @@ public class CommandParser {
      * @param input The raw input line.
      * @return A list of extracted string tokens.
      */
-    public static List<String> tokenize(String input) {
+    public List<String> tokenize(String input) {
         List<String> tokens = new ArrayList<>();
         if (input.isBlank()) {
             return tokens;
@@ -118,41 +133,26 @@ public class CommandParser {
         return Optional.empty();
     }
 
-    /**
-     * Collects the positional argument and named flags from command tokens.
-     *
-     * @param tokens The tokens in the command.
-     * @param commandType The command word.
-     * @param arguments The list receiving the positional argument.
-     * @param flags The map receiving flag names and values.
-     */
-    private static void collectArgumentsAndFlags(List<String> tokens, String commandType, List<String> arguments,
-                                                 Map<String, String> flags) {
-        int tokenIndex = 1;
-        while (tokenIndex < tokens.size()) {
-            String token = tokens.get(tokenIndex);
-            Optional<String> flagName = extractFlagName(token, commandType);
-
-            if (isFlag(flagName, arguments, token)) {
-                tokenIndex = addFlag(tokens, tokenIndex, token, flagName.orElseThrow(), flags);
-            } else {
-                addArgument(arguments, token);
-                tokenIndex++;
-            }
-        }
-    }
+//    /**
+//     * Collects the positional argument and named flags from command tokens.
+//     *
+//     * @param tokens The tokens in the command.
+//     * @param commandType The command word.
+//     * @param arguments The list receiving the positional argument.
+//     * @param flags The map receiving flag names and values.
+//     */
+//    public List<String> collectPositionalParameters(List<String> tokens, int tokenIndex) {
+//
+//    }
 
     /**
      * Checks whether a token should be treated as a flag in the current command context.
      *
-     * @param flagName The optional normalized flag name.
-     * @param arguments The positional arguments parsed so far.
      * @param token The original token.
      * @return {@code true} if the token is a flag, {@code false} otherwise.
      */
-    private static boolean isFlag(Optional<String> flagName, List<String> arguments, String token) {
-        return flagName.isPresent()
-                && (!arguments.isEmpty() || token.startsWith("/") || token.startsWith("-"));
+    private boolean isFlag(String token) {
+        return token.startsWith("/") || token.startsWith("--") || token.startsWith("-");
     }
 
     /**
