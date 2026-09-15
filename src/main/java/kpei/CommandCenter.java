@@ -1,8 +1,6 @@
 package kpei;
 
-import kpei.commands.user.DeadlineCommand;
-import kpei.commands.user.EventCommand;
-import kpei.commands.user.TodoCommand;
+import kpei.commands.user.*;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
@@ -34,6 +32,10 @@ public class CommandCenter {
     private TodoCommand todoCommand;
     private DeadlineCommand deadlineCommand;
     private EventCommand eventCommand;
+    private FindCommand findCommand;
+    private MarkCommand markCommand;
+    private UnmarkCommand unmarkCommand;
+    private RemoveCommand removeCommand;
 
     /**
      * Constructs a {@code CommandCenter} instance with the given storage, task list, and CLI interface.
@@ -71,6 +73,10 @@ public class CommandCenter {
         todoCommand = new TodoCommand();
         deadlineCommand = new DeadlineCommand();
         eventCommand = new EventCommand();
+        findCommand = new FindCommand();
+        markCommand = new MarkCommand();
+        unmarkCommand = new UnmarkCommand();
+        removeCommand = new RemoveCommand();
 
         try {
             this.storage.load(taskList);
@@ -98,7 +104,6 @@ public class CommandCenter {
 
             cli.horizontalLine();
 
-//            ParsedCommand cmd = CommandParser.parse(userPrompt);
             List<String> tokens = commandParser.tokenize(userPrompt);
             ParsedCommand cmd = commandParser.parse(tokens);
 
@@ -108,14 +113,14 @@ public class CommandCenter {
                 handleAdd(deadlineCommand.execute(cmd));
             } else if (eventCommand.isMatch(cmd)) {
                 handleAdd(eventCommand.execute(cmd));
-//            } else if (cmd.getCommandType().equals("find")) {
-//                handleFind(cmd.getArguments());
-//            } else if (cmd.getCommandType().equals("mark")) {
-//                handleMark(cmd.getArguments());
-//            } else if (cmd.getCommandType().equals("unmark")) {
-//                handleUnmark(cmd.getArguments());
-//            } else if (cmd.getCommandType().equals("delete")) {
-//                handleDelete(cmd.getArguments());
+            } else if (findCommand.isMatch(cmd)) {
+                handleFind(findCommand.execute(cmd));
+            } else if (markCommand.isMatch(cmd)) {
+                handleMark(markCommand.execute(cmd));
+            } else if (unmarkCommand.isMatch(cmd)) {
+                handleUnmark(unmarkCommand.execute(cmd));
+            } else if (removeCommand.isMatch(cmd)) {
+                handleDelete(removeCommand.execute(cmd));
             } else if (cmd.getCommandType().equals("list")) {
                 handleList();
             } else if (cmd.getCommandType().equals("exit")) {
@@ -124,7 +129,7 @@ public class CommandCenter {
             } else {
                 throw new UnknownCommandException(cmd.getCommandType());
             }
-        } catch (BertException e) { // IllegalArgumentException | IndexOutOfBoundsException e
+        } catch (BertException e) {
             cli.error(e.getMessage());
         } finally {
             cli.horizontalLine();
