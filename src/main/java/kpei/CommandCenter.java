@@ -1,14 +1,14 @@
 package kpei;
 
-import kpei.commands.deadlineCommand;
-import kpei.commands.todoCommand;
+import kpei.commands.user.deadlineCommand;
+import kpei.commands.user.todoCommand;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
 import kpei.exceptions.InvalidIndexException;
 import kpei.exceptions.UnknownCommandException;
-import kpei.commands.CommandParser;
-import kpei.commands.ParsedCommand;
+import kpei.commands.parser.CommandParser;
+import kpei.commands.parser.ParsedCommand;
 import kpei.storage.Storage;
 import kpei.ui.Cli;
 import kpei.ui.controllers.MainWindowController;

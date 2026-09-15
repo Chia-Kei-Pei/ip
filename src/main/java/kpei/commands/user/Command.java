@@ -1,5 +1,6 @@
-package kpei.commands;
+package kpei.commands.user;
 
+import kpei.commands.parser.ParsedCommand;
 import kpei.exceptions.MissingArgumentException;
 
 import java.util.List;

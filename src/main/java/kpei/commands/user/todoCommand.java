@@ -1,5 +1,6 @@
-package kpei.commands;
+package kpei.commands.user;
 
+import kpei.commands.parser.ParsedCommand;
 import kpei.commands.flags.stringFlag;
 import kpei.datatypes.Task;
 import kpei.exceptions.MissingArgumentException;

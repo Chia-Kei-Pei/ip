@@ -1,4 +1,4 @@
-package kpei.commands;
+package kpei.commands.parser;
 
 import java.util.List;
 import java.util.Map;
