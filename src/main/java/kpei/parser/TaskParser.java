@@ -1,6 +1,8 @@
 package kpei.parser;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 
 import kpei.datatypes.Deadline;
 import kpei.datatypes.Event;
@@ -30,8 +32,8 @@ public class TaskParser {
 
         return switch (fields[0].trim()) {
             case "todo" -> true;
-            case "deadline" -> fields.length >= 4;
-            case "event" -> fields.length >= 5;
+            case "deadline" -> fields.length >= 5;
+            case "event" -> fields.length >= 7;
             default -> false;
         };
     }
@@ -55,8 +57,9 @@ public class TaskParser {
 
         return switch (type) {
             case "todo" -> parseTask(isMarked, description);
-            case "deadline" -> parseDeadline(isMarked, description, fields[3].trim());
-            case "event" -> parseEvent(isMarked, description, fields[3].trim(), fields[4].trim());
+            case "deadline" -> parseDeadline(isMarked, description, fields[3].trim(), fields[4].trim());
+            case "event" -> parseEvent(isMarked, description, fields[3].trim(), fields[4].trim(),
+                    fields[5].trim(), fields[6].trim());
             default -> throw new BertException("Unsupported stored task type: " + type);
         };
     }
@@ -77,39 +80,73 @@ public class TaskParser {
     }
 
     /**
-     * Creates a {@link Deadline} task with the specified completion status, description, and due date.
+     * Creates a {@link Deadline} task with the specified completion status, description, due date, and due time.
      *
      * @param isMarked Whether the deadline task is marked as completed.
      * @param description The description of the deadline task.
-     * @param byDate The date or time string by which the task must be completed.
+     * @param byDate The date by which the task must be completed.
+     * @param byTime The time by which the task must be completed.
      * @return The created {@link Deadline} instance.
      * @throws BertException If any field is invalid or date parsing fails.
      */
-    private static Deadline parseDeadline(boolean isMarked, String description, String byDate) throws BertException {
-        if (description.isBlank() || byDate.isBlank()) {
+    private static Deadline parseDeadline(boolean isMarked, String description, String byDate, String byTime)
+            throws BertException {
+        if (description.isBlank() || byDate.isBlank() || byTime.isBlank()) {
             throw new BertException("Failed to create deadline. Some fields are invalid");
         }
-        LocalDateTime parsedByDate = DateTimeParser.parse(byDate);
-        return new Deadline(isMarked, description, parsedByDate);
+        return new Deadline(isMarked, description, parseDate(byDate), parseTime(byTime));
     }
 
     /**
-     * Creates an {@link Event} task with the specified completion status, description, start date, and end date.
+     * Creates an {@link Event} task with the specified completion status, description, start date and time,
+     * and end date and time.
      *
      * @param isMarked Whether the event task is marked as completed.
      * @param description The description of the event task.
-     * @param fromDate The starting date or time string of the event.
-     * @param toDate The ending date or time string of the event.
+     * @param fromDate The starting date of the event.
+     * @param fromTime The starting time of the event.
+     * @param toDate The ending date of the event.
+     * @param toTime The ending time of the event.
      * @return The created {@link Event} instance.
      * @throws BertException If any field is invalid or date parsing fails.
      */
-    private static Event parseEvent(boolean isMarked, String description, String fromDate, String toDate)
-            throws BertException {
-        if (description.isBlank() || fromDate.isBlank() || toDate.isBlank()) {
+    private static Event parseEvent(boolean isMarked, String description, String fromDate, String fromTime,
+                                    String toDate, String toTime) throws BertException {
+        if (description.isBlank() || fromDate.isBlank() || fromTime.isBlank()
+                || toDate.isBlank() || toTime.isBlank()) {
             throw new BertException("Failed to create event. Some fields are invalid");
         }
-        LocalDateTime parsedFromDate = DateTimeParser.parse(fromDate);
-        LocalDateTime parsedToDate = DateTimeParser.parse(toDate);
-        return new Event(isMarked, description, parsedFromDate, parsedToDate);
+        return new Event(isMarked, description, parseDate(fromDate), parseTime(fromTime),
+                parseDate(toDate), parseTime(toTime));
+    }
+
+    /**
+     * Parses a stored ISO-8601 date.
+     *
+     * @param date The stored date string.
+     * @return The parsed date.
+     * @throws BertException If the date is invalid.
+     */
+    private static LocalDate parseDate(String date) throws BertException {
+        try {
+            return LocalDate.parse(date);
+        } catch (DateTimeParseException e) {
+            throw new BertException("Invalid stored date: " + date, e);
+        }
+    }
+
+    /**
+     * Parses a stored ISO-8601 time.
+     *
+     * @param time The stored time string.
+     * @return The parsed time.
+     * @throws BertException If the time is invalid.
+     */
+    private static LocalTime parseTime(String time) throws BertException {
+        try {
+            return LocalTime.parse(time);
+        } catch (DateTimeParseException e) {
+            throw new BertException("Invalid stored time: " + time, e);
+        }
     }
 }
