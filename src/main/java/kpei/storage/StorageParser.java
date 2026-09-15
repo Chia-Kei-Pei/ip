@@ -1,4 +1,4 @@
-package kpei.parser;
+package kpei.storage;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,7 +12,7 @@ import kpei.exceptions.BertException;
 /**
  * Parses raw parameters into specific {@link Task} objects.
  */
-public class TaskParser {
+public class StorageParser {
 
     /**
      * Checks whether a storage line contains all fields required for a supported task type.
