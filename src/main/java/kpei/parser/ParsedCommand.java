@@ -8,9 +8,9 @@ import java.util.Map;
  * Holds the Command type, the primary argument, and any associated named flags.
  */
 public class ParsedCommand {
-    public String commandType;
-    public List<String> arguments;
-    public Map<String, String> flags;
+    private String commandType;
+    private List<String> arguments;
+    private Map<String, String> flags;
 
     /**
      * Constructs a {@code ParsedCommand} with the given Command type, positional arguments, and flags.
@@ -23,5 +23,18 @@ public class ParsedCommand {
         this.commandType = commandType;
         this.arguments = positionalParameters;
         this.flags = flaggedParameters;
+    }
+
+
+    public String getCommandType() {
+        return commandType;
+    }
+
+    public List<String> getArguments() {
+        return arguments;
+    }
+
+    public Map<String, String> getFlags() {
+        return flags;
     }
 }

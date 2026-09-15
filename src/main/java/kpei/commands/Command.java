@@ -4,5 +4,5 @@ import kpei.exceptions.MissingArgumentException;
 import kpei.parser.ParsedCommand;
 
 public interface Command<T> {
-    public T execute(ParsedCommand parsedCommand) throws MissingArgumentException;
+    T execute(ParsedCommand parsedCommand) throws MissingArgumentException;
 }

@@ -98,23 +98,23 @@ public class CommandCenter {
 
 //            ParsedCommand cmd = CommandParser.parse(userPrompt);
             List<String> tokens = commandParser.tokenize(userPrompt);
-            ParsedCommand parsedCommand = commandParser.parse(tokens);
+            ParsedCommand cmd = commandParser.parse(tokens);
 
-            switch (parsedCommand.commandType) {
-                case "todo" -> handleAdd(todoCommand.execute(parsedCommand));
-//                case "deadline" -> handleAdd(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
-//                case "event" -> handleAdd(TaskParser.parseEvent(cmd.getArgument(),
-//                        cmd.getFlag("from"), cmd.getFlag("to")));
-//                case "list" -> handleList();
-//                case "find" -> handleFind(cmd.getArgument());
-//                case "mark" -> handleMark(cmd.getArgumentAsInt());
-//                case "unmark" -> handleUnmark(cmd.getArgumentAsInt());
-//                case "delete" -> handleDelete(cmd.getArgumentAsInt());
+            switch (cmd.commandType) {
+                case "todo" -> handleAdd(todoCommand.execute(cmd));
+                case "deadline" -> handleAdd(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
+                case "event" -> handleAdd(TaskParser.parseEvent(cmd.getArgument(),
+                        cmd.getFlag("from"), cmd.getFlag("to")));
+                case "list" -> handleList();
+                case "find" -> handleFind(cmd.getArgument());
+                case "mark" -> handleMark(cmd.getArgumentAsInt());
+                case "unmark" -> handleUnmark(cmd.getArgumentAsInt());
+                case "delete" -> handleDelete(cmd.getArgumentAsInt());
                 case "exit" -> {
                     cli.farewell();
                     return true;
                 }
-                default -> throw new UnknownCommandException(parsedCommand.commandType);
+                default -> throw new UnknownCommandException(cmd.commandType);
             }
         } catch (BertException e) { // IllegalArgumentException | IndexOutOfBoundsException e
             cli.error(e.getMessage());

@@ -8,9 +8,11 @@ import java.util.List;
 
 public class todoCommand implements Command<Task> {
     stringFlag description;
+    List<String> aliases;
 
     public todoCommand() {
-        this.description = new stringFlag("description",0, List.of("/d", "-d", "--description"));
+        description = new stringFlag("description",0, List.of("/d", "-d", "--description"));
+        aliases = List.of("t", "todo");
     }
 
     public Task execute(ParsedCommand parsedCommand) throws MissingArgumentException {

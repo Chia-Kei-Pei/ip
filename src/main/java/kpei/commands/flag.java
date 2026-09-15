@@ -30,11 +30,11 @@ public abstract class flag<T> {
 
     public String getValue(ParsedCommand parsedCommand) throws MissingArgumentException {
         String value = "";
-        if (position <= parsedCommand.arguments.size()) {
-            value = parsedCommand.arguments.get(position);
+        if (position <= parsedCommand.getArguments().size()) {
+            value = parsedCommand.getArguments().get(position);
         } else {
             for (String alias : aliases) {
-                value = parsedCommand.flags.get(alias);
+                value = parsedCommand.getFlags().get(alias);
                 if (!value.isBlank()) {
                     break;
                 }
