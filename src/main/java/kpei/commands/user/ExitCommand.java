@@ -8,13 +8,11 @@ import java.util.List;
 public class ExitCommand extends Command<Boolean> {
 
     public ExitCommand() {
-        super(List.of("q", "quit", "exit", "bye"));
+        super("exit", List.of("q", "quit", "exit", "bye"), 0);
     }
 
     public Boolean execute(ParsedCommand parsedCommand) throws BertException {
-        if (!(parsedCommand.getArguments().isEmpty() && parsedCommand.getFlags().isEmpty())) {
-            throw new BertException("'Exit' command does not take any arguments");
-        }
+        checkArgCount(parsedCommand);
         return Boolean.TRUE;
     }
 }

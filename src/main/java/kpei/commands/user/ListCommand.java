@@ -8,13 +8,12 @@ import java.util.List;
 public class ListCommand extends Command<Boolean> {
 
     public ListCommand() {
-        super(List.of("ls", "list", "dir"));
+        super("list", List.of("ls", "list", "dir"), 0);
     }
 
     public Boolean execute(ParsedCommand parsedCommand) throws BertException {
-        if (!(parsedCommand.getArguments().isEmpty() && parsedCommand.getFlags().isEmpty())) {
-            throw new BertException("'list' command does not take any arguments");
-        }
+        checkArgCount(parsedCommand);
+
         return Boolean.TRUE;
     }
 }
