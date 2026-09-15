@@ -100,21 +100,28 @@ public class CommandCenter {
             List<String> tokens = commandParser.tokenize(userPrompt);
             ParsedCommand cmd = commandParser.parse(tokens);
 
-            switch (cmd.commandType) {
-                case "todo" -> handleAdd(todoCommand.execute(cmd));
-                case "deadline" -> handleAdd(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
-                case "event" -> handleAdd(TaskParser.parseEvent(cmd.getArgument(),
-                        cmd.getFlag("from"), cmd.getFlag("to")));
-                case "list" -> handleList();
-                case "find" -> handleFind(cmd.getArgument());
-                case "mark" -> handleMark(cmd.getArgumentAsInt());
-                case "unmark" -> handleUnmark(cmd.getArgumentAsInt());
-                case "delete" -> handleDelete(cmd.getArgumentAsInt());
-                case "exit" -> {
-                    cli.farewell();
-                    return true;
-                }
-                default -> throw new UnknownCommandException(cmd.commandType);
+            if (todoCommand.isMatch(cmd)) {
+                handleAdd(todoCommand.execute(cmd));
+//            } else if (cmd.getCommandType().equals("deadline")) {
+//                handleAdd(TaskParser.parseDeadline(cmd.getArguments(), cmd.getFlags("by")));
+//            } else if (cmd.getCommandType().equals("event")) {
+//                handleAdd(TaskParser.parseEvent(cmd.getArguments(),
+//                        cmd.getFlags("from"), cmd.getFlags("to")));
+//            } else if (cmd.getCommandType().equals("find")) {
+//                handleFind(cmd.getArguments());
+//            } else if (cmd.getCommandType().equals("mark")) {
+//                handleMark(cmd.getArguments());
+//            } else if (cmd.getCommandType().equals("unmark")) {
+//                handleUnmark(cmd.getArguments());
+//            } else if (cmd.getCommandType().equals("delete")) {
+//                handleDelete(cmd.getArguments());
+            } else if (cmd.getCommandType().equals("list")) {
+                handleList();
+            } else if (cmd.getCommandType().equals("exit")) {
+                cli.farewell();
+                return true;
+            } else {
+                throw new UnknownCommandException(cmd.getCommandType());
             }
         } catch (BertException e) { // IllegalArgumentException | IndexOutOfBoundsException e
             cli.error(e.getMessage());
