@@ -1,4 +1,4 @@
-package kpei.parser;
+package kpei.commands;
 
 import java.util.*;
 

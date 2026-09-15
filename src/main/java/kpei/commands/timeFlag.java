@@ -1,7 +1,6 @@
 package kpei.commands;
 
 import kpei.exceptions.MissingArgumentException;
-import kpei.parser.ParsedCommand;
 
 import java.time.LocalTime;
 import java.util.List;
