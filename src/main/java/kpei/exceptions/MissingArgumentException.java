@@ -10,6 +10,6 @@ public class MissingArgumentException extends BertException {
      * @param argument The name of the argument that is required when creating a item.
      */
     public MissingArgumentException(String argument) {
-        super("Field " + argument + " is missing its value");
+        super("Argument " + argument + " is required.");
     }
 }
