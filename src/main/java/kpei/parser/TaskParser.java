@@ -77,17 +77,6 @@ public class TaskParser {
     }
 
     /**
-     * Creates an unmarked {@link Task} with the specified description.
-     *
-     * @param description The description of the task.
-     * @return The created {@link Task} instance.
-     * @throws BertException If the description is blank.
-     */
-    public static Task parseTask(String description) throws BertException {
-        return parseTask(false, description);
-    }
-
-    /**
      * Creates a {@link Deadline} task with the specified completion status, description, and due date.
      *
      * @param isMarked Whether the deadline task is marked as completed.
@@ -102,18 +91,6 @@ public class TaskParser {
         }
         LocalDateTime parsedByDate = DateTimeParser.parse(byDate);
         return new Deadline(isMarked, description, parsedByDate);
-    }
-
-    /**
-     * Creates an unmarked {@link Deadline} task with the specified description and due date.
-     *
-     * @param description The description of the deadline task.
-     * @param byDate The date or time string by which the task must be completed.
-     * @return The created {@link Deadline} instance.
-     * @throws BertException If any field is invalid or date parsing fails.
-     */
-    public static Deadline parseDeadline(String description, String byDate) throws BertException {
-        return parseDeadline(false, description, byDate);
     }
 
     /**
@@ -134,18 +111,5 @@ public class TaskParser {
         LocalDateTime parsedFromDate = DateTimeParser.parse(fromDate);
         LocalDateTime parsedToDate = DateTimeParser.parse(toDate);
         return new Event(isMarked, description, parsedFromDate, parsedToDate);
-    }
-
-    /**
-     * Creates an unmarked {@link Event} task with the specified description, start date, and end date.
-     *
-     * @param description The description of the event task.
-     * @param fromDate The starting date or time string of the event.
-     * @param toDate The ending date or time string of the event.
-     * @return The created {@link Event} instance.
-     * @throws BertException If any field is invalid or date parsing fails.
-     */
-    public static Event parseEvent(String description, String fromDate, String toDate) throws BertException {
-        return parseEvent(false, description, fromDate, toDate);
     }
 }
