@@ -10,7 +10,6 @@ import java.util.List;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
-import kpei.parser.TaskParser;
 
 /**
  * Handles persistent storage of {@link TaskList} tasks to and from a local file.
@@ -18,6 +17,7 @@ import kpei.parser.TaskParser;
  */
 public class Storage {
     private final Path filePath;
+    private final StorageParser storageParser;
 
     /**
      * Constructs a {@code Storage} handler with a custom file path.
@@ -26,6 +26,7 @@ public class Storage {
      */
     public Storage(String filePath) {
         this.filePath = parseFilePath(filePath);
+        storageParser = new StorageParser();
     }
 
     /**
@@ -58,8 +59,8 @@ public class Storage {
 
         try {
             for (String line : Files.readAllLines(filePath)) {
-                if (TaskParser.isStoredTask(line)) {
-                    taskList.add(TaskParser.parseStoredTask(line));
+                if (storageParser.isStoredTask(line)) {
+                    taskList.add(storageParser.parseStoredTask(line));
                 }
             }
         } catch (IOException e) {

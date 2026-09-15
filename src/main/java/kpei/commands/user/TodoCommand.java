@@ -4,12 +4,11 @@ import kpei.commands.parser.ParsedCommand;
 import kpei.commands.flags.StringFlag;
 import kpei.datatypes.Task;
 import kpei.exceptions.BertException;
-import kpei.exceptions.MissingArgumentException;
 
 import java.util.List;
 
 public class TodoCommand extends Command<Task> {
-    private StringFlag descriptionFlag;
+    private final StringFlag descriptionFlag;
 
     public TodoCommand() {
         super("todo", List.of("t", "todo"), 1);

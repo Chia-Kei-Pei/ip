@@ -1,73 +1,100 @@
 package kpei.datatypes;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-import kpei.parser.DateTimeParser;
+import kpei.utility.DateTimeParser;
 
 /**
  * Represents an event task occurring within a specific time period.
  */
 public class Event extends Task {
-    protected LocalDateTime fromDate;
-    protected LocalDateTime toDate;
+    private LocalDate fromDate;
+    private LocalTime fromTime;
+    private LocalDate toDate;
+    private LocalTime toTime;
 
     /**
      * Constructs an {@code Event} task with specified completion status, description,
-     * start time, and end time.
+     * start date and time, and end date and time.
      *
      * @param isMarked Whether this event task is marked as completed.
      * @param description The description of the event.
-     * @param fromDate The starting date or time of the event.
-     * @param toDate The ending date or time of the event.
+     * @param fromDate The starting date of the event.
+     * @param fromTime The starting time of the event.
+     * @param toDate The ending date of the event.
+     * @param toTime The ending time of the event.
      */
-    public Event(boolean isMarked, String description, LocalDateTime fromDate, LocalDateTime toDate) {
+    public Event(boolean isMarked, String description, LocalDate fromDate, LocalTime fromTime,
+                 LocalDate toDate, LocalTime toTime) {
         super(isMarked, description);
         this.type = "event";
         this.fromDate = fromDate;
+        this.fromTime = fromTime;
         this.toDate = toDate;
+        this.toTime = toTime;
     }
 
     /**
-     * Constructs an unmarked {@code Event} task with specified description, start time, and end time.
+     * Constructs an unmarked {@code Event} task with specified description, start date and time, and end date and time.
      *
      * @param description The description of the event.
-     * @param fromDate The starting date or time of the event.
-     * @param toDate The ending date or time of the event.
+     * @param fromDate The starting date of the event.
+     * @param fromTime The starting time of the event.
+     * @param toDate The ending date of the event.
+     * @param toTime The ending time of the event.
      */
-    public Event(String description, LocalDateTime fromDate, LocalDateTime toDate) {
-        this(false, description, fromDate, toDate);
+    public Event(String description, LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
+        this(false, description, fromDate, fromTime, toDate, toTime);
     }
 
     @Override
     public String toString() {
-        return String.format("%s (from: %s, to: %s)", super.toString(),
-                DateTimeParser.format(fromDate),
-                DateTimeParser.format(toDate));
+        return String.format("%s (from: %s %s, to: %s %s)", super.toString(),
+                DateTimeParser.formatDate(fromDate), DateTimeParser.formatTime(fromTime),
+                DateTimeParser.formatDate(toDate), DateTimeParser.formatTime(toTime));
     }
 
     @Override
     public String toFileFormat() {
-        return String.format("%s | %s | %s", super.toFileFormat(),
-                DateTimeParser.formatForStorage(fromDate),
-                DateTimeParser.formatForStorage(toDate));
+        return String.format("%s | %s | %s | %s | %s", super.toFileFormat(),
+                fromDate.toString(), fromTime.toString(), toDate.toString(), toTime.toString());
     }
 
     /**
-     * Returns the starting date and time of this event.
+     * Returns the starting date of this event.
      *
-     * @return The starting date and time.
+     * @return The starting date.
      */
-    public LocalDateTime getFromDate() {
+    public LocalDate getFromDate() {
         return fromDate;
     }
 
     /**
-     * Returns the ending date and time of this event.
+     * Returns the starting time of this event.
      *
-     * @return The ending date and time.
+     * @return The starting time.
      */
-    public LocalDateTime getToDate() {
+    public LocalTime getFromTime() {
+        return fromTime;
+    }
+
+    /**
+     * Returns the ending date of this event.
+     *
+     * @return The ending date.
+     */
+    public LocalDate getToDate() {
         return toDate;
+    }
+
+    /**
+     * Returns the ending time of this event.
+     *
+     * @return The ending time.
+     */
+    public LocalTime getToTime() {
+        return toTime;
     }
 
     /**
@@ -76,7 +103,7 @@ public class Event extends Task {
      * @return Formatted start date string.
      */
     public String getFormattedFromDate() {
-        return DateTimeParser.format(fromDate);
+        return String.format("%s %s", DateTimeParser.formatDate(fromDate), DateTimeParser.formatTime(fromTime));
     }
 
     /**
@@ -85,7 +112,7 @@ public class Event extends Task {
      * @return Formatted end date string.
      */
     public String getFormattedToDate() {
-        return DateTimeParser.format(toDate);
+        return String.format("%s %s", DateTimeParser.formatDate(toDate), DateTimeParser.formatTime(toTime));
     }
 }
 
