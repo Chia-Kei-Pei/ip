@@ -1,11 +1,8 @@
 package kpei.datatypes;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import javafx.util.converter.LocalDateStringConverter;
-import kpei.parser.DateTimeParser;
 
 /**
  * Represents a task with a deadline date/time constraint.
@@ -40,12 +37,12 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s (by: %s %s)", super.toString(), byDate.toString(), byTime.toString());
+        return String.format("%s (by: %s %s)", super.toString(), byDate, byTime);
     }
 
     @Override
     public String toFileFormat() {
-        return String.format("%s | %s | %s", super.toFileFormat(), byDate.toString(), byTime.toString());
+        return String.format("%s | %s | %s", super.toFileFormat(), byDate, byTime);
     }
 
     /**
@@ -72,7 +69,7 @@ public class Deadline extends Task {
      * @return Formatted date string for display.
      */
     public String getFormattedByDate() {
-        return DateTimeParser.format(byDate);
+        return String.format("%s %s", byDate, byTime);
     }
 }
 
