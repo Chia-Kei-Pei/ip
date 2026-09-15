@@ -93,6 +93,7 @@ public class CommandCenter {
 //            ParsedCommand cmd = CommandParser.parse(userPrompt);
             List<String> tokens = commandParser.tokenize(userPrompt);
             ParsedCommand parsedCommand = commandParser.parse(tokens);
+            IO.print("");
 
 //            switch (cmd.getCommandType()) {
 //                case "todo" -> handleAdd(TaskParser.parseTask(cmd.getArgument()));
@@ -110,7 +111,7 @@ public class CommandCenter {
 //                }
 //                default -> throw new UnknownCommandException(cmd.getCommandType());
 //            }
-        } catch (BertException | IllegalArgumentException | IndexOutOfBoundsException e) {
+        } catch (BertException e) { // IllegalArgumentException | IndexOutOfBoundsException e
             cli.error(e.getMessage());
         } finally {
             cli.horizontalLine();

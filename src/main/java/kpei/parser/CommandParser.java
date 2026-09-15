@@ -51,11 +51,14 @@ public class CommandParser {
 
             String flag = tokens.get(i);
             i++;
-            if (i > tokens.size()) {
+            if (i >= tokens.size()) {
                 throw new MissingArgumentException(flag);
             }
+
             String value = tokens.get(i);
             flaggedParameters.put(flag, value);
+
+            i++;
         }
 
         return new ParsedCommand(commandType, positionalParameters, flaggedParameters);
