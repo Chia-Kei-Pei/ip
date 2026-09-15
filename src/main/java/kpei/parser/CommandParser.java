@@ -115,7 +115,7 @@ public class CommandParser {
      * @param commandType The Command context in lowercase.
      * @return The normalized flag name, if the token is a flag.
      */
-    private static Optional<String> extractFlagName(String token, String commandType) {
+    private static Optional<String> extractFlagName(String token, String commandType) { // NO USAGES
         if (token.startsWith("/")) {
             return Optional.of(token.substring(1).toLowerCase());
         }
@@ -168,7 +168,7 @@ public class CommandParser {
      * @return The index of the next unprocessed token.
      */
     private static int addFlag(List<String> tokens, int flagIndex, String token, String flagName,
-                               Map<String, String> flags) {
+                               Map<String, String> flags) { // NO USAGES
         if (flagIndex + 1 >= tokens.size()) {
             throw new IllegalArgumentException("Missing value for flag: " + token);
         }
@@ -188,7 +188,7 @@ public class CommandParser {
      * @param arguments The list receiving the positional argument.
      * @param token The token to add as an argument.
      */
-    private static void addArgument(List<String> arguments, String token) {
+    private static void addArgument(List<String> arguments, String token) { // NO USAGES
         if (!arguments.isEmpty()) {
             throw new IllegalArgumentException(
                     "Unexpected argument: \"" + token + "\"."
@@ -207,7 +207,7 @@ public class CommandParser {
      * @throws BertException If the Command is unrecognized.
      * @throws IllegalArgumentException If a mandatory argument or flag is missing.
      */
-    private static void validateCommand(String commandType, String argument, Map<String, String> flags)
+    private static void validateCommand(String commandType, String argument, Map<String, String> flags) // NO USAGES
             throws BertException, IllegalArgumentException {
         switch (commandType) {
             case "todo":
