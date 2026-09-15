@@ -19,33 +19,50 @@ public class DateTimeParser {
 
     /** Formatter for displaying dates to users. */
     public static final DateTimeFormatter DISPLAY_DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH);
+            DateTimeFormatter.ofPattern("dd MMM uuuu", Locale.ENGLISH);
 
     /** Formatter for displaying times to users. */
-    public static final DateTimeFormatter DISPLAY_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    public static final DateTimeFormatter DISPLAY_TIME_FORMATTER = DateTimeFormatter.ofPattern("h:mm a");
 
     /** Date formats accepted from users and storage. */
     private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
-            createFormatter("d/M/uuuu"),
-            createFormatter("d-M-uuuu"),
             createFormatter("uuuu-M-d"),
             createFormatter("uuuu/M/d"),
-            createFormatter("d.M.uuuu"),
             createFormatter("uuuu.M.d"),
+
+            createFormatter("d/M/uuuu"),
+            createFormatter("d-M-uuuu"),
+            createFormatter("d.M.uuuu"),
             createFormatter("d MMM uuuu"),
             createFormatter("d MMMM uuuu"),
+
+            createFormatter("M/d/uuuu"),
+            createFormatter("M-d-uuuu"),
+            createFormatter("M.d.uuuu"),
+            createFormatter("MMM d uuuu"),
+            createFormatter("MMMM d uuuu"),
+
             DateTimeFormatter.ISO_LOCAL_DATE
     );
 
     /** Time formats accepted from users and storage. */
     private static final List<DateTimeFormatter> TIME_FORMATTERS = List.of(
-            createFormatter("H:mm"),
             createFormatter("HHmm"),
+
+            createFormatter("H:mm"),
             createFormatter("H:mm:ss"),
             createFormatter("h:mm a"),
             createFormatter("hh:mm a"),
             createFormatter("h:mma"),
             createFormatter("hh:mma"),
+
+            createFormatter("H.mm"),
+            createFormatter("H.mm.ss"),
+            createFormatter("h.mm a"),
+            createFormatter("hh.mm a"),
+            createFormatter("h.mma"),
+            createFormatter("hh.mma"),
+            
             DateTimeFormatter.ISO_LOCAL_TIME
     );
 
