@@ -120,8 +120,7 @@ public class CommandCenter {
             } else if (findCommand.isMatch(cmd)) {
                 handleFind(findCommand.execute(cmd));
             } else if (markCommand.isMatch(cmd)) {
-                Integer i = markCommand.execute(cmd);
-                handleMark(i);
+                handleMark(markCommand.execute(cmd));
             } else if (unmarkCommand.isMatch(cmd)) {
                 handleUnmark(unmarkCommand.execute(cmd));
             } else if (removeCommand.isMatch(cmd)) {
