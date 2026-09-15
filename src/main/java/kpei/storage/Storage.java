@@ -18,6 +18,7 @@ import kpei.parser.TaskParser;
  */
 public class Storage {
     private final Path filePath;
+    private TaskParser taskParser;
 
     /**
      * Constructs a {@code Storage} handler with a custom file path.

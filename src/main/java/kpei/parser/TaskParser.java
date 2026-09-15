@@ -69,7 +69,7 @@ public class TaskParser {
      * @return The created {@link Task} instance.
      * @throws BertException If the description is blank.
      */
-    public static Task parseTask(boolean isMarked, String description) throws BertException {
+    private static Task parseTask(boolean isMarked, String description) throws BertException {
         if (description.isBlank()) {
             throw new BertException("Failed to create task. Some fields are invalid");
         }
@@ -85,7 +85,7 @@ public class TaskParser {
      * @return The created {@link Deadline} instance.
      * @throws BertException If any field is invalid or date parsing fails.
      */
-    public static Deadline parseDeadline(boolean isMarked, String description, String byDate) throws BertException {
+    private static Deadline parseDeadline(boolean isMarked, String description, String byDate) throws BertException {
         if (description.isBlank() || byDate.isBlank()) {
             throw new BertException("Failed to create deadline. Some fields are invalid");
         }
@@ -103,7 +103,7 @@ public class TaskParser {
      * @return The created {@link Event} instance.
      * @throws BertException If any field is invalid or date parsing fails.
      */
-    public static Event parseEvent(boolean isMarked, String description, String fromDate, String toDate)
+    private static Event parseEvent(boolean isMarked, String description, String fromDate, String toDate)
             throws BertException {
         if (description.isBlank() || fromDate.isBlank() || toDate.isBlank()) {
             throw new BertException("Failed to create event. Some fields are invalid");
