@@ -10,16 +10,15 @@ import kpei.exceptions.BertException;
 import kpei.exceptions.MissingArgumentException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 public class EventCommand extends Command<Task> {
-    private StringFlag descriptionFlag;
-    private DateFlag fromDateFlag;
-    private TimeFlag fromTimeFlag;
-    private DateFlag toDateFlag;
-    private TimeFlag toTimeFlag;
+    private final StringFlag descriptionFlag;
+    private final DateFlag fromDateFlag;
+    private final TimeFlag fromTimeFlag;
+    private final DateFlag toDateFlag;
+    private final TimeFlag toTimeFlag;
 
     public EventCommand() {
         super("event", List.of("e", "event"), 5);
@@ -40,8 +39,6 @@ public class EventCommand extends Command<Task> {
         LocalTime fromTime = fromTimeFlag.parse(parsedCommand);
         LocalDate toDate = toDateFlag.parse(parsedCommand);
         LocalTime toTime = toTimeFlag.parse(parsedCommand);
-        LocalDateTime byDateTime = fromDate.atTime(fromTime);
-        LocalDateTime toDateTime = toDate.atTime(toTime);
-        return new Event(description, byDateTime, toDateTime);
+        return new Event(description, fromDate, fromTime, toDate, toTime);
     }
 }
