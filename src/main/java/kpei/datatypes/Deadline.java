@@ -1,14 +1,18 @@
 package kpei.datatypes;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
+import javafx.util.converter.LocalDateStringConverter;
 import kpei.parser.DateTimeParser;
 
 /**
  * Represents a task with a deadline date/time constraint.
  */
 public class Deadline extends Task {
-    protected LocalDateTime byDate;
+    private LocalDate byDate;
+    private LocalTime byTime;
 
     /**
      * Constructs a {@code Deadline} task with specified completion status, description, and due date.
@@ -17,10 +21,11 @@ public class Deadline extends Task {
      * @param description The description of the deadline task.
      * @param byDate The date or time string by which the task must be completed.
      */
-    public Deadline(boolean isMarked, String description, LocalDateTime byDate) {
+    public Deadline(boolean isMarked, String description, LocalDate byDate, LocalTime byTime) {
         super(isMarked, description);
         type = "deadline";
         this.byDate = byDate;
+        this.byTime = byTime;
     }
 
     /**
@@ -29,27 +34,36 @@ public class Deadline extends Task {
      * @param description The description of the deadline task.
      * @param byDate The date or time string by which the task must be completed.
      */
-    public Deadline(String description, LocalDateTime byDate) {
-        this(false, description, byDate);
+    public Deadline(String description, LocalDate byDate, LocalTime byTime) {
+        this(false, description, byDate, byTime);
     }
 
     @Override
     public String toString() {
-        return String.format("%s (by: %s)", super.toString(), DateTimeParser.format(byDate));
+        return String.format("%s (by: %s %s)", super.toString(), byDate.toString(), byTime.toString());
     }
 
     @Override
     public String toFileFormat() {
-        return String.format("%s | %s", super.toFileFormat(), DateTimeParser.formatForStorage(byDate));
+        return String.format("%s | %s | %s", super.toFileFormat(), byDate.toString(), byTime.toString());
     }
 
     /**
-     * Returns the due date and time of this deadline.
+     * Returns the due date of this deadline.
      *
-     * @return The due date and time.
+     * @return The due date.
      */
-    public LocalDateTime getByDate() {
+    public LocalDate getByDate() {
         return byDate;
+    }
+
+    /**
+     * Returns the due time of this deadline.
+     *
+     * @return The due time.
+     */
+    public LocalTime getByTime() {
+        return byTime;
     }
 
     /**
