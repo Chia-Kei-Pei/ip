@@ -1,4 +1,4 @@
-package kpei.parser;
+package kpei.utility;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
