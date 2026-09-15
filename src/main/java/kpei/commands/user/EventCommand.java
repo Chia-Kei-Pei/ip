@@ -24,10 +24,10 @@ public class EventCommand extends Command<Task> {
         descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
         fromDateFlag = new DateFlag("fromDate", 1, List.of("/f", "-f", "--fromDate"));
         fromTimeFlag = new TimeFlag("fromTime", 2, List.of("/ff", "-ff", "--fromTime"),
-                LocalTime.parse("00:00"));
+                LocalTime.MIDNIGHT);
         toDateFlag = new DateFlag("toDate", 3, List.of("/t", "-t", "--toDate"));
         toTimeFlag = new TimeFlag("toTime", 4, List.of("/tt", "-tt", "--toTime"),
-                LocalTime.parse("00:00"));
+                LocalTime.MIDNIGHT);
     }
 
     public Task execute(ParsedCommand parsedCommand) throws BertException {

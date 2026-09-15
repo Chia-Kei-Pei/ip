@@ -3,6 +3,8 @@ package kpei.datatypes;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import kpei.utility.DateTimeParser;
+
 /**
  * Represents an event task occurring within a specific time period.
  */
@@ -49,13 +51,14 @@ public class Event extends Task {
     @Override
     public String toString() {
         return String.format("%s (from: %s %s, to: %s %s)", super.toString(),
-                fromDate, fromTime, toDate, toTime);
+                DateTimeParser.formatDate(fromDate), DateTimeParser.formatTime(fromTime),
+                DateTimeParser.formatDate(toDate), DateTimeParser.formatTime(toTime));
     }
 
     @Override
     public String toFileFormat() {
         return String.format("%s | %s | %s | %s | %s", super.toFileFormat(),
-                fromDate, fromTime, toDate, toTime);
+                fromDate.toString(), fromTime.toString(), toDate.toString(), toTime.toString());
     }
 
     /**
@@ -100,7 +103,7 @@ public class Event extends Task {
      * @return Formatted start date string.
      */
     public String getFormattedFromDate() {
-        return String.format("%s %s", fromDate, fromTime);
+        return String.format("%s %s", DateTimeParser.formatDate(fromDate), DateTimeParser.formatTime(fromTime));
     }
 
     /**
@@ -109,7 +112,7 @@ public class Event extends Task {
      * @return Formatted end date string.
      */
     public String getFormattedToDate() {
-        return String.format("%s %s", toDate, toTime);
+        return String.format("%s %s", DateTimeParser.formatDate(toDate), DateTimeParser.formatTime(toTime));
     }
 }
 

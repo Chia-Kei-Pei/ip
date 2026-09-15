@@ -22,7 +22,7 @@ public class DeadlineCommand extends Command<Task> {
         descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
         byDateFlag = new DateFlag("byDate", 1, List.of("/b", "-b", "--byDate"));
         byTimeFlag = new TimeFlag("byTime", 2, List.of("/bb", "-bb", "--byTime"),
-                LocalTime.parse("00:00"));
+                LocalTime.MIDNIGHT);
     }
 
     public Task execute(ParsedCommand parsedCommand) throws BertException {

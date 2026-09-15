@@ -1,7 +1,9 @@
 package kpei.commands.flags;
 
 import kpei.commands.parser.ParsedCommand;
+import kpei.exceptions.BertException;
 import kpei.exceptions.MissingArgumentException;
+import kpei.utility.DateTimeParser;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -17,11 +19,11 @@ public class TimeFlag extends Flag<LocalTime> {
     }
 
     @Override
-    public LocalTime parse(ParsedCommand parsedCommand) throws MissingArgumentException {
+    public LocalTime parse(ParsedCommand parsedCommand) throws BertException {
         try {
             String value = getValue(parsedCommand);
             assert !value.isBlank() : "value of argument should be initialized";
-            return LocalTime.parse(value);
+            return DateTimeParser.parseTime(value);
         } catch (MissingArgumentException e) {
             if (isRequired) {
                 throw e;

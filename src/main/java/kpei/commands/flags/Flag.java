@@ -1,6 +1,7 @@
 package kpei.commands.flags;
 
 import kpei.commands.parser.ParsedCommand;
+import kpei.exceptions.BertException;
 import kpei.exceptions.MissingArgumentException;
 
 import java.util.List;
@@ -48,5 +49,5 @@ public abstract class Flag<T> {
         return value;
     }
 
-    public abstract T parse(ParsedCommand parsedCommand) throws MissingArgumentException;
+    public abstract T parse(ParsedCommand parsedCommand) throws BertException;
 }

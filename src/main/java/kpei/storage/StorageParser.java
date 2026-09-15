@@ -1,13 +1,10 @@
 package kpei.storage;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
-
 import kpei.datatypes.Deadline;
 import kpei.datatypes.Event;
 import kpei.datatypes.Task;
 import kpei.exceptions.BertException;
+import kpei.utility.DateTimeParser;
 
 /**
  * Parses raw parameters into specific {@link Task} objects.
@@ -94,7 +91,7 @@ public class StorageParser {
         if (description.isBlank() || byDate.isBlank() || byTime.isBlank()) {
             throw new BertException("Failed to create deadline. Some fields are invalid");
         }
-        return new Deadline(isMarked, description, parseDate(byDate), parseTime(byTime));
+        return new Deadline(isMarked, description, DateTimeParser.parseDate(byDate), DateTimeParser.parseTime(byTime));
     }
 
     /**
@@ -116,37 +113,7 @@ public class StorageParser {
                 || toDate.isBlank() || toTime.isBlank()) {
             throw new BertException("Failed to create event. Some fields are invalid");
         }
-        return new Event(isMarked, description, parseDate(fromDate), parseTime(fromTime),
-                parseDate(toDate), parseTime(toTime));
-    }
-
-    /**
-     * Parses a stored ISO-8601 date.
-     *
-     * @param date The stored date string.
-     * @return The parsed date.
-     * @throws BertException If the date is invalid.
-     */
-    private LocalDate parseDate(String date) throws BertException {
-        try {
-            return LocalDate.parse(date);
-        } catch (DateTimeParseException e) {
-            throw new BertException("Invalid stored date: " + date, e);
-        }
-    }
-
-    /**
-     * Parses a stored ISO-8601 time.
-     *
-     * @param time The stored time string.
-     * @return The parsed time.
-     * @throws BertException If the time is invalid.
-     */
-    private LocalTime parseTime(String time) throws BertException {
-        try {
-            return LocalTime.parse(time);
-        } catch (DateTimeParseException e) {
-            throw new BertException("Invalid stored time: " + time, e);
-        }
+        return new Event(isMarked, description, DateTimeParser.parseDate(fromDate), DateTimeParser.parseTime(fromTime),
+                DateTimeParser.parseDate(toDate), DateTimeParser.parseTime(toTime));
     }
 }
