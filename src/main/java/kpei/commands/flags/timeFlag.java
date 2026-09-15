@@ -1,25 +1,27 @@
-package kpei.commands;
+package kpei.commands.flags;
 
+import kpei.commands.ParsedCommand;
 import kpei.exceptions.MissingArgumentException;
 
+import java.time.LocalTime;
 import java.util.List;
 
-public class stringFlag extends flag<String> {
+public class timeFlag extends flag<LocalTime> {
 
-    public stringFlag(String argument, int position, List<String> aliases) {
+    public timeFlag(String argument, int position, List<String> aliases) {
         super(argument, position, aliases);
     }
 
-    public stringFlag(String argument, int position, List<String> aliases, String defaultValue) {
+    public timeFlag(String argument, int position, List<String> aliases, LocalTime defaultValue) {
         super(argument, position, aliases, defaultValue);
     }
 
     @Override
-    public String parse(ParsedCommand parsedCommand) throws MissingArgumentException {
+    public LocalTime parse(ParsedCommand parsedCommand) throws MissingArgumentException {
         try {
             String value = getValue(parsedCommand);
             assert !value.isBlank() : "value of argument should be initialized";
-            return value;
+            return LocalTime.parse(value);
         } catch (MissingArgumentException e) {
             if (isRequired) {
                 throw e;

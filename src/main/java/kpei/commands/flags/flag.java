@@ -1,5 +1,6 @@
-package kpei.commands;
+package kpei.commands.flags;
 
+import kpei.commands.ParsedCommand;
 import kpei.exceptions.MissingArgumentException;
 
 import java.util.List;
