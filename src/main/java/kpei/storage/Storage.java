@@ -17,7 +17,7 @@ import kpei.exceptions.BertException;
  */
 public class Storage {
     private final Path filePath;
-    private StorageParser storageParser;
+    private final StorageParser storageParser;
 
     /**
      * Constructs a {@code Storage} handler with a custom file path.
@@ -26,6 +26,7 @@ public class Storage {
      */
     public Storage(String filePath) {
         this.filePath = parseFilePath(filePath);
+        storageParser = new StorageParser();
     }
 
     /**
@@ -58,8 +59,8 @@ public class Storage {
 
         try {
             for (String line : Files.readAllLines(filePath)) {
-                if (StorageParser.isStoredTask(line)) {
-                    taskList.add(StorageParser.parseStoredTask(line));
+                if (storageParser.isStoredTask(line)) {
+                    taskList.add(storageParser.parseStoredTask(line));
                 }
             }
         } catch (IOException e) {

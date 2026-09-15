@@ -20,7 +20,7 @@ public class StorageParser {
      * @param line A line read from a storage file.
      * @return {@code true} if the line represents a supported task, {@code false} otherwise.
      */
-    public static boolean isStoredTask(String line) {
+    public boolean isStoredTask(String line) {
         if (line.isBlank()) {
             return false;
         }
@@ -45,7 +45,7 @@ public class StorageParser {
      * @return The task represented by the storage line.
      * @throws BertException If the stored task has invalid field values or an unsupported type.
      */
-    public static Task parseStoredTask(String line) throws BertException {
+    public Task parseStoredTask(String line) throws BertException {
         if (!isStoredTask(line)) {
             throw new BertException("Unsupported or incomplete stored task");
         }
@@ -72,7 +72,7 @@ public class StorageParser {
      * @return The created {@link Task} instance.
      * @throws BertException If the description is blank.
      */
-    private static Task parseTask(boolean isMarked, String description) throws BertException {
+    private Task parseTask(boolean isMarked, String description) throws BertException {
         if (description.isBlank()) {
             throw new BertException("Failed to create task. Some fields are invalid");
         }
@@ -89,7 +89,7 @@ public class StorageParser {
      * @return The created {@link Deadline} instance.
      * @throws BertException If any field is invalid or date parsing fails.
      */
-    private static Deadline parseDeadline(boolean isMarked, String description, String byDate, String byTime)
+    private Deadline parseDeadline(boolean isMarked, String description, String byDate, String byTime)
             throws BertException {
         if (description.isBlank() || byDate.isBlank() || byTime.isBlank()) {
             throw new BertException("Failed to create deadline. Some fields are invalid");
@@ -110,7 +110,7 @@ public class StorageParser {
      * @return The created {@link Event} instance.
      * @throws BertException If any field is invalid or date parsing fails.
      */
-    private static Event parseEvent(boolean isMarked, String description, String fromDate, String fromTime,
+    private Event parseEvent(boolean isMarked, String description, String fromDate, String fromTime,
                                     String toDate, String toTime) throws BertException {
         if (description.isBlank() || fromDate.isBlank() || fromTime.isBlank()
                 || toDate.isBlank() || toTime.isBlank()) {
@@ -127,7 +127,7 @@ public class StorageParser {
      * @return The parsed date.
      * @throws BertException If the date is invalid.
      */
-    private static LocalDate parseDate(String date) throws BertException {
+    private LocalDate parseDate(String date) throws BertException {
         try {
             return LocalDate.parse(date);
         } catch (DateTimeParseException e) {
@@ -142,7 +142,7 @@ public class StorageParser {
      * @return The parsed time.
      * @throws BertException If the time is invalid.
      */
-    private static LocalTime parseTime(String time) throws BertException {
+    private LocalTime parseTime(String time) throws BertException {
         try {
             return LocalTime.parse(time);
         } catch (DateTimeParseException e) {
