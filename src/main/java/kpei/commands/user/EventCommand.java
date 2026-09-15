@@ -7,7 +7,6 @@ import kpei.commands.parser.ParsedCommand;
 import kpei.datatypes.Event;
 import kpei.datatypes.Task;
 import kpei.exceptions.BertException;
-import kpei.exceptions.MissingArgumentException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

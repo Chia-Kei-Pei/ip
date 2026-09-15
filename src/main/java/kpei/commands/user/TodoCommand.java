@@ -4,7 +4,6 @@ import kpei.commands.parser.ParsedCommand;
 import kpei.commands.flags.StringFlag;
 import kpei.datatypes.Task;
 import kpei.exceptions.BertException;
-import kpei.exceptions.MissingArgumentException;
 
 import java.util.List;
 
