@@ -20,7 +20,8 @@ public class IntFlag extends Flag<Integer> {
         try {
             String value = getValue(parsedCommand);
             assert !value.isBlank() : "value of argument should be initialized";
-            return Integer.getInteger(value);
+            Integer integerValue = Integer.valueOf(value);
+            return integerValue;
         } catch (MissingArgumentException e) {
             if (isRequired) {
                 throw e;
