@@ -9,7 +9,7 @@ import kpei.exceptions.UnknownCommandException;
 /**
  * Parses raw user input strings into structured {@link ParsedCommand} objects.
  * <p>
- * Enforces strict single-token arguments and flag values. Arguments or flag values
+ * Enforces strict single-token arguments and Flag values. Arguments or Flag values
  * containing spaces must be enclosed in quotation marks (e.g. {@code "wash the dishes"}).
  * Single-word arguments without spaces (or connected by underscores) do not require quotation marks.
  * </p>
@@ -18,7 +18,7 @@ public class CommandParser {
 
     /**
      * Parses a raw Command string from the user into a {@link ParsedCommand}.
-     * Enforces that each argument or flag value is a single token or a quoted string.
+     * Enforces that each argument or Flag value is a single token or a quoted string.
      *
      * @param tokens Tokenized input command where each argument or parameter is one token.
      * @return A {@link ParsedCommand} containing the parsed Command type, arguments, and flags.
@@ -46,7 +46,7 @@ public class CommandParser {
 
         // collect flagged arguments
         while (i < tokens.size()) {
-            assert isFlag(tokens.get(i)) : tokens.get(i) + " at index " + i + " should be a flag";
+            assert isFlag(tokens.get(i)) : tokens.get(i) + " at index " + i + " should be a Flag";
 
             String flag = tokens.get(i);
             i++;
@@ -108,12 +108,12 @@ public class CommandParser {
     }
 
     /**
-     * Determines whether a token represents a flag identifier, and returns its normalized name.
-     * Supports `/flag`, `--flag`, `-flag`, and context-specific bare keywords like `by`, `from`, `to`.
+     * Determines whether a token represents a Flag identifier, and returns its normalized name.
+     * Supports `/Flag`, `--Flag`, `-Flag`, and context-specific bare keywords like `by`, `from`, `to`.
      *
      * @param token The token string to inspect.
      * @param commandType The Command context in lowercase.
-     * @return The normalized flag name, if the token is a flag.
+     * @return The normalized Flag name, if the token is a Flag.
      */
     private static Optional<String> extractFlagName(String token, String commandType) { // NO USAGES
         if (token.startsWith("/")) {
@@ -141,41 +141,41 @@ public class CommandParser {
 //     * @param tokens The tokens in the Command.
 //     * @param commandType The Command word.
 //     * @param arguments The list receiving the positional argument.
-//     * @param flags The map receiving flag names and values.
+//     * @param flags The map receiving Flag names and values.
 //     */
 //    public List<String> collectPositionalParameters(List<String> tokens, int tokenIndex) {
 //
 //    }
 
     /**
-     * Checks whether a token should be treated as a flag in the current Command context.
+     * Checks whether a token should be treated as a Flag in the current Command context.
      *
      * @param token The original token.
-     * @return {@code true} if the token is a flag, {@code false} otherwise.
+     * @return {@code true} if the token is a Flag, {@code false} otherwise.
      */
     private boolean isFlag(String token) {
         return token.startsWith("/") || token.startsWith("--") || token.startsWith("-");
     }
 
     /**
-     * Adds a flag and its value to the parsed flag map.
+     * Adds a Flag and its value to the parsed Flag map.
      *
      * @param tokens The tokens in the Command.
-     * @param flagIndex The index of the flag token.
-     * @param token The original flag token.
-     * @param flagName The normalized flag name.
-     * @param flags The map receiving the flag value.
+     * @param flagIndex The index of the Flag token.
+     * @param token The original Flag token.
+     * @param flagName The normalized Flag name.
+     * @param flags The map receiving the Flag value.
      * @return The index of the next unprocessed token.
      */
     private static int addFlag(List<String> tokens, int flagIndex, String token, String flagName,
                                Map<String, String> flags) { // NO USAGES
         if (flagIndex + 1 >= tokens.size()) {
-            throw new IllegalArgumentException("Missing value for flag: " + token);
+            throw new IllegalArgumentException("Missing value for Flag: " + token);
         }
 
         String flagValue = tokens.get(flagIndex + 1);
         if (flagValue.startsWith("/") || flagValue.startsWith("--")) {
-            throw new IllegalArgumentException("Missing value for flag: " + token);
+            throw new IllegalArgumentException("Missing value for Flag: " + token);
         }
 
         flags.put(flagName, flagValue);
@@ -205,7 +205,7 @@ public class CommandParser {
      * @param argument The positional argument string.
      * @param flags The map of parsed flags.
      * @throws BertException If the Command is unrecognized.
-     * @throws IllegalArgumentException If a mandatory argument or flag is missing.
+     * @throws IllegalArgumentException If a mandatory argument or Flag is missing.
      */
     private static void validateCommand(String commandType, String argument, Map<String, String> flags) // NO USAGES
             throws BertException, IllegalArgumentException {

@@ -17,7 +17,7 @@ public class ParsedCommand {
      *
      * @param commandType The primary Command word in lowercase (e.g., "deadline", "list").
      * @param positionalParameters The primary positional argument (e.g., task description or index).
-     * @param flaggedParameters A map of flag names to their corresponding values.
+     * @param flaggedParameters A map of Flag names to their corresponding values.
      */
     public ParsedCommand(String commandType, List<String> positionalParameters, Map<String, String> flaggedParameters) {
         this.commandType = commandType;

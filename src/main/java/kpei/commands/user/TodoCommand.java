@@ -1,18 +1,18 @@
 package kpei.commands.user;
 
 import kpei.commands.parser.ParsedCommand;
-import kpei.commands.flags.stringFlag;
+import kpei.commands.flags.StringFlag;
 import kpei.datatypes.Task;
 import kpei.exceptions.MissingArgumentException;
 
 import java.util.List;
 
-public class todoCommand extends Command<Task> {
-    private stringFlag descriptionFlag;
+public class TodoCommand extends Command<Task> {
+    private StringFlag descriptionFlag;
 
-    public todoCommand() {
+    public TodoCommand() {
         super(List.of("t", "todo"));
-        descriptionFlag = new stringFlag("description",0, List.of("/d", "-d", "--description"));
+        descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
     }
 
     public Task execute(ParsedCommand parsedCommand) throws MissingArgumentException {

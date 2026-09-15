@@ -5,22 +5,22 @@ import kpei.exceptions.MissingArgumentException;
 
 import java.util.List;
 
-public abstract class flag<T> {
+public abstract class Flag<T> {
     protected final String argument;
     protected final int position;
     protected List<String> aliases;
     protected final boolean isRequired;
     protected final T defaultValue;
 
-    public flag(String argument, int position, List<String> aliases) {
+    public Flag(String argument, int position, List<String> aliases) {
         this(argument, position, aliases, true, null);
     }
 
-    public flag(String argument, int position, List<String> aliases, T defaultValue) {
+    public Flag(String argument, int position, List<String> aliases, T defaultValue) {
         this(argument, position, aliases, false, defaultValue);
     }
 
-    private flag(String argument, int position, List<String> aliases, boolean isRequired, T defaultValue) {
+    private Flag(String argument, int position, List<String> aliases, boolean isRequired, T defaultValue) {
         this.argument = argument;
         this.position = position;
         this.aliases = aliases;

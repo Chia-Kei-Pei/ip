@@ -1,8 +1,8 @@
 package kpei;
 
-import kpei.commands.user.deadlineCommand;
-import kpei.commands.user.eventCommand;
-import kpei.commands.user.todoCommand;
+import kpei.commands.user.DeadlineCommand;
+import kpei.commands.user.EventCommand;
+import kpei.commands.user.TodoCommand;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
@@ -31,9 +31,9 @@ public class CommandCenter {
 
     private TaskList displayList;
 
-    private todoCommand todoCommand;
-    private deadlineCommand deadlineCommand;
-    private eventCommand eventCommand;
+    private TodoCommand todoCommand;
+    private DeadlineCommand deadlineCommand;
+    private EventCommand eventCommand;
 
     /**
      * Constructs a {@code CommandCenter} instance with the given storage, task list, and CLI interface.
@@ -68,9 +68,9 @@ public class CommandCenter {
         this.mainWindowController = mainWindowController;
         this.isGuiEnabled = isGuiEnabled;
 
-        todoCommand = new todoCommand();
-        deadlineCommand = new deadlineCommand();
-        eventCommand = new eventCommand();
+        todoCommand = new TodoCommand();
+        deadlineCommand = new DeadlineCommand();
+        eventCommand = new EventCommand();
 
         try {
             this.storage.load(taskList);

@@ -6,13 +6,13 @@ import kpei.exceptions.MissingArgumentException;
 import java.time.LocalTime;
 import java.util.List;
 
-public class timeFlag extends flag<LocalTime> {
+public class TimeFlag extends Flag<LocalTime> {
 
-    public timeFlag(String argument, int position, List<String> aliases) {
+    public TimeFlag(String argument, int position, List<String> aliases) {
         super(argument, position, aliases);
     }
 
-    public timeFlag(String argument, int position, List<String> aliases, LocalTime defaultValue) {
+    public TimeFlag(String argument, int position, List<String> aliases, LocalTime defaultValue) {
         super(argument, position, aliases, defaultValue);
     }
 

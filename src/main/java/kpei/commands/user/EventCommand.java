@@ -1,8 +1,8 @@
 package kpei.commands.user;
 
-import kpei.commands.flags.dateFlag;
-import kpei.commands.flags.stringFlag;
-import kpei.commands.flags.timeFlag;
+import kpei.commands.flags.DateFlag;
+import kpei.commands.flags.StringFlag;
+import kpei.commands.flags.TimeFlag;
 import kpei.commands.parser.ParsedCommand;
 import kpei.datatypes.Event;
 import kpei.datatypes.Task;
@@ -13,21 +13,21 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-public class eventCommand extends Command<Task> {
-    private stringFlag descriptionFlag;
-    private dateFlag fromDateFlag;
-    private timeFlag fromTimeFlag;
-    private dateFlag toDateFlag;
-    private timeFlag toTimeFlag;
+public class EventCommand extends Command<Task> {
+    private StringFlag descriptionFlag;
+    private DateFlag fromDateFlag;
+    private TimeFlag fromTimeFlag;
+    private DateFlag toDateFlag;
+    private TimeFlag toTimeFlag;
 
-    public eventCommand() {
+    public EventCommand() {
         super(List.of("e", "event"));
-        descriptionFlag = new stringFlag("description",0, List.of("/d", "-d", "--description"));
-        fromDateFlag = new dateFlag("fromDate", 1, List.of("/f", "-f", "--fromDate"));
-        fromTimeFlag = new timeFlag("fromTime", 2, List.of("/ff", "-ff", "--fromTime"),
+        descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
+        fromDateFlag = new DateFlag("fromDate", 1, List.of("/f", "-f", "--fromDate"));
+        fromTimeFlag = new TimeFlag("fromTime", 2, List.of("/ff", "-ff", "--fromTime"),
                 LocalTime.parse("00:00"));
-        toDateFlag = new dateFlag("toDate", 3, List.of("/t", "-t", "--toDate"));
-        toTimeFlag = new timeFlag("toTime", 4, List.of("/tt", "-tt", "--toTime"),
+        toDateFlag = new DateFlag("toDate", 3, List.of("/t", "-t", "--toDate"));
+        toTimeFlag = new TimeFlag("toTime", 4, List.of("/tt", "-tt", "--toTime"),
                 LocalTime.parse("00:00"));
     }
 
