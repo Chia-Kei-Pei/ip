@@ -1,19 +1,21 @@
 package kpei;
 
+import kpei.commands.user.*;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
 import kpei.exceptions.InvalidIndexException;
 import kpei.exceptions.UnknownCommandException;
-import kpei.parser.CommandParser;
-import kpei.parser.ParsedCommand;
-import kpei.parser.TaskParser;
+import kpei.commands.parser.CommandParser;
+import kpei.commands.parser.ParsedCommand;
 import kpei.storage.Storage;
 import kpei.ui.Cli;
 import kpei.ui.controllers.MainWindowController;
 
+import java.util.List;
+
 /**
- * Core coordinator and command handler for the BERT assistant.
+ * Core coordinator and Command handler for the BERT assistant.
  * Processes user input commands, mutates application state and storage,
  * and instructs the user interface on what to display.
  */
@@ -26,6 +28,16 @@ public class CommandCenter {
     private final boolean isGuiEnabled;
 
     private TaskList displayList;
+
+    private TodoCommand todoCommand;
+    private DeadlineCommand deadlineCommand;
+    private EventCommand eventCommand;
+    private FindCommand findCommand;
+    private MarkCommand markCommand;
+    private UnmarkCommand unmarkCommand;
+    private RemoveCommand removeCommand;
+    private ListCommand listCommand;
+    private ExitCommand exitCommand;
 
     /**
      * Constructs a {@code CommandCenter} instance with the given storage, task list, and CLI interface.
@@ -60,6 +72,16 @@ public class CommandCenter {
         this.mainWindowController = mainWindowController;
         this.isGuiEnabled = isGuiEnabled;
 
+        todoCommand = new TodoCommand();
+        deadlineCommand = new DeadlineCommand();
+        eventCommand = new EventCommand();
+        findCommand = new FindCommand();
+        markCommand = new MarkCommand();
+        unmarkCommand = new UnmarkCommand();
+        removeCommand = new RemoveCommand();
+        listCommand = new ListCommand();
+        exitCommand = new ExitCommand();
+
         try {
             this.storage.load(taskList);
         } catch (BertException e) {
@@ -75,33 +97,47 @@ public class CommandCenter {
     }
 
     /**
-     * Dispatches a parsed command to the appropriate handler method.
+     * Dispatches a parsed Command to the appropriate handler method.
      *
-     * @param userPrompt The raw command string entered by the user.
-     * @return {@code true} if an exit command was executed, {@code false} otherwise.
+     * @param userPrompt The raw Command string entered by the user.
+     * @return {@code true} if an exit Command was executed, {@code false} otherwise.
      */
     public boolean executeCommand(String userPrompt) {
         try {
-            cli.horizontalLine();
-            ParsedCommand cmd = CommandParser.parse(userPrompt);
+            CommandParser commandParser = new CommandParser();
 
-            switch (cmd.getCommandType()) {
-                case "todo" -> handleAdd(TaskParser.parseTask(cmd.getArgument()));
-                case "deadline" -> handleAdd(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
-                case "event" -> handleAdd(TaskParser.parseEvent(cmd.getArgument(),
-                        cmd.getFlag("from"), cmd.getFlag("to")));
-                case "list" -> handleList();
-                case "find" -> handleFind(cmd.getArgument());
-                case "mark" -> handleMark(cmd.getArgumentAsInt());
-                case "unmark" -> handleUnmark(cmd.getArgumentAsInt());
-                case "delete" -> handleDelete(cmd.getArgumentAsInt());
-                case "exit" -> {
+            cli.horizontalLine();
+
+            List<String> tokens = commandParser.tokenize(userPrompt);
+            ParsedCommand cmd = commandParser.parse(tokens);
+
+            if (todoCommand.isMatch(cmd)) {
+                handleAdd(todoCommand.execute(cmd));
+            } else if (deadlineCommand.isMatch(cmd)) {
+                handleAdd(deadlineCommand.execute(cmd));
+            } else if (eventCommand.isMatch(cmd)) {
+                handleAdd(eventCommand.execute(cmd));
+            } else if (findCommand.isMatch(cmd)) {
+                handleFind(findCommand.execute(cmd));
+            } else if (markCommand.isMatch(cmd)) {
+                handleMark(markCommand.execute(cmd));
+            } else if (unmarkCommand.isMatch(cmd)) {
+                handleUnmark(unmarkCommand.execute(cmd));
+            } else if (removeCommand.isMatch(cmd)) {
+                handleDelete(removeCommand.execute(cmd));
+            } else if (listCommand.isMatch(cmd)) {
+                if (listCommand.execute(cmd)) {
+                    handleList();
+                }
+            } else if (exitCommand.isMatch(cmd)) {
+                if (exitCommand.execute(cmd)) {
                     cli.farewell();
                     return true;
                 }
-                default -> throw new UnknownCommandException(cmd.getCommandType());
+            } else {
+                throw new UnknownCommandException(cmd.getCommandType());
             }
-        } catch (BertException | IllegalArgumentException | IndexOutOfBoundsException e) {
+        } catch (BertException e) {
             cli.error(e.getMessage());
         } finally {
             cli.horizontalLine();
