@@ -19,10 +19,11 @@ public class deadlineCommand extends Command<Task> {
     private timeFlag byTimeFlag;
 
     public deadlineCommand() {
-        super(List.of("t", "todo"));
+        super(List.of("d", "deadline"));
         descriptionFlag = new stringFlag("description",0, List.of("/d", "-d", "--description"));
         byDateFlag = new dateFlag("byDate", 1, List.of("/b", "-b", "--byDate"));
-        byTimeFlag = new timeFlag("byTime", 2, List.of("/bb", "-bb", "--byTime"));
+        byTimeFlag = new timeFlag("byTime", 2, List.of("/bb", "-bb", "--byTime"),
+                LocalTime.parse("00:00"));
     }
 
     public Task execute(ParsedCommand parsedCommand) throws MissingArgumentException {

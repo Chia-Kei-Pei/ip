@@ -1,6 +1,7 @@
 package kpei;
 
 import kpei.commands.user.deadlineCommand;
+import kpei.commands.user.eventCommand;
 import kpei.commands.user.todoCommand;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
@@ -32,6 +33,7 @@ public class CommandCenter {
 
     private todoCommand todoCommand;
     private deadlineCommand deadlineCommand;
+    private eventCommand eventCommand;
 
     /**
      * Constructs a {@code CommandCenter} instance with the given storage, task list, and CLI interface.
@@ -67,6 +69,8 @@ public class CommandCenter {
         this.isGuiEnabled = isGuiEnabled;
 
         todoCommand = new todoCommand();
+        deadlineCommand = new deadlineCommand();
+        eventCommand = new eventCommand();
 
         try {
             this.storage.load(taskList);
@@ -102,9 +106,8 @@ public class CommandCenter {
                 handleAdd(todoCommand.execute(cmd));
             } else if (deadlineCommand.isMatch(cmd)) {
                 handleAdd(deadlineCommand.execute(cmd));
-//            } else if (cmd.getCommandType().equals("event")) {
-//                handleAdd(TaskParser.parseEvent(cmd.getArguments(),
-//                        cmd.getFlags("from"), cmd.getFlags("to")));
+            } else if (eventCommand.isMatch(cmd)) {
+                handleAdd(eventCommand.execute(cmd));
 //            } else if (cmd.getCommandType().equals("find")) {
 //                handleFind(cmd.getArguments());
 //            } else if (cmd.getCommandType().equals("mark")) {
