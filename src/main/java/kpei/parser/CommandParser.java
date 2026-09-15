@@ -17,17 +17,16 @@ import kpei.exceptions.UnknownCommandException;
 public class CommandParser {
 
     /**
-     * Parses a raw command string from the user into a {@link ParsedCommand}.
+     * Parses a raw Command string from the user into a {@link ParsedCommand}.
      * Enforces that each argument or flag value is a single token or a quoted string.
      *
-     * @param rawInput The raw input string entered by the user.
-     * @return A {@link ParsedCommand} containing the parsed command type, arguments, and flags.
-     * @throws BertException If the command type is unknown or invalid.
-     * @throws IllegalArgumentException If arguments with spaces are not quoted, or required fields are missing.
+     * @param tokens Tokenized input command where each argument or parameter is one token.
+     * @return A {@link ParsedCommand} containing the parsed Command type, arguments, and flags.
+     * @throws BertException If the entire command is missing.
      */
-    public ParsedCommand parse(List<String> tokens) throws BertException, IllegalArgumentException {
+    public ParsedCommand parse(List<String> tokens) throws BertException {
         if (tokens.isEmpty()) {
-            throw new IllegalArgumentException("Command should not be empty");
+            throw new BertException("User prompt should not be blank.");
         }
 
         String commandType = tokens.get(0).toLowerCase();
@@ -113,7 +112,7 @@ public class CommandParser {
      * Supports `/flag`, `--flag`, `-flag`, and context-specific bare keywords like `by`, `from`, `to`.
      *
      * @param token The token string to inspect.
-     * @param commandType The command context in lowercase.
+     * @param commandType The Command context in lowercase.
      * @return The normalized flag name, if the token is a flag.
      */
     private static Optional<String> extractFlagName(String token, String commandType) {
@@ -137,10 +136,10 @@ public class CommandParser {
     }
 
 //    /**
-//     * Collects the positional argument and named flags from command tokens.
+//     * Collects the positional argument and named flags from Command tokens.
 //     *
-//     * @param tokens The tokens in the command.
-//     * @param commandType The command word.
+//     * @param tokens The tokens in the Command.
+//     * @param commandType The Command word.
 //     * @param arguments The list receiving the positional argument.
 //     * @param flags The map receiving flag names and values.
 //     */
@@ -149,7 +148,7 @@ public class CommandParser {
 //    }
 
     /**
-     * Checks whether a token should be treated as a flag in the current command context.
+     * Checks whether a token should be treated as a flag in the current Command context.
      *
      * @param token The original token.
      * @return {@code true} if the token is a flag, {@code false} otherwise.
@@ -161,7 +160,7 @@ public class CommandParser {
     /**
      * Adds a flag and its value to the parsed flag map.
      *
-     * @param tokens The tokens in the command.
+     * @param tokens The tokens in the Command.
      * @param flagIndex The index of the flag token.
      * @param token The original flag token.
      * @param flagName The normalized flag name.
@@ -184,7 +183,7 @@ public class CommandParser {
     }
 
     /**
-     * Adds the command's only positional argument.
+     * Adds the Command's only positional argument.
      *
      * @param arguments The list receiving the positional argument.
      * @param token The token to add as an argument.
@@ -200,12 +199,12 @@ public class CommandParser {
     }
 
     /**
-     * Validates that the parsed arguments and flags satisfy the constraints of the given command.
+     * Validates that the parsed arguments and flags satisfy the constraints of the given Command.
      *
-     * @param commandType The command word.
+     * @param commandType The Command word.
      * @param argument The positional argument string.
      * @param flags The map of parsed flags.
-     * @throws BertException If the command is unrecognized.
+     * @throws BertException If the Command is unrecognized.
      * @throws IllegalArgumentException If a mandatory argument or flag is missing.
      */
     private static void validateCommand(String commandType, String argument, Map<String, String> flags)

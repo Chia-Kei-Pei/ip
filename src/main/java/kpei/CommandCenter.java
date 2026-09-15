@@ -1,9 +1,11 @@
 package kpei;
 
+import kpei.commands.todoCommand;
 import kpei.datatypes.Task;
 import kpei.datatypes.TaskList;
 import kpei.exceptions.BertException;
 import kpei.exceptions.InvalidIndexException;
+import kpei.exceptions.MissingArgumentException;
 import kpei.exceptions.UnknownCommandException;
 import kpei.parser.CommandParser;
 import kpei.parser.ParsedCommand;
@@ -17,7 +19,7 @@ import java.util.Dictionary;
 import java.util.List;
 
 /**
- * Core coordinator and command handler for the BERT assistant.
+ * Core coordinator and Command handler for the BERT assistant.
  * Processes user input commands, mutates application state and storage,
  * and instructs the user interface on what to display.
  */
@@ -30,6 +32,8 @@ public class CommandCenter {
     private final boolean isGuiEnabled;
 
     private TaskList displayList;
+
+    private todoCommand todoCommand;
 
     /**
      * Constructs a {@code CommandCenter} instance with the given storage, task list, and CLI interface.
@@ -64,6 +68,8 @@ public class CommandCenter {
         this.mainWindowController = mainWindowController;
         this.isGuiEnabled = isGuiEnabled;
 
+        todoCommand = new todoCommand();
+
         try {
             this.storage.load(taskList);
         } catch (BertException e) {
@@ -79,10 +85,10 @@ public class CommandCenter {
     }
 
     /**
-     * Dispatches a parsed command to the appropriate handler method.
+     * Dispatches a parsed Command to the appropriate handler method.
      *
-     * @param userPrompt The raw command string entered by the user.
-     * @return {@code true} if an exit command was executed, {@code false} otherwise.
+     * @param userPrompt The raw Command string entered by the user.
+     * @return {@code true} if an exit Command was executed, {@code false} otherwise.
      */
     public boolean executeCommand(String userPrompt) {
         try {
@@ -93,10 +99,9 @@ public class CommandCenter {
 //            ParsedCommand cmd = CommandParser.parse(userPrompt);
             List<String> tokens = commandParser.tokenize(userPrompt);
             ParsedCommand parsedCommand = commandParser.parse(tokens);
-            IO.print("");
 
-//            switch (cmd.getCommandType()) {
-//                case "todo" -> handleAdd(TaskParser.parseTask(cmd.getArgument()));
+            switch (parsedCommand.commandType) {
+                case "todo" -> handleAdd(todoCommand.execute(parsedCommand));
 //                case "deadline" -> handleAdd(TaskParser.parseDeadline(cmd.getArgument(), cmd.getFlag("by")));
 //                case "event" -> handleAdd(TaskParser.parseEvent(cmd.getArgument(),
 //                        cmd.getFlag("from"), cmd.getFlag("to")));
@@ -105,12 +110,12 @@ public class CommandCenter {
 //                case "mark" -> handleMark(cmd.getArgumentAsInt());
 //                case "unmark" -> handleUnmark(cmd.getArgumentAsInt());
 //                case "delete" -> handleDelete(cmd.getArgumentAsInt());
-//                case "exit" -> {
-//                    cli.farewell();
-//                    return true;
-//                }
-//                default -> throw new UnknownCommandException(cmd.getCommandType());
-//            }
+                case "exit" -> {
+                    cli.farewell();
+                    return true;
+                }
+                default -> throw new UnknownCommandException(parsedCommand.commandType);
+            }
         } catch (BertException e) { // IllegalArgumentException | IndexOutOfBoundsException e
             cli.error(e.getMessage());
         } finally {

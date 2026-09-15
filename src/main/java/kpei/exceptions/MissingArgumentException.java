@@ -1,7 +1,7 @@
 package kpei.exceptions;
 
 /**
- * Signals that a required field or argument for a command is missing or empty.
+ * Signals that a required field or argument for a Command is missing or empty.
  */
 public class MissingArgumentException extends BertException {
     /**

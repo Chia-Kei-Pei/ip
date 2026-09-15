@@ -8,8 +8,12 @@ import java.util.List;
 
 public class timeFlag extends flag<LocalTime> {
 
-    public timeFlag(String argument, int position, List<String> aliases, boolean isRequired, LocalTime defaultValue) {
-        super(argument, position, aliases, isRequired, defaultValue);
+    public timeFlag(String argument, int position, List<String> aliases) {
+        super(argument, position, aliases);
+    }
+
+    public timeFlag(String argument, int position, List<String> aliases, LocalTime defaultValue) {
+        super(argument, position, aliases, defaultValue);
     }
 
     @Override

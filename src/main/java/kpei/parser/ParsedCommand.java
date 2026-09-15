@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents the structured result of parsing a raw command string.
- * Holds the command type, the primary argument, and any associated named flags.
+ * Represents the structured result of parsing a raw Command string.
+ * Holds the Command type, the primary argument, and any associated named flags.
  */
 public class ParsedCommand {
     public String commandType;
@@ -13,9 +13,9 @@ public class ParsedCommand {
     public Map<String, String> flags;
 
     /**
-     * Constructs a {@code ParsedCommand} with the given command type, positional arguments, and flags.
+     * Constructs a {@code ParsedCommand} with the given Command type, positional arguments, and flags.
      *
-     * @param commandType The primary command word in lowercase (e.g., "deadline", "list").
+     * @param commandType The primary Command word in lowercase (e.g., "deadline", "list").
      * @param positionalParameters The primary positional argument (e.g., task description or index).
      * @param flaggedParameters A map of flag names to their corresponding values.
      */

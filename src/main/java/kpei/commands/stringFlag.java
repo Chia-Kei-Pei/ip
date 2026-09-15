@@ -7,8 +7,12 @@ import java.util.List;
 
 public class stringFlag extends flag<String> {
 
-    public stringFlag(String argument, int position, List<String> aliases, boolean isRequired, String defaultValue) {
-        super(argument, position, aliases, isRequired, defaultValue);
+    public stringFlag(String argument, int position, List<String> aliases) {
+        super(argument, position, aliases);
+    }
+
+    public stringFlag(String argument, int position, List<String> aliases, String defaultValue) {
+        super(argument, position, aliases, defaultValue);
     }
 
     @Override
