@@ -36,6 +36,8 @@ public class CommandCenter {
     private MarkCommand markCommand;
     private UnmarkCommand unmarkCommand;
     private RemoveCommand removeCommand;
+    private ListCommand listCommand;
+    private ExitCommand exitCommand;
 
     /**
      * Constructs a {@code CommandCenter} instance with the given storage, task list, and CLI interface.
@@ -77,6 +79,8 @@ public class CommandCenter {
         markCommand = new MarkCommand();
         unmarkCommand = new UnmarkCommand();
         removeCommand = new RemoveCommand();
+        listCommand = new ListCommand();
+        exitCommand = new ExitCommand();
 
         try {
             this.storage.load(taskList);
@@ -121,11 +125,15 @@ public class CommandCenter {
                 handleUnmark(unmarkCommand.execute(cmd));
             } else if (removeCommand.isMatch(cmd)) {
                 handleDelete(removeCommand.execute(cmd));
-            } else if (cmd.getCommandType().equals("list")) {
-                handleList();
-            } else if (cmd.getCommandType().equals("exit")) {
-                cli.farewell();
-                return true;
+            } else if (listCommand.isMatch(cmd)) {
+                if (listCommand.execute(cmd)) {
+                    handleList();
+                }
+            } else if (exitCommand.isMatch(cmd)) {
+                if (exitCommand.execute(cmd)) {
+                    cli.farewell();
+                    return true;
+                }
             } else {
                 throw new UnknownCommandException(cmd.getCommandType());
             }
