@@ -31,6 +31,7 @@ public class DeadlineCommand extends Command<Task> {
         String description = descriptionFlag.parse(parsedCommand);
         LocalDate byDate = byDateFlag.parse(parsedCommand);
         LocalTime byTime = byTimeFlag.parse(parsedCommand);
-        return new Deadline(description, byDate, byTime);
+        Deadline deadline = new Deadline(description, byDate, byTime);
+        return deadline;
     }
 }

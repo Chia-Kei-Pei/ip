@@ -115,19 +115,26 @@ public class CommandCenter {
             ParsedCommand cmd = commandParser.parse(tokens);
 
             if (todoCommand.isMatch(cmd)) {
-                handleAdd(todoCommand.parse(cmd));
+                Task task = todoCommand.parse(cmd);
+                handleAdd(task);
             } else if (deadlineCommand.isMatch(cmd)) {
-                handleAdd(deadlineCommand.parse(cmd));
+                Task task = deadlineCommand.parse(cmd);
+                handleAdd(task);
             } else if (eventCommand.isMatch(cmd)) {
-                handleAdd(eventCommand.parse(cmd));
+                Task task = eventCommand.parse(cmd);
+                handleAdd(task);
             } else if (findCommand.isMatch(cmd)) {
-                handleFind(findCommand.parse(cmd));
+                String keyword = findCommand.parse(cmd);
+                handleFind(keyword);
             } else if (markCommand.isMatch(cmd)) {
-                handleMark(markCommand.parse(cmd));
+                int index = markCommand.parse(cmd);
+                handleMark(index);
             } else if (unmarkCommand.isMatch(cmd)) {
-                handleUnmark(unmarkCommand.parse(cmd));
+                int index = unmarkCommand.parse(cmd);
+                handleUnmark(index);
             } else if (removeCommand.isMatch(cmd)) {
-                handleDelete(removeCommand.parse(cmd));
+                int index = removeCommand.parse(cmd);
+                handleDelete(index);
             } else if (listCommand.isMatch(cmd)) {
                 if (listCommand.parse(cmd)) {
                     handleList();

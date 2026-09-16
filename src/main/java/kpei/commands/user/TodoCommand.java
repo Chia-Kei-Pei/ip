@@ -19,6 +19,7 @@ public class TodoCommand extends Command<Task> {
         checkArgCount(parsedCommand);
 
         String description = descriptionFlag.parse(parsedCommand);
-        return new Task(description);
+        Task task = new Task(description);
+        return task;
     }
 }

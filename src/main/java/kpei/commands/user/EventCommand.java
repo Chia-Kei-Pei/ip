@@ -38,6 +38,7 @@ public class EventCommand extends Command<Task> {
         LocalTime fromTime = fromTimeFlag.parse(parsedCommand);
         LocalDate toDate = toDateFlag.parse(parsedCommand);
         LocalTime toTime = toTimeFlag.parse(parsedCommand);
-        return new Event(description, fromDate, fromTime, toDate, toTime);
+        Event event = new Event(description, fromDate, fromTime, toDate, toTime);
+        return event;
     }
 }
