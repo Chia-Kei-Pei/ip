@@ -91,9 +91,12 @@ public class CommandCenter {
         this.cli.greeting();
         this.cli.horizontalLine();
 
-        displayList = this.taskList;
-
-        displayListGui();
+        try {
+            setDisplayList(this.taskList);
+            refreshDisplayListGui();
+        } catch (BertException e) {
+            this.cli.error(e.getMessage());
+        }
     }
 
     /**
@@ -150,33 +153,27 @@ public class CommandCenter {
         saveList();
         cli.print("Added " + task.getType());
         cli.printTask(taskList.size(), task);
-        displayList = taskList;
-        displayListGui();
+        setDisplayList(taskList);
+        refreshDisplayListGui();
     }
 
     private void handleList() throws InvalidIndexException {
         if (taskList.isEmpty()) {
             cli.print("List is empty.");
-        } else {
-            displayList = taskList;
-            cli.print(String.format("Displaying list of size %d.", displayList.size()));
-            if (!isGuiEnabled) {
-                cli.printList(taskList);
-            } else {
-                displayListGui();
-            }
+            return;
         }
+        cli.print(String.format("Displaying list of size %d.", taskList.size()));
+        setDisplayList(taskList);
+        printDisplayListCli();
+        refreshDisplayListGui();
     }
 
     private void handleFind(String keyword) throws InvalidIndexException {
         TaskList matchingTasks = taskList.find(keyword);
-        displayList = matchingTasks;
-        cli.print(String.format("Found %d matching tasks.", displayList.size()));
-        if (!isGuiEnabled) {
-            cli.printList(displayList);
-        } else {
-            displayListGui();
-        }
+        cli.print(String.format("Found %d matching tasks.", matchingTasks.size()));
+        setDisplayList(matchingTasks);
+        printDisplayListCli();
+        refreshDisplayListGui();
     }
 
     private void handleMark(int index) throws InvalidIndexException, BertException {
@@ -186,10 +183,10 @@ public class CommandCenter {
             cli.printTask(index, task);
         } else {
             displayList.mark(index);
-            saveList();
             cli.print("Marked " + task.getType());
             cli.printTask(index, task);
-            displayListGui();
+            refreshDisplayListGui();
+            saveList();
         }
     }
 
@@ -200,26 +197,36 @@ public class CommandCenter {
             cli.printTask(index, task);
         } else {
             displayList.unmark(index);
-            saveList();
             cli.print("Unmarked " + task.getType());
             cli.printTask(index, task);
-            displayListGui();
+            refreshDisplayListGui();
+            saveList();
         }
     }
 
     private void handleDelete(int index) throws InvalidIndexException, BertException {
         Task removedTask = displayList.remove(index);
-        saveList();
         cli.print("Removed " + removedTask.getType());
         cli.printTask(index, removedTask);
-        displayListGui();
+        refreshDisplayListGui();
+        saveList();
     }
 
     private void saveList() throws BertException {
         storage.save(taskList); // do NOT save displaylist
     }
 
-    private void displayListGui() {
+    private void setDisplayList(TaskList taskList) {
+        this.displayList = taskList;
+    }
+
+    private void printDisplayListCli() throws InvalidIndexException {
+        if (!isGuiEnabled) {
+            cli.printList(displayList);
+        }
+    }
+
+    private void refreshDisplayListGui() throws InvalidIndexException {
         if (isGuiEnabled) {
             mainWindowController.refreshTaskList(displayList);
         }

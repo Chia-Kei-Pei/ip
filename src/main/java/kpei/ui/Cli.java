@@ -118,11 +118,6 @@ public class Cli {
      * @param taskList The list of tasks to display.
      */
     public void printList(TaskList taskList) throws InvalidIndexException {
-        if (taskList.isEmpty()) {
-            print("List is empty.");
-            return;
-        }
-
         for (int i = 1; i <= taskList.size(); i++) {
             printTask(i, taskList.get(i));
         }
