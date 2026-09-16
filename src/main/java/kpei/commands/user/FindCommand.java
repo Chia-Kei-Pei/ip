@@ -16,7 +16,7 @@ public class FindCommand extends Command<String> {
         descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
     }
 
-    public String execute(ParsedCommand parsedCommand) throws BertException {
+    public String parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
 
         String description = descriptionFlag.parse(parsedCommand);

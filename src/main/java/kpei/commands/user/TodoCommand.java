@@ -15,7 +15,7 @@ public class TodoCommand extends Command<Task> {
         descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
     }
 
-    public Task execute(ParsedCommand parsedCommand) throws BertException {
+    public Task parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
 
         String description = descriptionFlag.parse(parsedCommand);

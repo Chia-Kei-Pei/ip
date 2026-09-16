@@ -30,7 +30,7 @@ public class EventCommand extends Command<Task> {
                 LocalTime.MIDNIGHT);
     }
 
-    public Task execute(ParsedCommand parsedCommand) throws BertException {
+    public Task parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
 
         String description = descriptionFlag.parse(parsedCommand);

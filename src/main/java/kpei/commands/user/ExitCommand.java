@@ -11,7 +11,7 @@ public class ExitCommand extends Command<Boolean> {
         super("exit", List.of("q", "quit", "exit", "bye"), 0);
     }
 
-    public Boolean execute(ParsedCommand parsedCommand) throws BertException {
+    public Boolean parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
         return Boolean.TRUE;
     }

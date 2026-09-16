@@ -11,7 +11,7 @@ public class ListCommand extends Command<Boolean> {
         super("list", List.of("ls", "list", "dir"), 0);
     }
 
-    public Boolean execute(ParsedCommand parsedCommand) throws BertException {
+    public Boolean parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
 
         return Boolean.TRUE;

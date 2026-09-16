@@ -115,25 +115,25 @@ public class CommandCenter {
             ParsedCommand cmd = commandParser.parse(tokens);
 
             if (todoCommand.isMatch(cmd)) {
-                handleAdd(todoCommand.execute(cmd));
+                handleAdd(todoCommand.parse(cmd));
             } else if (deadlineCommand.isMatch(cmd)) {
-                handleAdd(deadlineCommand.execute(cmd));
+                handleAdd(deadlineCommand.parse(cmd));
             } else if (eventCommand.isMatch(cmd)) {
-                handleAdd(eventCommand.execute(cmd));
+                handleAdd(eventCommand.parse(cmd));
             } else if (findCommand.isMatch(cmd)) {
-                handleFind(findCommand.execute(cmd));
+                handleFind(findCommand.parse(cmd));
             } else if (markCommand.isMatch(cmd)) {
-                handleMark(markCommand.execute(cmd));
+                handleMark(markCommand.parse(cmd));
             } else if (unmarkCommand.isMatch(cmd)) {
-                handleUnmark(unmarkCommand.execute(cmd));
+                handleUnmark(unmarkCommand.parse(cmd));
             } else if (removeCommand.isMatch(cmd)) {
-                handleDelete(removeCommand.execute(cmd));
+                handleDelete(removeCommand.parse(cmd));
             } else if (listCommand.isMatch(cmd)) {
-                if (listCommand.execute(cmd)) {
+                if (listCommand.parse(cmd)) {
                     handleList();
                 }
             } else if (exitCommand.isMatch(cmd)) {
-                if (exitCommand.execute(cmd)) {
+                if (exitCommand.parse(cmd)) {
                     cli.farewell();
                     return true;
                 }

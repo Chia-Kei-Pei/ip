@@ -15,7 +15,7 @@ public class RemoveCommand extends Command<Integer> {
         indexFlag = new IntFlag("index",0, List.of("/i", "-i", "--index"));
     }
 
-    public Integer execute(ParsedCommand parsedCommand) throws BertException {
+    public Integer parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
 
         Integer index = indexFlag.parse(parsedCommand);
