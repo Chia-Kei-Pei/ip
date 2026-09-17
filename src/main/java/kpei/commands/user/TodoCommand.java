@@ -32,6 +32,7 @@ public class TodoCommand extends Command<Task> {
 
     @Override
     public String getSyntax() {
-        return "Syntax: " + commandType + " " + descriptionFlag.formatArgument();
+        return String.format("Syntax: %s %s", commandType, descriptionFlag.formatArgument())
+                + String.format("\n%s", descriptionFlag.getHelp());
     }
 }

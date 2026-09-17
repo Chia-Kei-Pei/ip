@@ -20,12 +20,17 @@ public class MarkCommand extends Command<Integer> {
     public Integer parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
 
-        Integer index = indexFlag.parse(parsedCommand);
-        return index;
+        try {
+            Integer index = indexFlag.parse(parsedCommand);
+            return index;
+        } catch (MissingArgumentException e) {
+            throw new BertException(e.getMessage() + "\n" + getSyntax());
+        }
     }
 
     @Override
     public String getSyntax() {
-        return commandType + " " + indexFlag.formatArgument();
+        return String.format("Syntax: %s %s", commandType, indexFlag.formatArgument())
+                + String.format("\n%s", indexFlag.getHelp());
     }
 }

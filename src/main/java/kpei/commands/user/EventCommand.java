@@ -7,6 +7,7 @@ import kpei.commands.parser.ParsedCommand;
 import kpei.datatypes.Event;
 import kpei.datatypes.Task;
 import kpei.exceptions.BertException;
+import kpei.exceptions.MissingArgumentException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -36,19 +37,25 @@ public class EventCommand extends Command<Task> {
     public Task parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
 
-        String description = descriptionFlag.parse(parsedCommand);
-        LocalDate fromDate = fromDateFlag.parse(parsedCommand);
-        LocalTime fromTime = fromTimeFlag.parse(parsedCommand);
-        LocalDate toDate = toDateFlag.parse(parsedCommand);
-        LocalTime toTime = toTimeFlag.parse(parsedCommand);
-        Event event = new Event(description, fromDate, fromTime, toDate, toTime);
-        return event;
+        try {
+            String description = descriptionFlag.parse(parsedCommand);
+            LocalDate fromDate = fromDateFlag.parse(parsedCommand);
+            LocalTime fromTime = fromTimeFlag.parse(parsedCommand);
+            LocalDate toDate = toDateFlag.parse(parsedCommand);
+            LocalTime toTime = toTimeFlag.parse(parsedCommand);
+            Event event = new Event(description, fromDate, fromTime, toDate, toTime);
+            return event;
+        } catch (MissingArgumentException e) {
+            throw new BertException(e.getMessage() + "\n" + getSyntax());
+        }
     }
 
     @Override
     public String getSyntax() {
-        return String.format("%s %s %s %s %s %s", commandType, descriptionFlag.formatArgument(),
+        return String.format("Syntax: %s %s %s %s %s %s", commandType, descriptionFlag.formatArgument(),
                 fromDateFlag.formatArgument(), fromTimeFlag.formatArgument(), toDateFlag.formatArgument(),
-                toTimeFlag.formatArgument());
+                toTimeFlag.formatArgument())
+                + String.format("\n%s\n%s\n%s\n%s\n%s", descriptionFlag.getHelp(), fromDateFlag.getHelp(),
+                        fromTimeFlag.getHelp(), toDateFlag.getHelp(), toTimeFlag.getHelp());
     }
 }

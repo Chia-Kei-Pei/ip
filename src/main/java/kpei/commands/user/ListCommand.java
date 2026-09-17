@@ -21,6 +21,6 @@ public class ListCommand extends Command<Boolean> {
 
     @Override
     public String getSyntax() {
-        return commandType;
+        return String.format("Syntax: %s", commandType);
     }
 }

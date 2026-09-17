@@ -22,12 +22,17 @@ public class FindCommand extends Command<String> {
     public String parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
 
-        String description = descriptionFlag.parse(parsedCommand);
-        return description;
+        try {
+            String description = descriptionFlag.parse(parsedCommand);
+            return description;
+        } catch (MissingArgumentException e) {
+            throw new BertException(e.getMessage() + "\n" + getSyntax());
+        }
     }
 
     @Override
     public String getSyntax() {
-        return commandType + " " + descriptionFlag.formatArgument();
+        return String.format("Syntax: %s %s", commandType, descriptionFlag.formatArgument())
+                + String.format("\n%s", descriptionFlag.getHelp());
     }
 }
