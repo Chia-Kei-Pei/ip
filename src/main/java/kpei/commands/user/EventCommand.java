@@ -20,7 +20,9 @@ public class EventCommand extends Command<Task> {
     private final TimeFlag toTimeFlag;
 
     public EventCommand() {
-        super("event", List.of("e", "event"), 5);
+        commandType = "event";
+        aliases = List.of("e", "event");
+        maxArgs = 5;
         descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
         fromDateFlag = new DateFlag("from-date", 1, List.of("/f", "-f", "--from-date"));
         fromTimeFlag = new TimeFlag("from-time", 2, List.of("/ff", "-ff", "--from-time"),

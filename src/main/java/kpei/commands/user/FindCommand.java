@@ -12,7 +12,9 @@ public class FindCommand extends Command<String> {
     private StringFlag descriptionFlag;
 
     public FindCommand() {
-        super("find", List.of("f", "find"), 1);
+        commandType = "find";
+        aliases = List.of("f", "find");
+        maxArgs = 1;
         descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
     }
 

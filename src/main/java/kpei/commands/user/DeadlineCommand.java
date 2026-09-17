@@ -18,7 +18,9 @@ public class DeadlineCommand extends Command<Task> {
     private final TimeFlag byTimeFlag;
 
     public DeadlineCommand() {
-        super("deadline", List.of("d", "deadline"), 3);
+        commandType = "deadline";
+        aliases = List.of("d", "deadline");
+        maxArgs = 3;
         descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
         byDateFlag = new DateFlag("by-date", 1, List.of("/b", "-b", "--by-date"));
         byTimeFlag = new TimeFlag("by-time", 2, List.of("/bb", "-bb", "--by-time"),

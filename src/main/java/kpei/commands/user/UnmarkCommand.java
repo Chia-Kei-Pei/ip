@@ -11,7 +11,9 @@ public class UnmarkCommand extends Command<Integer> {
     private IntFlag indexFlag;
 
     public UnmarkCommand() {
-        super("unmark", List.of("um", "unmark"), 1);
+        commandType = "unmark";
+        aliases = List.of("um", "unmark");
+        maxArgs = 1;
         indexFlag = new IntFlag("index",0, List.of("/i", "-i", "--index"));
     }
 

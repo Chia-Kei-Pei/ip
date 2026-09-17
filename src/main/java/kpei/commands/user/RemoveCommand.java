@@ -11,7 +11,9 @@ public class RemoveCommand extends Command<Integer> {
     private IntFlag indexFlag;
 
     public RemoveCommand() {
-        super("remove", List.of("r", "remove", "delete"), 1);
+        commandType = "remove";
+        aliases = List.of("r", "remove", "delete");
+        maxArgs = 1;
         indexFlag = new IntFlag("index",0, List.of("/i", "-i", "--index"));
     }
 

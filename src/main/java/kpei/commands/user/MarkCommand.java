@@ -11,7 +11,9 @@ public class MarkCommand extends Command<Integer> {
     private IntFlag indexFlag;
 
     public MarkCommand() {
-        super("mark", List.of("m", "mark"), 1);
+        commandType = "mark";
+        aliases = List.of("m", "mark");
+        maxArgs = 1;
         indexFlag = new IntFlag("index",0, List.of("/i", "-i", "--index"));
     }
 

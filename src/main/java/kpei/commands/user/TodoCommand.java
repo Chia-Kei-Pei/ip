@@ -13,7 +13,9 @@ public class TodoCommand extends Command<Task> {
     private final String SYNTAX;
 
     public TodoCommand() {
-        super("todo", List.of("t", "todo"), 1);
+        commandType = "todo";
+        aliases = List.of("t", "todo");
+        maxArgs = 1;
         descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
         SYNTAX = "todo <description>";
     }
