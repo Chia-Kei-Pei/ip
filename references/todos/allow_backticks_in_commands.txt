@@ -1,2 +1,0 @@
-allow backslash to allow quotes in values: 'I\'m sorry' -> value: I'm sorry
-figure out how single quotes '' can be used instead of double quotes "" to surround values
