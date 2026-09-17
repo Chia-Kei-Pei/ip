@@ -1,4 +1,0 @@
-If not isGuiEnabled, Cli constructor takes in custom InputStream and OutputStream.
-If isGuiEnabled, Cli constructor takes in only the message consumer from the MainWindowClass.
-
-Then ask AI to fix BertTest.java
