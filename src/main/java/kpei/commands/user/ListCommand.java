@@ -8,12 +8,19 @@ import java.util.List;
 public class ListCommand extends Command<Boolean> {
 
     public ListCommand() {
-        super("list", List.of("ls", "list", "dir"), 0);
+        commandType = "list";
+        aliases = List.of("ls", "list", "dir");
+        maxArgs = 0;
     }
 
     public Boolean parse(ParsedCommand parsedCommand) throws BertException {
         checkArgCount(parsedCommand);
 
         return Boolean.TRUE;
+    }
+
+    @Override
+    public String getSyntax() {
+        return String.format("Syntax: %s", commandType);
     }
 }
