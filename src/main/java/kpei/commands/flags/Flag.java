@@ -12,16 +12,18 @@ public abstract class Flag<T> {
     protected List<String> aliases;
     protected final boolean isRequired;
     protected final T defaultValue;
+    protected final String helpDescription;
 
-    public Flag(String argument, int position, List<String> aliases) {
-        this(argument, position, aliases, true, null);
+    public Flag(String argument, int position, List<String> aliases, String helpDescription) {
+        this(argument, position, aliases, true, null, helpDescription);
     }
 
-    public Flag(String argument, int position, List<String> aliases, T defaultValue) {
-        this(argument, position, aliases, false, defaultValue);
+    public Flag(String argument, int position, List<String> aliases, T defaultValue, String helpDescription) {
+        this(argument, position, aliases, false, defaultValue, helpDescription);
     }
 
-    private Flag(String argument, int position, List<String> aliases, boolean isRequired, T defaultValue) {
+    private Flag(String argument, int position, List<String> aliases, boolean isRequired, T defaultValue,
+                 String helpDescription) {
         this.argument = argument;
         this.position = position;
         this.aliases = aliases;
@@ -50,4 +52,16 @@ public abstract class Flag<T> {
     }
 
     public abstract T parse(ParsedCommand parsedCommand) throws BertException;
+
+    public String formatArgument() {
+        if (isRequired) {
+            return String.format("<%s>", argument);
+        }
+        return String.format("[<%s>]", argument);
+    }
+
+    public String getHelp() {
+        String formattedAliases = String.join(" | ", aliases);
+        return String.format("\t%s\t%s", formattedAliases, helpDescription);
+    }
 }

@@ -28,6 +28,5 @@ public class TodoCommand extends Command<Task> {
             String msg = e.getMessage() + "\nSyntax: " + SYNTAX;
             throw new BertException(msg);
         }
-
     }
 }
