@@ -4,7 +4,6 @@ import java.util.*;
 
 import kpei.exceptions.BertException;
 import kpei.exceptions.MissingArgumentException;
-import kpei.exceptions.UnknownCommandException;
 
 /**
  * Parses raw user input strings into structured {@link ParsedCommand} objects.
@@ -15,53 +14,6 @@ import kpei.exceptions.UnknownCommandException;
  * </p>
  */
 public class CommandParser {
-
-    /**
-     * Parses a raw Command string from the user into a {@link ParsedCommand}.
-     * Enforces that each argument or Flag value is a single token or a quoted string.
-     *
-     * @param tokens Tokenized input command where each argument or parameter is one token.
-     * @return A {@link ParsedCommand} containing the parsed Command type, arguments, and flags.
-     * @throws BertException If the entire command is missing.
-     */
-    public ParsedCommand parse(List<String> tokens) throws BertException {
-        if (tokens.isEmpty()) {
-            throw new BertException("User prompt should not be blank.");
-        }
-
-        String commandType = tokens.get(0).toLowerCase();
-        List<String> positionalParameters = new ArrayList<>();
-        Map<String, String> flaggedParameters = new LinkedHashMap<>();
-
-        int i = 1;
-
-        // collect positional arguments
-        while (i < tokens.size()) {
-            if (isFlag(tokens.get(i))) {
-                break;
-            }
-            positionalParameters.add(tokens.get(i));
-            i++;
-        }
-
-        // collect flagged arguments
-        while (i < tokens.size()) {
-            assert isFlag(tokens.get(i)) : tokens.get(i) + " at index " + i + " should be a Flag";
-
-            String flag = tokens.get(i);
-            i++;
-            if (i >= tokens.size()) {
-                throw new MissingArgumentException(flag);
-            }
-
-            String value = tokens.get(i);
-            flaggedParameters.put(flag, value);
-
-            i++;
-        }
-
-        return new ParsedCommand(commandType, positionalParameters, flaggedParameters);
-    }
 
     /**
      * Tokenizes a raw input string into individual tokens, taking quoted strings into account.
@@ -105,6 +57,53 @@ public class CommandParser {
         }
 
         return tokens;
+    }
+
+    /**
+     * Parses a raw Command string from the user into a {@link ParsedCommand}.
+     * Enforces that each argument or Flag value is a single token or a quoted string.
+     *
+     * @param tokens Tokenized input command where each argument or parameter is one token.
+     * @return A {@link ParsedCommand} containing the parsed Command type, arguments, and flags.
+     * @throws BertException If the entire command is missing.
+     */
+    public ParsedCommand parse(List<String> tokens) throws BertException {
+        if (tokens.isEmpty()) {
+            throw new BertException("User prompt should not be blank.");
+        }
+
+        String commandType = tokens.getFirst().toLowerCase();
+        List<String> positionalParameters = new ArrayList<>();
+        Map<String, String> flaggedParameters = new LinkedHashMap<>();
+
+        int i = 1;
+
+        // collect positional arguments
+        while (i < tokens.size()) {
+            if (isFlag(tokens.get(i))) {
+                break;
+            }
+            positionalParameters.add(tokens.get(i));
+            i++;
+        }
+
+        // collect flagged arguments
+        while (i < tokens.size()) {
+            assert isFlag(tokens.get(i)) : tokens.get(i) + " at index " + i + " should be a Flag";
+
+            String flag = tokens.get(i);
+            i++;
+            if (i >= tokens.size()) {
+                throw new MissingArgumentException(flag);
+            }
+
+            String value = tokens.get(i);
+            flaggedParameters.put(flag, value);
+
+            i++;
+        }
+
+        return new ParsedCommand(commandType, positionalParameters, flaggedParameters);
     }
 
     /**
