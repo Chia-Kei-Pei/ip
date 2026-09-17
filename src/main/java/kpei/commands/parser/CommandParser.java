@@ -18,6 +18,7 @@ public class CommandParser {
     /**
      * Tokenizes a raw input string into individual tokens, taking quoted strings into account.
      * Characters enclosed in single or double quotes are treated as a single token.
+     * The matching quote character can be included in a quoted token by preceding it with a backslash.
      *
      * @param input The raw input line.
      * @return A list of extracted string tokens.
@@ -35,7 +36,12 @@ public class CommandParser {
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
 
-            if ((c == '"' || c == '\'') && (!inQuotes || c == quoteChar)) {
+            boolean isEscapedQuote = inQuotes && c == '\\'
+                    && i + 1 < input.length() && input.charAt(i + 1) == quoteChar;
+            if (isEscapedQuote) {
+                current.append(quoteChar);
+                i++;
+            } else if ((c == '"' || c == '\'') && (!inQuotes || c == quoteChar)) {
                 if (inQuotes) {
                     inQuotes = false;
                 } else {
