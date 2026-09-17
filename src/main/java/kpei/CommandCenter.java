@@ -29,15 +29,15 @@ public class CommandCenter {
 
     private TaskList displayList;
 
-    private TodoCommand todoCommand;
-    private DeadlineCommand deadlineCommand;
-    private EventCommand eventCommand;
-    private FindCommand findCommand;
-    private MarkCommand markCommand;
-    private UnmarkCommand unmarkCommand;
-    private RemoveCommand removeCommand;
-    private ListCommand listCommand;
-    private ExitCommand exitCommand;
+    private final TodoCommand todoCommand;
+    private final DeadlineCommand deadlineCommand;
+    private final EventCommand eventCommand;
+    private final FindCommand findCommand;
+    private final MarkCommand markCommand;
+    private final UnmarkCommand unmarkCommand;
+    private final RemoveCommand removeCommand;
+    private final ListCommand listCommand;
+    private final ExitCommand exitCommand;
 
     /**
      * Constructs a {@code CommandCenter} instance with the given storage, task list, and CLI interface.
