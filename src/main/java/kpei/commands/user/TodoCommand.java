@@ -26,13 +26,12 @@ public class TodoCommand extends Command<Task> {
             String description = descriptionFlag.parse(parsedCommand);
             return new Task(description);
         } catch (MissingArgumentException e) {
-            String msg = e.getMessage() + "\nSyntax: " + getSyntax();
-            throw new BertException(msg);
+            throw new BertException(e.getMessage() + "\n" + getSyntax());
         }
     }
 
     @Override
     public String getSyntax() {
-        return commandType + " " + descriptionFlag.formatArgument();
+        return "Syntax: " + commandType + " " + descriptionFlag.formatArgument();
     }
 }

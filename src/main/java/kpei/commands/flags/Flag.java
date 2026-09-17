@@ -7,6 +7,8 @@ import kpei.exceptions.MissingArgumentException;
 import java.util.List;
 
 public abstract class Flag<T> {
+    private static final int HELP_ALIAS_WIDTH = 30;
+
     protected final String argument;
     protected final int position;
     protected List<String> aliases;
@@ -63,6 +65,6 @@ public abstract class Flag<T> {
 
     public String getHelp() {
         String formattedAliases = String.join(" | ", aliases);
-        return String.format("\t%s\t%s", formattedAliases, helpDescription);
+        return String.format("   %-" + HELP_ALIAS_WIDTH + "s%s", formattedAliases, helpDescription);
     }
 }
