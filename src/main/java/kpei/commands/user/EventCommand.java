@@ -22,8 +22,8 @@ public class EventCommand extends Command<Task> {
     public EventCommand() {
         super("event", List.of("e", "event"), 5);
         descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
-        fromDateFlag = new DateFlag("fromDate", 1, List.of("/f", "-f", "--fromDate"));
-        fromTimeFlag = new TimeFlag("fromTime", 2, List.of("/ff", "-ff", "--fromTime"),
+        fromDateFlag = new DateFlag("from-date", 1, List.of("/f", "-f", "--from-date"));
+        fromTimeFlag = new TimeFlag("from-time", 2, List.of("/ff", "-ff", "--from-time"),
                 LocalTime.MIDNIGHT);
         toDateFlag = new DateFlag("toDate", 3, List.of("/t", "-t", "--toDate"));
         toTimeFlag = new TimeFlag("toTime", 4, List.of("/tt", "-tt", "--toTime"),
