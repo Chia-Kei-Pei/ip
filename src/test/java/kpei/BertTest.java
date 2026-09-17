@@ -26,10 +26,10 @@ class BertTest {
 
         Storage storage = new Storage(testDataFilePath);
         TaskList taskList = new TaskList("task_list.txt");
-        Cli cli = new Cli(msg -> output.append(msg));
+        Cli cli = new Cli(output::append);
         CommandCenter commandCenter = new CommandCenter(storage, taskList, cli);
 
-        cli.run(input, commandCenter);
+        cli.runCliOnly(commandCenter);
 
         return output.toString();
     }

@@ -1,6 +1,8 @@
 package kpei.ui;
 
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -26,7 +28,23 @@ public class Cli {
         """;
     private static final String HORIZONTAL_LINE = "____________________________________________________________";
 
-    private final Consumer<String> output;
+    private final Consumer<String> outputConsumer;
+    private final Scanner scanner;
+    private final PrintWriter printWriter;
+    private final boolean isGuiEnabled;
+
+    /**
+     * Constructs a {@code Cli} instance with a custom message consumer.
+     *
+     * @param in InputStream for user prompts
+     * @param out OutputStream for output messages.
+     */
+    public Cli(InputStream in, OutputStream out) {
+        this.scanner = new Scanner(in);
+        this.printWriter = new PrintWriter(out, true);
+        this.outputConsumer = null;
+        isGuiEnabled = false;
+    }
 
     /**
      * Constructs a {@code Cli} instance with a custom message consumer.
@@ -34,21 +52,43 @@ public class Cli {
      * @param output Consumer for output messages.
      */
     public Cli(Consumer<String> output) {
-        this.output = output;
+        this.outputConsumer = output;
+        this.scanner = null;
+        this.printWriter = null;
+        isGuiEnabled = true;
     }
 
     /**
      * Starts the CLI run loop using the configured {@link CommandCenter} controller.
      */
-    public void run(InputStream input, CommandCenter commandCenter) {
-        Scanner scanner = new Scanner(input);
+    public void runCliOnly(CommandCenter commandCenter) {
+        assert scanner != null : "scanner should be initialized";
+        assert printWriter != null : "printWriter should be initialized";
+        assert !isGuiEnabled : "Should not run when in Gui Mode";
+
         while (true) {
-            System.out.print("> ");
+            printWriter.printf("> ");
             String userPrompt = scanner.nextLine();
 
-            if (commandCenter.executeCommand(userPrompt)) {
+            boolean isExit = commandCenter.executeCommand(userPrompt);
+            if (isExit) {
                 return;
             }
+        }
+    }
+
+    /**
+     * Displays a general message to the user.
+     *
+     * @param message The message text.
+     */
+    public void print(String message) {
+        if (isGuiEnabled) {
+            assert outputConsumer != null : "outputConsumer should be initialized";
+            outputConsumer.accept(message + "\n");
+        } else {
+            assert printWriter != null : "printWriter should be initialized";
+            printWriter.println(message);
         }
     }
 
@@ -73,15 +113,6 @@ public class Cli {
      */
     public void horizontalLine() {
         print(HORIZONTAL_LINE);
-    }
-
-    /**
-     * Displays a general message to the user.
-     *
-     * @param message The message text.
-     */
-    public void print(String message) {
-        output.accept(message + "\n");
     }
 
     /**
