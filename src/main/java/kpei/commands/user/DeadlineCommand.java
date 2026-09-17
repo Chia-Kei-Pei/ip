@@ -21,10 +21,11 @@ public class DeadlineCommand extends Command<Task> {
         commandType = "deadline";
         aliases = List.of("d", "deadline");
         maxArgs = 3;
-        descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
-        byDateFlag = new DateFlag("by-date", 1, List.of("/b", "-b", "--by-date"));
+        descriptionFlag = new StringFlag("description", 0, List.of("/d", "-d", "--description"),
+                "Task description.");
+        byDateFlag = new DateFlag("by-date", 1, List.of("/b", "-b", "--by-date"), "Deadline date.");
         byTimeFlag = new TimeFlag("by-time", 2, List.of("/bb", "-bb", "--by-time"),
-                LocalTime.MIDNIGHT);
+                LocalTime.MIDNIGHT, "Deadline time.");
     }
 
     public Task parse(ParsedCommand parsedCommand) throws BertException {
@@ -35,5 +36,11 @@ public class DeadlineCommand extends Command<Task> {
         LocalTime byTime = byTimeFlag.parse(parsedCommand);
         Deadline deadline = new Deadline(description, byDate, byTime);
         return deadline;
+    }
+
+    @Override
+    public String getSyntax() {
+        return String.format("%s %s %s %s", commandType, descriptionFlag.formatArgument(),
+                byDateFlag.formatArgument(), byTimeFlag.formatArgument());
     }
 }

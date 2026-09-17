@@ -17,4 +17,9 @@ public class ExitCommand extends Command<Boolean> {
         checkArgCount(parsedCommand);
         return Boolean.TRUE;
     }
+
+    @Override
+    public String getSyntax() {
+        return commandType;
+    }
 }

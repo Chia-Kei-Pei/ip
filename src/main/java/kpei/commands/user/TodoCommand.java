@@ -10,14 +10,13 @@ import java.util.List;
 
 public class TodoCommand extends Command<Task> {
     private final StringFlag descriptionFlag;
-    private final String SYNTAX;
 
     public TodoCommand() {
         commandType = "todo";
         aliases = List.of("t", "todo");
         maxArgs = 1;
-        descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
-        SYNTAX = "todo <description>";
+        descriptionFlag = new StringFlag("description", 0, List.of("/d", "-d", "--description"),
+                "Task description.");
     }
 
     public Task parse(ParsedCommand parsedCommand) throws BertException {
@@ -27,8 +26,13 @@ public class TodoCommand extends Command<Task> {
             String description = descriptionFlag.parse(parsedCommand);
             return new Task(description);
         } catch (MissingArgumentException e) {
-            String msg = e.getMessage() + "\nSyntax: " + SYNTAX;
+            String msg = e.getMessage() + "\nSyntax: " + getSyntax();
             throw new BertException(msg);
         }
+    }
+
+    @Override
+    public String getSyntax() {
+        return commandType + " " + descriptionFlag.formatArgument();
     }
 }

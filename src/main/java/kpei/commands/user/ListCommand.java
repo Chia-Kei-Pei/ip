@@ -18,4 +18,9 @@ public class ListCommand extends Command<Boolean> {
 
         return Boolean.TRUE;
     }
+
+    @Override
+    public String getSyntax() {
+        return commandType;
+    }
 }

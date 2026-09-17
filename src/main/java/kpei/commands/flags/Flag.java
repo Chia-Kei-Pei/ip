@@ -29,6 +29,7 @@ public abstract class Flag<T> {
         this.aliases = aliases;
         this.isRequired = isRequired;
         this.defaultValue = defaultValue;
+        this.helpDescription = helpDescription;
     }
 
     public String getValue(ParsedCommand parsedCommand) throws MissingArgumentException {

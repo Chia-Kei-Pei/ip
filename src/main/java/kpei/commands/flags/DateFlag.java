@@ -10,12 +10,13 @@ import java.util.List;
 
 public class DateFlag extends Flag<LocalDate> {
 
-    public DateFlag(String argument, int position, List<String> aliases) {
-        super(argument, position, aliases);
+    public DateFlag(String argument, int position, List<String> aliases, String helpDescription) {
+        super(argument, position, aliases, helpDescription);
     }
 
-    public DateFlag(String argument, int position, List<String> aliases, LocalDate defaultValue) {
-        super(argument, position, aliases, defaultValue);
+    public DateFlag(String argument, int position, List<String> aliases, LocalDate defaultValue,
+                    String helpDescription) {
+        super(argument, position, aliases, defaultValue, helpDescription);
     }
 
     @Override

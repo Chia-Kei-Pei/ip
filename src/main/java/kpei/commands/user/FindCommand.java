@@ -15,7 +15,8 @@ public class FindCommand extends Command<String> {
         commandType = "find";
         aliases = List.of("f", "find");
         maxArgs = 1;
-        descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
+        descriptionFlag = new StringFlag("description", 0, List.of("/d", "-d", "--description"),
+                "Keyword to search for.");
     }
 
     public String parse(ParsedCommand parsedCommand) throws BertException {
@@ -23,5 +24,10 @@ public class FindCommand extends Command<String> {
 
         String description = descriptionFlag.parse(parsedCommand);
         return description;
+    }
+
+    @Override
+    public String getSyntax() {
+        return commandType + " " + descriptionFlag.formatArgument();
     }
 }

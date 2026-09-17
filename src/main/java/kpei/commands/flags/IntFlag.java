@@ -7,12 +7,13 @@ import java.util.List;
 
 public class IntFlag extends Flag<Integer> {
 
-    public IntFlag(String argument, int position, List<String> aliases) {
-        super(argument, position, aliases);
+    public IntFlag(String argument, int position, List<String> aliases, String helpDescription) {
+        super(argument, position, aliases, helpDescription);
     }
 
-    public IntFlag(String argument, int position, List<String> aliases, Integer defaultValue) {
-        super(argument, position, aliases, defaultValue);
+    public IntFlag(String argument, int position, List<String> aliases, Integer defaultValue,
+                   String helpDescription) {
+        super(argument, position, aliases, defaultValue, helpDescription);
     }
 
     @Override

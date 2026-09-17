@@ -23,13 +23,14 @@ public class EventCommand extends Command<Task> {
         commandType = "event";
         aliases = List.of("e", "event");
         maxArgs = 5;
-        descriptionFlag = new StringFlag("description",0, List.of("/d", "-d", "--description"));
-        fromDateFlag = new DateFlag("from-date", 1, List.of("/f", "-f", "--from-date"));
+        descriptionFlag = new StringFlag("description", 0, List.of("/d", "-d", "--description"),
+                "Task description.");
+        fromDateFlag = new DateFlag("from-date", 1, List.of("/f", "-f", "--from-date"), "Start date.");
         fromTimeFlag = new TimeFlag("from-time", 2, List.of("/ff", "-ff", "--from-time"),
-                LocalTime.MIDNIGHT);
-        toDateFlag = new DateFlag("toDate", 3, List.of("/t", "-t", "--toDate"));
+                LocalTime.MIDNIGHT, "Start time.");
+        toDateFlag = new DateFlag("toDate", 3, List.of("/t", "-t", "--toDate"), "End date.");
         toTimeFlag = new TimeFlag("toTime", 4, List.of("/tt", "-tt", "--toTime"),
-                LocalTime.MIDNIGHT);
+                LocalTime.MIDNIGHT, "End time.");
     }
 
     public Task parse(ParsedCommand parsedCommand) throws BertException {
@@ -42,5 +43,12 @@ public class EventCommand extends Command<Task> {
         LocalTime toTime = toTimeFlag.parse(parsedCommand);
         Event event = new Event(description, fromDate, fromTime, toDate, toTime);
         return event;
+    }
+
+    @Override
+    public String getSyntax() {
+        return String.format("%s %s %s %s %s %s", commandType, descriptionFlag.formatArgument(),
+                fromDateFlag.formatArgument(), fromTimeFlag.formatArgument(), toDateFlag.formatArgument(),
+                toTimeFlag.formatArgument());
     }
 }

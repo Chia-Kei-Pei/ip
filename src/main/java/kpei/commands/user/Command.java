@@ -22,4 +22,6 @@ public abstract class Command<T> {
             throw new BertException(String.format("'%s' command does not take more than %d arguments.", commandType, maxArgs));
         }
     }
+
+    public abstract String getSyntax();
 }

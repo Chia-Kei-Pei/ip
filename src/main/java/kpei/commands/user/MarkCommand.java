@@ -14,7 +14,7 @@ public class MarkCommand extends Command<Integer> {
         commandType = "mark";
         aliases = List.of("m", "mark");
         maxArgs = 1;
-        indexFlag = new IntFlag("index",0, List.of("/i", "-i", "--index"));
+        indexFlag = new IntFlag("index", 0, List.of("/i", "-i", "--index"), "Task index.");
     }
 
     public Integer parse(ParsedCommand parsedCommand) throws BertException {
@@ -22,5 +22,10 @@ public class MarkCommand extends Command<Integer> {
 
         Integer index = indexFlag.parse(parsedCommand);
         return index;
+    }
+
+    @Override
+    public String getSyntax() {
+        return commandType + " " + indexFlag.formatArgument();
     }
 }
