@@ -43,8 +43,7 @@ public class EventCommand extends Command<Task> {
             LocalTime fromTime = fromTimeFlag.parse(parsedCommand);
             LocalDate toDate = toDateFlag.parse(parsedCommand);
             LocalTime toTime = toTimeFlag.parse(parsedCommand);
-            Event event = new Event(description, fromDate, fromTime, toDate, toTime);
-            return event;
+            return new Event(description, fromDate, fromTime, toDate, toTime);
         } catch (MissingArgumentException e) {
             throw new BertException(e.getMessage() + "\n" + getSyntax());
         }

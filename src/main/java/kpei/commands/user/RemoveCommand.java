@@ -8,7 +8,7 @@ import kpei.exceptions.MissingArgumentException;
 import java.util.List;
 
 public class RemoveCommand extends Command<Integer> {
-    private IntFlag indexFlag;
+    private final IntFlag indexFlag;
 
     public RemoveCommand() {
         commandType = "remove";
@@ -21,8 +21,7 @@ public class RemoveCommand extends Command<Integer> {
         checkArgCount(parsedCommand);
 
         try {
-            Integer index = indexFlag.parse(parsedCommand);
-            return index;
+            return indexFlag.parse(parsedCommand);
         } catch (MissingArgumentException e) {
             throw new BertException(e.getMessage() + "\n" + getSyntax());
         }

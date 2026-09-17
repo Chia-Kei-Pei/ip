@@ -2,14 +2,13 @@ package kpei.commands.user;
 
 import kpei.commands.flags.StringFlag;
 import kpei.commands.parser.ParsedCommand;
-import kpei.datatypes.Task;
 import kpei.exceptions.BertException;
 import kpei.exceptions.MissingArgumentException;
 
 import java.util.List;
 
 public class FindCommand extends Command<String> {
-    private StringFlag descriptionFlag;
+    private final StringFlag descriptionFlag;
 
     public FindCommand() {
         commandType = "find";
@@ -23,8 +22,7 @@ public class FindCommand extends Command<String> {
         checkArgCount(parsedCommand);
 
         try {
-            String description = descriptionFlag.parse(parsedCommand);
-            return description;
+            return descriptionFlag.parse(parsedCommand);
         } catch (MissingArgumentException e) {
             throw new BertException(e.getMessage() + "\n" + getSyntax());
         }
