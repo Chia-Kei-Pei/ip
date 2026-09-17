@@ -3,6 +3,7 @@ package kpei;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -22,16 +23,16 @@ class BertTest {
 
     private String runCliWithInput(String testDataFilePath, String simulatedInput) {
         InputStream input = new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8));
-        StringBuilder output = new StringBuilder();
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
 
         Storage storage = new Storage(testDataFilePath);
-        TaskList taskList = new TaskList("task_list.txt");
-        Cli cli = new Cli(output::append);
+        TaskList taskList = new TaskList(storage.getFileName());
+        Cli cli = new Cli(input, output);
         CommandCenter commandCenter = new CommandCenter(storage, taskList, cli);
 
         cli.runCliOnly(commandCenter);
 
-        return output.toString();
+        return output.toString(StandardCharsets.UTF_8);
     }
 
     /*
