@@ -34,9 +34,9 @@ public class Launcher {
         if (isCli) {
             Storage storage = new Storage(DEFAULT_STORAGE_PATH);
             TaskList taskList = new TaskList(storage.getFileName());
-            Cli cli = new Cli(System.out::print);
+            Cli cli = new Cli(System.in, System.out);
             CommandCenter commandCenter = new CommandCenter(storage, taskList, cli);
-            cli.run(System.in, commandCenter);
+            cli.runCliOnly(commandCenter);
         } else {
             Gui.initDependencies(DEFAULT_STORAGE_PATH);
             Application.launch(Gui.class, args);
