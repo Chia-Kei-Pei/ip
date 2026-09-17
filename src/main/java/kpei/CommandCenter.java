@@ -183,7 +183,7 @@ public class CommandCenter {
         refreshDisplayListGui();
     }
 
-    private void handleMark(int index) throws InvalidIndexException, BertException {
+    private void handleMark(int index) throws BertException {
         Task task = displayList.get(index);
         if (task.isMarked()) {
             cli.print("Already marked " + task.getType());
@@ -197,7 +197,7 @@ public class CommandCenter {
         }
     }
 
-    private void handleUnmark(int index) throws InvalidIndexException, BertException {
+    private void handleUnmark(int index) throws BertException {
         Task task = displayList.get(index);
         if (!task.isMarked()) {
             cli.print("Already unmarked " + task.getType());
@@ -211,7 +211,7 @@ public class CommandCenter {
         }
     }
 
-    private void handleDelete(int index) throws InvalidIndexException, BertException {
+    private void handleDelete(int index) throws BertException {
         Task removedTask = displayList.remove(index);
         cli.print("Removed " + removedTask.getType());
         cli.printTask(index, removedTask);
