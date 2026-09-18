@@ -94,7 +94,8 @@ class DateTimeParserTest {
 
     @Test
     void formatDateAndTime_singleDigitAndBoundaryValues_expectedDisplayFormatReturned() {
-        assertEquals("05 Jan 2026", DateTimeParser.formatDate(LocalDate.of(2026, 1, 5)));
+        assertEquals("05 Jan 2026",
+                DateTimeParser.formatDate(LocalDate.of(2026, 1, 5)));
         assertEquals("12:00 am", DateTimeParser.formatTime(LocalTime.MIDNIGHT));
         assertEquals("12:00 pm", DateTimeParser.formatTime(LocalTime.NOON));
     }

@@ -34,8 +34,10 @@ class StorageTest {
         Storage storage = new Storage(saveFile.toString());
         TaskList savedTasks = new TaskList("tasks.txt");
         savedTasks.add(new Task(true, "Clean room"));
-        savedTasks.add(new Deadline(false, "Submit report", LocalDate.of(2026, 8, 29), LocalTime.of(16, 0)));
-        savedTasks.add(new Event(true, "Hackathon", LocalDate.of(2026, 9, 1), LocalTime.of(9, 0),
+        savedTasks.add(new Deadline(false, "Submit report",
+                LocalDate.of(2026, 8, 29), LocalTime.of(16, 0)));
+        savedTasks.add(new Event(true, "Hackathon",
+                LocalDate.of(2026, 9, 1), LocalTime.of(9, 0),
                 LocalDate.of(2026, 9, 2), LocalTime.of(18, 30)));
 
         storage.save(savedTasks);
