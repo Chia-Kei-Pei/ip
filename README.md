@@ -44,7 +44,7 @@ Where it was used LESS:
 - Re-written command classes: flags and user commands
 - Datatypes
 
-Basically much of the codebase is AI-generated, but with much of my oversight and heavily refactored by hand.
+Basically much of the codebase is AI-generated, but with much of my oversight and heavily refactored.
 
 ## Image attribution
 
