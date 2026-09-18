@@ -25,3 +25,27 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## AI Declaration
+
+Generative AI was used heavily in writing code for this project.
+
+Tools used:
+- Google Antigravity
+- OpenAI Codex
+
+Where it was used:
+- Most of the GUI - JavaFX and JavaFXML
+- Most of the Tests
+- Storage Config classes
+- Exceptions
+
+Where it was used LESS:
+- Re-written command classes: flags and user commands
+- Datatypes
+
+Basically much of the codebase is AI-generated, but with much of my oversight and heavily refactored by hand.
+
+## Image attribution
+
+artsyolive_. (n.d.). *[bart simpson gummybear tattoo]* [Pinterest Pin]. Pinterest. Retrieved September 18, 2026, from https://fr.pinterest.com/pin/572449802640664140/
