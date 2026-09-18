@@ -57,8 +57,8 @@ class DateTimeParserTest {
 
     @Test
     void formatDateAndTime_validValues_success() {
-        assertEquals("Aug 29 2026",
+        assertEquals("29 Aug 2026",
                 DateTimeParser.formatDate(LocalDate.of(2026, 8, 29)));
-        assertEquals("16:00", DateTimeParser.formatTime(LocalTime.of(16, 0)));
+        assertEquals("4:00 pm", DateTimeParser.formatTime(LocalTime.of(16, 0)));
     }
 }
