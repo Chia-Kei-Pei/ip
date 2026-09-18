@@ -15,7 +15,7 @@ import kpei.datatypes.TaskList;
 import kpei.storage.Storage;
 import kpei.ui.Cli;
 
-class BertTest {
+class CommandCenterTest {
 
     @TempDir
     Path tempDir;
