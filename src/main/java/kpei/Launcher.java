@@ -1,5 +1,8 @@
 package kpei;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import javafx.application.Application;
 
 import kpei.datatypes.TaskList;
@@ -12,8 +15,7 @@ import kpei.ui.Gui;
  */
 public class Launcher {
 
-    private static final String CLI_FLAG = "--cli";
-    private static final String DEFAULT_STORAGE_PATH = "data/task_list_2.txt";
+    private static final Path CONFIG_FILE = Path.of("config.txt");
 
     /**
      * Main method deciding whether to launch the CLI or GUI version of BERT.
@@ -21,25 +23,21 @@ public class Launcher {
      * @param args Command line arguments.
      */
     public static void main(String[] args) {
-        boolean isCli = false;
-        if (args != null) {
-            for (String arg : args) {
-                if (CLI_FLAG.equalsIgnoreCase(arg.trim())) {
-                    isCli = true;
-                    break;
-                }
+        try {
+            LaunchConfiguration launchConfiguration = new LaunchConfiguration(CONFIG_FILE);
+            String storageFilePath = launchConfiguration.getStorageFilePath(args);
+            if (launchConfiguration.isCli(args)) {
+                Storage storage = new Storage(storageFilePath);
+                TaskList taskList = new TaskList(storage.getFileName());
+                Cli cli = new Cli(System.in, System.out);
+                CommandCenter commandCenter = new CommandCenter(storage, taskList, cli);
+                cli.runCliOnly(commandCenter);
+            } else {
+                Gui.initDependencies(storageFilePath);
+                Application.launch(Gui.class, args);
             }
-        }
-
-        if (isCli) {
-            Storage storage = new Storage(DEFAULT_STORAGE_PATH);
-            TaskList taskList = new TaskList(storage.getFileName());
-            Cli cli = new Cli(System.in, System.out);
-            CommandCenter commandCenter = new CommandCenter(storage, taskList, cli);
-            cli.runCliOnly(commandCenter);
-        } else {
-            Gui.initDependencies(DEFAULT_STORAGE_PATH);
-            Application.launch(Gui.class, args);
+        } catch (IOException | IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
     }
 }
