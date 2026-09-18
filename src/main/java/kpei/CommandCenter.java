@@ -29,15 +29,15 @@ public class CommandCenter {
 
     private TaskList displayList;
 
-    private TodoCommand todoCommand;
-    private DeadlineCommand deadlineCommand;
-    private EventCommand eventCommand;
-    private FindCommand findCommand;
-    private MarkCommand markCommand;
-    private UnmarkCommand unmarkCommand;
-    private RemoveCommand removeCommand;
-    private ListCommand listCommand;
-    private ExitCommand exitCommand;
+    private final TodoCommand todoCommand;
+    private final DeadlineCommand deadlineCommand;
+    private final EventCommand eventCommand;
+    private final FindCommand findCommand;
+    private final MarkCommand markCommand;
+    private final UnmarkCommand unmarkCommand;
+    private final RemoveCommand removeCommand;
+    private final ListCommand listCommand;
+    private final ExitCommand exitCommand;
 
     /**
      * Constructs a {@code CommandCenter} instance with the given storage, task list, and CLI interface.
@@ -183,7 +183,7 @@ public class CommandCenter {
         refreshDisplayListGui();
     }
 
-    private void handleMark(int index) throws InvalidIndexException, BertException {
+    private void handleMark(int index) throws BertException {
         Task task = displayList.get(index);
         if (task.isMarked()) {
             cli.print("Already marked " + task.getType());
@@ -197,7 +197,7 @@ public class CommandCenter {
         }
     }
 
-    private void handleUnmark(int index) throws InvalidIndexException, BertException {
+    private void handleUnmark(int index) throws BertException {
         Task task = displayList.get(index);
         if (!task.isMarked()) {
             cli.print("Already unmarked " + task.getType());
@@ -211,7 +211,7 @@ public class CommandCenter {
         }
     }
 
-    private void handleDelete(int index) throws InvalidIndexException, BertException {
+    private void handleDelete(int index) throws BertException {
         Task removedTask = displayList.remove(index);
         cli.print("Removed " + removedTask.getType());
         cli.printTask(index, removedTask);

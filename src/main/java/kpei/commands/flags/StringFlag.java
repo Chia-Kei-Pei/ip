@@ -7,12 +7,13 @@ import java.util.List;
 
 public class StringFlag extends Flag<String> {
 
-    public StringFlag(String argument, int position, List<String> aliases) {
-        super(argument, position, aliases);
+    public StringFlag(String argument, int position, List<String> aliases, String helpDescription) {
+        super(argument, position, aliases, helpDescription);
     }
 
-    public StringFlag(String argument, int position, List<String> aliases, String defaultValue) {
-        super(argument, position, aliases, defaultValue);
+    public StringFlag(String argument, int position, List<String> aliases, String defaultValue,
+                      String helpDescription) {
+        super(argument, position, aliases, defaultValue, helpDescription);
     }
 
     @Override

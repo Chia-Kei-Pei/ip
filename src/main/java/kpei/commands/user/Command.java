@@ -6,15 +6,9 @@ import kpei.exceptions.BertException;
 import java.util.List;
 
 public abstract class Command<T> {
-    private String commandType;
-    private int maxArgs;
-    private List<String> aliases;
-
-    public Command(String commandType, List<String> aliases, int maxArgs) {
-        this.commandType = commandType;
-        this.aliases = aliases;
-        this.maxArgs = maxArgs;
-    }
+    protected String commandType;
+    protected int maxArgs;
+    protected List<String> aliases;
 
     public abstract T parse(ParsedCommand parsedCommand) throws BertException;
 
@@ -28,4 +22,6 @@ public abstract class Command<T> {
             throw new BertException(String.format("'%s' command does not take more than %d arguments.", commandType, maxArgs));
         }
     }
+
+    public abstract String getSyntax();
 }
