@@ -27,7 +27,7 @@ deadline 'submit proposal' 2026-09-25 23:59
 event 'team meeting' 2026-09-22 14:00 2026-09-22 15:30
 ```
 
-Dates use `YYYY-MM-DD` and times use 24-hour `HH:MM` format. A deadline or event without a time starts or ends at midnight.
+Dates and times accept convenient formats. For example, use `2026-09-19 12:16` or the more natural `19/9/2026 12.16pm`. A deadline or event without a time starts or ends at midnight.
 
 ### View and find
 
