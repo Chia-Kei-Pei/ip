@@ -2,6 +2,8 @@
 
 **BERT Assistant** is a friendly chatbot for keeping track of todos, deadlines, and events. Type a command in the chat box and press Enter. Your tasks are saved automatically.
 
+![BERT Assistant interface](Ui.png)
+
 > **Tip:** Put text containing spaces in single quotes, for example `'buy groceries'`.
 
 ## Quick start
