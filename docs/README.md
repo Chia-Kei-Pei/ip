@@ -54,4 +54,4 @@ Replace `1` with the task number shown by `list`. Marking a task records it as c
 bye
 ```
 
-You can also use the shorter command names: `t`, `d`, `e`, `f`, `m`, `um`, and `r`.
+You can also use the shorter command names: `t`, `d`, `e`, `f`, `m`, `um`, `r`, and `q`.
